@@ -3,88 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillsPT | AI-Powered Skill Assessment</title>
-    <style>
-        :root { --primary: #00f2ff; --bg: #050505; --card: #111; }
-        body { background: var(--bg); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        
-        .lead-card { background: var(--card); border: 1px solid #333; padding: 40px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 10px 50px rgba(0,0,0,0.5); }
-        .badge { background: rgba(0,242,255,0.1); color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
-        
-        h2 { font-size: 28px; margin: 15px 0; }
-        .step { display: none; }
-        .step.active { display: block; animation: slideIn 0.4s ease; }
-        
-        input, select { width: 100%; padding: 15px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 12px; font-size: 16px; }
-        input:focus { border-color: var(--primary); outline: none; }
-        
-        .btn-main { width: 100%; padding: 18px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,242,255,0.4); }
+    <title>Skillspot.in | AI Path Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'primary': '#4F46E5', 'secondary': '#10B981', 'dark-bg': '#0F172A' },
+                    animation: { 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
+                }
+            }
+        }
+    </script>
 
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .grid-pattern {
+            background-image: linear-gradient(to right, rgba(79, 70, 229, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(79, 70, 229, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .step { display: none; }
+        .step.active { display: block; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom Checkbox Style */
+        .interest-chip input:checked + div {
+            background-color: #4F46E5;
+            color: white;
+            border-color: #4F46E5;
+        }
+
+        .loader-ring {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4F46E5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body class="min-h-screen grid-pattern flex items-center justify-center p-4">
 
-<div class="lead-card">
-    <span class="badge">AI Skill Analyzer v2.0</span>
-    
-    <form name="submit-to-google-sheet" id="leadForm">
-        <div class="step active" id="step1">
-            <h2>What is your AI Goal?</h2>
-            <p>Tell us what you want to achieve to build your path.</p>
-            <select name="Interest" required>
-                <option value="Robotics">Master Robotics & Hardware</option>
-                <option value="AI Web Dev">AI-Based Web Development</option>
-                <option value="ChatGPT">ChatGPT & Prompt Engineering</option>
-            </select>
-            <select name="Role" required>
-                <option value="Student">I am a Student</option>
-                <option value="Teacher">I am a Teacher/Educator</option>
-                <option value="Professional">I am a Professional</option>
-            </select>
-            <button type="button" class="btn-main" onclick="nextStep()">Continue to Analysis →</button>
+    <div class="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl w-full max-w-lg border border-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-slate-100">
+            <div id="progressBar" class="h-full bg-primary transition-all duration-500" style="width: 33%"></div>
         </div>
 
-        <div class="step" id="step2">
-            <h2>Secure Your Result</h2>
-            <p>Where should we send your custom Robotics & AI learning syllabus?</p>
-            <input type="text" name="Name" placeholder="Your Full Name" required>
-            <input type="email" name="Email" placeholder="Your Best Email" required>
-            <input type="tel" name="Phone" placeholder="WhatsApp Number (For Support)" required>
-            <button type="submit" class="btn-main" id="submitBtn">Get My AI Syllabus Now</button>
+        <div class="flex flex-col items-center mb-8 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg mb-4 text-white">
+                <i class="fas fa-robot text-2xl"></i>
+            </div>
+            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">AI Skill Analyzer v2.0</span>
         </div>
-    </form>
-    <div id="loading" style="display:none; text-align: center; margin-top: 20px;">
-        <p style="color: var(--primary);">🤖 AI is calculating your curriculum...</p>
+
+        <form id="leadForm" name="submit-to-google-sheet">
+            <div class="step active" id="step1">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">What's your AI Goal?</h2>
+                <p class="text-slate-500 text-sm mb-6">Let's define your primary objective.</p>
+                
+                <label class="text-xs font-bold uppercase text-slate-400 ml-2 mb-1 block">Primary Interest</label>
+                <select name="Interest" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary mb-4 appearance-none">
+                    <option value="Robotics">Master Robotics & Hardware</option>
+                    <option value="AI Web Dev">AI-Based Web Development</option>
+                    <option value="ChatGPT">ChatGPT & Prompt Engineering</option>
+                </select>
+
+                <label class="text-xs font-bold uppercase text-slate-400 ml-2 mb-1 block">Your Current Status</label>
+                <select name="Role" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary mb-8 appearance-none">
+                    <option value="Student">I am a Student</option>
+                    <option value="Teacher">I am a Teacher/Educator</option>
+                    <option value="Professional">I am a Professional</option>
+                </select>
+
+                <button type="button" onclick="goToStep(2)" class="w-full bg-primary text-white py-5 rounded-2xl font-bold shadow-lg shadow-indigo-100 flex items-center justify-center gap-3 transition-transform active:scale-95">
+                    Next: Personalize Path <i class="fas fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+
+            <div class="step" id="step2">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Personalize your result</h2>
+                <p class="text-slate-500 text-sm mb-6">Select specific topics you find interesting:</p>
+                
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <label class="interest-chip cursor-pointer">
+                        <input type="checkbox" name="Topic" value="IoT" class="hidden">
+                        <div class="border border-slate-200 p-3 rounded-xl text-center text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 italic">#IoT</div>
+                    </label>
+                    <label class="interest-chip cursor-pointer">
+                        <input type="checkbox" name="Topic" value="Automation" class="hidden">
+                        <div class="border border-slate-200 p-3 rounded-xl text-center text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 italic">#Automation</div>
+                    </label>
+                    <label class="interest-chip cursor-pointer">
+                        <input type="checkbox" name="Topic" value="LLM" class="hidden">
+                        <div class="border border-slate-200 p-3 rounded-xl text-center text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 italic">#LLM_Models</div>
+                    </label>
+                    <label class="interest-chip cursor-pointer">
+                        <input type="checkbox" name="Topic" value="Freelancing" class="hidden">
+                        <div class="border border-slate-200 p-3 rounded-xl text-center text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 italic">#Freelancing</div>
+                    </label>
+                </div>
+
+                <button type="button" onclick="goToStep(3)" class="w-full bg-primary text-white py-5 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3">
+                    Continue to Secure Result <i class="fas fa-arrow-right text-xs"></i>
+                </button>
+                <button type="button" onclick="goToStep(1)" class="w-full text-slate-400 text-xs font-bold mt-4">Go Back</button>
+            </div>
+
+            <div class="step" id="step3">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Almost there!</h2>
+                <p class="text-slate-500 text-sm mb-8">Where should we send your custom AI curriculum?</p>
+                
+                <input type="text" name="Name" placeholder="Full Name" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary mb-4">
+                <input type="email" name="Email" placeholder="Email Address" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary mb-4">
+                <input type="tel" name="Phone" placeholder="WhatsApp Number" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary mb-8">
+
+                <button type="submit" class="w-full bg-secondary text-white py-5 rounded-2xl font-bold shadow-lg shadow-emerald-100 flex items-center justify-center gap-3 transition-transform active:scale-95">
+                    Generate My AI Syllabus <i class="fas fa-wand-magic-sparkles"></i>
+                </button>
+            </div>
+        </form>
+
+        <div id="loadingUI" class="hidden flex flex-col items-center justify-center py-10 text-center animate-slide-up">
+            <div class="loader-ring mb-6"></div>
+            <h3 class="text-xl font-bold text-slate-800" id="loadingText">Analyzing Data...</h3>
+            <p class="text-slate-400 text-xs mt-2 italic">Skillspot AI is tailoring your technical roadmap</p>
+            
+            <div class="mt-8 w-full bg-slate-50 p-4 rounded-2xl text-[10px] font-mono text-slate-500 text-left overflow-hidden h-20">
+                <div id="statusLog">>> Initializing neural weights...</div>
+                <div id="statusLog2" class="mt-1"></div>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5bGEDl8S8HGigMgngwMTDJQcc9wQdJO700aW_jdFkidnWhX0vCxqnCGxkwB9GX-Fu/exec';
-    const form = document.forms['submit-to-google-sheet'];
+    <script>
+        const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE'; // PASTE YOUR URL HERE
+        const form = document.getElementById('leadForm');
+        const steps = document.querySelectorAll('.step');
+        const progress = document.getElementById('progressBar');
 
-    function nextStep() {
-        document.getElementById('step1').classList.remove('active');
-        document.getElementById('step2').classList.add('active');
-    }
+        function goToStep(stepNum) {
+            steps.forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + stepNum).classList.add('active');
+            
+            // Update Progress Bar
+            const percent = (stepNum / 3) * 100;
+            progress.style.width = percent + '%';
+        }
 
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('loading').style.display = 'block';
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            form.classList.add('hidden');
+            document.getElementById('loadingUI').classList.remove('hidden');
+            
+            // Animation for the "Thinking" feel
+            const logs = [
+                ">> Syncing with Industry Standards...",
+                ">> Mapping Robotics Modules...",
+                ">> Calibrating AI Learning Rate...",
+                ">> Generating Custom PDF Syllabus...",
+                ">> Optimizing Career Path..."
+            ];
+            
+            let i = 0;
+            const logInterval = setInterval(() => {
+                document.getElementById('loadingText').innerText = logs[i].replace('>> ', '');
+                document.getElementById('statusLog2').innerText = logs[i];
+                i++;
+                if(i >= logs.length) clearInterval(logInterval);
+            }, 800);
 
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                alert("Success! Your custom syllabus has been generated. Our team will WhatsApp you the PDF shortly.");
-                window.location.reload(); //
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                alert("Something went wrong. Please check your connection.");
-            });
-    });
-</script>
-
+            // Actual Form Submission
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    setTimeout(() => {
+                        alert("Success! Your custom AI path is ready. Our team will contact you on WhatsApp with your Syllabus.");
+                        window.location.reload();
+                    }, 4000);
+                })
+                .catch(error => {
+                    alert("Error connecting to Skillspot AI. Please try again.");
+                    form.classList.remove('hidden');
+                    document.getElementById('loadingUI').classList.add('hidden');
+                });
+        });
+    </script>
 </body>
 </html>
