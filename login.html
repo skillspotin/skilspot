@@ -5,224 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skillspot.in - Student Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        'primary': '#4F46E5',
-                        'secondary': '#10B981',
-                        'accent': '#F59E0B',
-                        'dark-bg': '#0F172A',
-                        'dark-card': '#1E293B',
-                        'light-bg': '#F8FAFC',
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'shine': 'shine 3s ease-in-out infinite',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' }
-                        },
-                        shine: {
-                            '0%': { backgroundPosition: '200% center' },
-                            '100%': { backgroundPosition: '-200% center' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        }
-                    }
+                    colors: { 'primary': '#4F46E5', 'secondary': '#10B981', 'dark-bg': '#0F172A' },
+                    animation: { 'slide-up': 'slideUp 0.4s ease-out' },
+                    keyframes: { slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } } }
                 }
             }
         }
     </script>
     <style>
-        .hidden { display: none; }
-        .page-active { display: flex !important; }
-        .section-active { display: block !important; }
+        body { font-family: 'Inter', sans-serif; height: 100vh; margin: 0; background-color: #F8FAFC; overflow: hidden; }
+        
+        /* STRICT HIDING LOGIC */
+        .hidden { display: none !important; }
+        #main-app { display: none; height: 100vh; width: 100%; } /* Hidden by default */
+        
         .grid-pattern {
             background-image: linear-gradient(to right, rgba(79, 70, 229, 0.05) 1px, transparent 1px),
                               linear-gradient(to bottom, rgba(79, 70, 229, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-size: 40px 40px;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #4F46E5, #8B5CF6);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); }
-        
-        /* Loader from your main site */
-        .loader {
-            width: 24px; height: 24px;
-            border: 3px solid #FFF; border-bottom-color: transparent;
-            border-radius: 50%; display: inline-block;
-            animation: rotation 1s linear infinite;
-        }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader { border: 2px solid #f3f3f3; border-top: 2px solid #4F46E5; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="bg-light-bg font-sans antialiased text-slate-900 overflow-x-hidden">
+<body>
 
-    <div id="auth-container" class="min-h-screen items-center justify-center p-4 relative page-active">
-        <div class="absolute inset-0 grid-pattern"></div>
-        
-        <div class="animate-float absolute top-20 left-10 text-4xl text-primary/10"><i class="fas fa-code"></i></div>
-        <div class="animate-float absolute bottom-20 right-10 text-5xl text-secondary/10" style="animation-delay: 1s;"><i class="fas fa-robot"></i></div>
-
-        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md relative z-10 border border-white animate-slide-up">
-            <div class="flex flex-col items-center mb-10">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg mb-4">
-                    <i class="fas fa-bolt text-white text-3xl"></i>
+    <div id="auth-page" class="fixed inset-0 grid-pattern flex items-center justify-center z-50 px-4">
+        <div class="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-white animate-slide-up">
+            <div class="flex flex-col items-center mb-10 text-center">
+                <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center shadow-lg mb-4 text-white">
+                    <i class="fas fa-bolt text-3xl"></i>
                 </div>
-                <h2 id="auth-title" class="text-3xl font-black text-slate-800 tracking-tight">Student Login</h2>
-                <p id="auth-subtitle" class="text-slate-500 mt-2 text-sm">Enter your tech journey today</p>
+                <h2 id="auth-title" class="text-3xl font-extrabold tracking-tight">Skillspot Login</h2>
+                <p id="auth-subtitle" class="text-slate-500 text-sm mt-1">Unlock your tech potential</p>
             </div>
             
-            <div class="space-y-5">
-                <div id="reg-name-wrapper" class="hidden">
-                    <label class="text-xs font-bold uppercase text-slate-400 ml-2 mb-1 block">Full Name</label>
-                    <input type="text" id="reg-name" placeholder="John Doe" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary transition-all">
-                </div>
-
-                <div>
-                    <label class="text-xs font-bold uppercase text-slate-400 ml-2 mb-1 block">Email Address</label>
-                    <input type="email" id="auth-email" placeholder="name@email.com" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary transition-all">
-                </div>
-
-                <div>
-                    <label class="text-xs font-bold uppercase text-slate-400 ml-2 mb-1 block">Password</label>
-                    <input type="password" id="auth-pass" placeholder="••••••••" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary transition-all">
-                </div>
+            <div class="space-y-4">
+                <input type="text" id="reg-name" placeholder="Full Name" class="hidden w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary transition-all">
+                <input type="email" id="auth-email" placeholder="Email Address" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary transition-all">
                 
-                <button id="main-btn" onclick="handleAuth()" class="btn-primary w-full text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3">
-                    <span id="btn-text">Login to Dashboard</span>
+                <div class="relative">
+                    <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary transition-all">
+                    <button onclick="togglePass()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary">
+                        <i id="eye" class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <button onclick="handleForgot()" class="text-xs font-bold text-primary block text-right hover:underline">Forgot Password?</button>
+                
+                <button id="main-btn" onclick="handleAuth()" class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-5 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 transition-all active:scale-95">
+                    <span id="btn-text">Sign In</span>
                     <div id="btn-loader" class="loader hidden"></div>
                 </button>
                 
                 <p class="text-center text-sm text-slate-500 mt-6">
-                    <span id="toggle-text">Not enrolled yet?</span> 
-                    <button onclick="toggleAuthMode()" id="toggle-btn" class="text-primary font-black hover:underline ml-1">Create Account</button>
+                    <span id="toggle-text">New to Skillspot?</span> 
+                    <button onclick="toggleAuth()" id="toggle-btn" class="text-primary font-black hover:underline ml-1">Create Account</button>
                 </p>
             </div>
         </div>
     </div>
 
-    <div id="main-app" class="hidden h-screen w-full overflow-hidden">
-        <aside class="w-80 bg-dark-bg text-white flex flex-col shrink-0 p-8">
-            <div class="flex items-center gap-3 mb-12">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                    <i class="fas fa-bolt text-white"></i>
-                </div>
-                <h1 class="text-xl font-bold tracking-tight">Skillspot<span class="text-secondary">.in</span></h1>
+    <div id="main-app" class="flex overflow-hidden">
+        <aside class="w-64 lg:w-72 bg-dark-bg text-white flex flex-col shrink-0">
+            <div class="p-8 border-b border-white/5 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center"><i class="fas fa-bolt text-white"></i></div>
+                <h1 class="font-bold text-xl tracking-tight">Skillspot<span class="text-secondary">.in</span></h1>
             </div>
             
-            <nav class="flex-1 space-y-2">
-                <button onclick="navTo('dash')" class="w-full text-left p-4 rounded-2xl hover:bg-slate-800 transition flex items-center gap-4 group">
-                    <i class="fas fa-home text-slate-500 group-hover:text-primary"></i>
-                    <span class="font-semibold">Dashboard</span>
+            <nav class="flex-1 p-6 space-y-3">
+                <button onclick="navTo('lessons')" id="btn-nav-lessons" class="w-full flex items-center gap-4 p-4 rounded-2xl bg-primary shadow-lg transition">
+                    <div class="w-6 text-center"><i class="fas fa-play-circle"></i></div>
+                    <span class="font-semibold text-sm">Course Content</span>
                 </button>
-                <button id="nav-course" onclick="navTo('lessons')" class="w-full text-left p-4 rounded-2xl hover:bg-slate-800 transition flex items-center gap-4 group">
-                    <i class="fas fa-play-circle text-slate-500 group-hover:text-secondary"></i>
-                    <span class="font-semibold">My Courses</span>
+                <button onclick="navTo('dash')" id="btn-nav-dash" class="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 opacity-60 transition">
+                    <div class="w-6 text-center"><i class="fas fa-th-large"></i></div>
+                    <span class="font-semibold text-sm">Dashboard</span>
                 </button>
-                <button id="nav-admin" onclick="navTo('admin')" class="hidden w-full text-left p-4 rounded-2xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition flex items-center gap-4 mt-6 border border-amber-500/20">
-                    <i class="fas fa-shield-halved"></i>
-                    <span class="font-bold">Admin Control</span>
+                <button id="nav-admin" onclick="navTo('admin')" class="hidden w-full flex items-center gap-4 p-4 rounded-2xl text-amber-400 border border-amber-400/20 mt-6 transition">
+                    <div class="w-6 text-center"><i class="fas fa-shield-halved"></i></div>
+                    <span class="font-bold text-sm">Admin Console</span>
                 </button>
             </nav>
 
-            <div class="mt-auto p-6 bg-slate-800/40 rounded-3xl border border-white/5">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center font-black text-lg" id="avatar-init">S</div>
-                    <div class="overflow-hidden">
-                        <p id="user-display-name" class="text-sm font-bold truncate">User Name</p>
-                        <p id="user-role-tag" class="text-[10px] uppercase text-slate-500 font-black tracking-widest">Student</p>
-                    </div>
-                </div>
-                <button onclick="logout()" class="w-full py-3 text-red-400 text-xs font-bold uppercase tracking-widest hover:text-red-300 transition">
-                    <i class="fas fa-power-off mr-2"></i>Logout
+            <div class="p-6 border-t border-white/5">
+                <button onclick="logout()" class="w-full flex items-center gap-4 text-red-400 font-bold hover:bg-red-500/10 p-4 rounded-2xl transition">
+                    <div class="w-6 text-center"><i class="fas fa-power-off"></i></div>
+                    <span class="text-sm">Logout</span>
                 </button>
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto bg-slate-50 relative">
-            <div class="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 rounded-full blur-[120px] -z-10"></div>
-            
-            <div id="view-dash" class="view section-active p-12 animate-slide-up">
-                <header class="mb-12">
-                    <h2 class="text-4xl font-black text-slate-800 tracking-tight">Welcome to Skillspot!</h2>
-                    <p class="text-slate-500 text-lg mt-1">Ready to unlock your potential today?</p>
-                </header>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl transition-shadow">
-                        <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-2xl mb-6 text-green-600">🚀</div>
-                        <h3 class="text-slate-400 text-xs font-black uppercase tracking-[0.2em]">Current Progress</h3>
-                        <p class="text-3xl font-black mt-2 text-slate-800">12%</p>
-                        <div class="w-full bg-slate-100 h-2 rounded-full mt-4 overflow-hidden">
-                            <div class="bg-green-500 h-full w-[12%]"></div>
+        <main class="flex-1 flex flex-col bg-white overflow-hidden">
+            <header class="bg-white border-b p-6 flex justify-between items-center z-20">
+                <h2 class="text-xl font-black text-dark-bg" id="header-title">My Learning</h2>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-sm font-bold" id="user-name">User</p>
+                        <p class="text-[10px] uppercase text-slate-400 font-black tracking-widest">Premium Student</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold" id="avatar">?</div>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto">
+                <div id="view-lessons" class="view h-full flex flex-col lg:flex-row">
+                    <div class="flex-1 bg-slate-900 flex flex-col overflow-y-auto">
+                        <div class="aspect-video w-full bg-black flex items-center justify-center text-white relative group">
+                            <i class="fas fa-play-circle text-8xl opacity-20 group-hover:opacity-40 transition-opacity cursor-pointer"></i>
+                            <div class="absolute bottom-8 left-8">
+                                <span class="bg-primary px-3 py-1 rounded-md text-[10px] font-bold mb-2 inline-block">MODULE 1</span>
+                                <h3 class="text-2xl font-bold">Introduction to Skillspot</h3>
+                            </div>
+                        </div>
+                        <div class="p-10 bg-white shadow-sm"><h3 class="text-2xl font-bold mb-4">Lecture Overview</h3><p class="text-slate-600">Learning content starting...</p></div>
+                    </div>
+                    <div class="w-full lg:w-96 border-l bg-slate-50 flex flex-col p-4 space-y-3">
+                        <div class="p-4 font-black text-[10px] uppercase tracking-widest text-slate-400 border-b mb-2">Curriculum</div>
+                        <div class="p-4 bg-white rounded-xl border border-primary/30 flex gap-4 items-center shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">1</div>
+                            <div class="flex-1 font-bold text-sm">Welcome</div>
+                            <i class="fas fa-check-circle text-primary"></i>
                         </div>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl transition-shadow">
-                        <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center text-2xl mb-6 text-indigo-600">📚</div>
-                        <h3 class="text-slate-400 text-xs font-black uppercase tracking-[0.2em]">Enrolled Courses</h3>
-                        <p class="text-3xl font-black mt-2 text-slate-800">1</p>
-                    </div>
                 </div>
-            </div>
 
-            <div id="view-lessons" class="view hidden p-12 animate-slide-up">
-                <div class="max-w-5xl mx-auto">
-                    <div class="flex justify-between items-end mb-8">
-                        <div>
-                            <span class="text-primary font-bold uppercase text-xs tracking-widest mb-2 block">Learning Module</span>
-                            <h2 class="text-4xl font-black text-slate-800 tracking-tight">MERN Stack Basics</h2>
-                        </div>
-                    </div>
-                    <div class="aspect-video bg-slate-900 rounded-[3rem] shadow-2xl flex items-center justify-center text-white overflow-hidden relative group">
-                        <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i class="fas fa-play-circle text-7xl opacity-50"></i>
-                    </div>
-                    <div class="mt-12 bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                        <h3 class="font-bold text-2xl mb-4 text-slate-800">Syllabus Overview</h3>
-                        <p class="text-slate-500 leading-relaxed text-lg italic">The video content is currently being updated for the latest version. Check back soon for the full lecture series.</p>
+                <div id="view-dash" class="view hidden p-12 animate-slide-up">
+                    <h2 class="text-3xl font-black mb-8 text-dark-bg">Student Progress</h2>
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 max-w-sm">
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Course Completed</p>
+                        <p class="text-4xl font-black text-primary">14%</p>
                     </div>
                 </div>
-            </div>
 
-            <div id="view-admin" class="view hidden p-12 animate-slide-up">
-                <div class="flex justify-between items-center mb-10">
-                    <div>
-                        <h2 class="text-4xl font-black text-slate-800 tracking-tight">Database</h2>
-                        <p class="text-slate-500">Manage all registered tech potential</p>
+                <div id="view-admin" class="view hidden p-12 animate-slide-up">
+                    <h2 class="text-2xl font-bold mb-8">Admin Control</h2>
+                    <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b text-[10px] font-bold uppercase text-slate-400 tracking-widest">
+                                <tr><th class="p-8">Student</th><th class="p-8 text-center">Status</th></tr>
+                            </thead>
+                            <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
+                        </table>
                     </div>
-                    <div class="flex gap-4">
-                        <input type="text" id="admin-search" onkeyup="filterUsers()" placeholder="Search..." class="px-6 py-3 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary shadow-sm">
-                        <button onclick="fetchAdminUsers()" class="bg-indigo-600 text-white p-4 rounded-2xl hover:bg-indigo-700 shadow-lg shadow-indigo-200">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">
-                            <tr>
-                                <th class="p-8 text-center">Initial</th>
-                                <th class="p-8">Student Detail</th>
-                                <th class="p-8">Access Level</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
-                    </table>
                 </div>
             </div>
         </main>
@@ -230,99 +162,85 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyndzHLKPDa-L5Bg8k12l4RCIaHt1ejVIsB8w8QHrmCvsgNd5A7knHYwXFzZjnjNRU4/exec";
-        let isSignupMode = false;
-        let cachedUsers = [];
+        let isReg = false;
 
-        window.onload = () => {
-            const savedUser = localStorage.getItem('cp_user');
-            if(savedUser) loginToUI(JSON.parse(savedUser));
+        window.onload = () => { 
+            const u = localStorage.getItem('cp_user'); 
+            if(u) enter(JSON.parse(u)); 
         };
 
-        function toggleAuthMode() {
-            isSignupMode = !isSignupMode;
-            document.getElementById('auth-title').innerText = isSignupMode ? 'Create Account' : 'Student Login';
-            document.getElementById('auth-subtitle').innerText = isSignupMode ? 'Join the Skillspot family' : 'Enter your tech journey today';
-            document.getElementById('btn-text').innerText = isSignupMode ? 'Enroll Now' : 'Login to Dashboard';
-            document.getElementById('reg-name-wrapper').classList.toggle('hidden', !isSignupMode);
-            document.getElementById('toggle-text').innerText = isSignupMode ? 'Already a member?' : 'Not enrolled yet?';
-            document.getElementById('toggle-btn').innerText = isSignupMode ? 'Login' : 'Create Account';
+        function toggleAuth() {
+            isReg = !isReg;
+            document.getElementById('auth-title').innerText = isReg ? 'Create Account' : 'Skillspot Login';
+            document.getElementById('btn-text').innerText = isReg ? 'Enroll Now' : 'Sign In';
+            document.getElementById('reg-name').classList.toggle('hidden', !isReg);
+            document.getElementById('toggle-btn').innerText = isReg ? 'Login' : 'Create Account';
+        }
+
+        function togglePass() {
+            const p = document.getElementById('auth-pass'), e = document.getElementById('eye');
+            if(p.type === 'password') { p.type = 'text'; e.classList.replace('fa-eye', 'fa-eye-slash'); } 
+            else { p.type = 'password'; e.classList.replace('fa-eye-slash', 'fa-eye'); }
+        }
+
+        function handleForgot() {
+            const e = document.getElementById('auth-email').value;
+            if(!e) return alert("Enter email address");
+            window.open(`https://wa.me/919074854599?text=Reset%20Email:%20${e}`, '_blank');
         }
 
         async function handleAuth() {
-            const action = isSignupMode ? 'signup' : 'login';
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-pass').value;
+            const email = document.getElementById('auth-email').value, pass = document.getElementById('auth-pass').value, name = document.getElementById('reg-name').value;
+            if(!email || !pass) return alert("Missing fields");
 
-            if (!email || !pass) return alert("Required fields missing");
-
-            toggleLoading(true);
-            const url = `${SCRIPT_URL}?action=${action}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`;
-
+            document.getElementById('btn-loader').classList.remove('hidden');
             try {
-                const res = await fetch(url);
+                const res = await fetch(`${SCRIPT_URL}?action=${isReg?'signup':'login'}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}&name=${encodeURIComponent(name)}`);
                 const data = await res.json();
                 if (data.status === 'success') {
-                    if (isSignupMode) {
-                        alert("Enrollment Successful! Log in to start.");
-                        toggleAuthMode();
-                    } else {
-                        localStorage.setItem('cp_user', JSON.stringify(data));
-                        loginToUI(data);
-                    }
-                } else { alert(data.message || "Credential Error"); }
-            } catch (err) { alert("Server Connection Error"); }
-            finally { toggleLoading(false); }
+                    if (isReg) { alert("Registration Done! Login now."); toggleAuth(); } 
+                    else { localStorage.setItem('cp_user', JSON.stringify(data)); enter(data); }
+                } else alert(data.message);
+            } catch (e) { alert("Network error"); }
+            finally { document.getElementById('btn-loader').classList.add('hidden'); }
         }
 
-        function loginToUI(user) {
-            document.getElementById('auth-container').classList.remove('page-active');
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('main-app').classList.add('page-active');
-            document.getElementById('user-display-name').innerText = user.name;
-            document.getElementById('avatar-init').innerText = user.name.charAt(0).toUpperCase();
-            document.getElementById('user-role-tag').innerText = user.role;
-            if (user.role.toLowerCase() === 'admin') document.getElementById('nav-admin').classList.remove('hidden');
+        function enter(user) {
+            // STEP 1: Fully hide the centered Login Page
+            document.getElementById('auth-page').style.display = 'none';
+            // STEP 2: Make the Dashboard visible
+            const app = document.getElementById('main-app');
+            app.style.display = 'flex';
+            
+            document.getElementById('user-name').innerText = user.name;
+            document.getElementById('avatar').innerText = user.name[0].toUpperCase();
+            if(user.role.toLowerCase() === 'admin') document.getElementById('nav-admin').classList.remove('hidden');
+            navTo('lessons'); 
         }
 
         function logout() { localStorage.removeItem('cp_user'); location.reload(); }
+        
+        function navTo(id) { 
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden')); 
+            document.getElementById('view-'+id).classList.remove('hidden');
+            
+            document.getElementById('btn-nav-lessons').className = (id === 'lessons') 
+                ? "w-full flex items-center gap-4 p-4 rounded-2xl bg-primary shadow-lg transition" 
+                : "w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 opacity-60 transition";
+            
+            document.getElementById('btn-nav-dash').className = (id === 'dash') 
+                ? "w-full flex items-center gap-4 p-4 rounded-2xl bg-primary shadow-lg transition" 
+                : "w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 opacity-60 transition";
 
-        function toggleLoading(isLoading) {
-            document.getElementById('btn-text').classList.toggle('hidden', isLoading);
-            document.getElementById('btn-loader').classList.toggle('hidden', !isLoading);
-            document.getElementById('main-btn').disabled = isLoading;
+            if(id==='admin') fetchUsers(); 
         }
 
-        function navTo(view) {
-            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-            document.getElementById('view-' + view).classList.add('section-active');
-            if (view === 'admin') fetchAdminUsers();
-        }
-
-        async function fetchAdminUsers() {
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = '<tr><td colspan="3" class="p-20 text-center"><div class="loader !border-primary"></div></td></tr>';
-            try {
-                const res = await fetch(SCRIPT_URL);
-                cachedUsers = await res.json();
-                renderUsers(cachedUsers);
-            } catch (err) { tbody.innerHTML = '<tr><td colspan="3" class="p-10 text-center">Error Loading List</td></tr>'; }
-        }
-
-        function renderUsers(users) {
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = users.map(u => `
-                <tr class="hover:bg-slate-50 transition border-b border-slate-50 last:border-0">
-                    <td class="p-8 text-center"><div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400 mx-auto">${u.name.charAt(0).toUpperCase()}</div></td>
-                    <td class="p-8"><div class="font-bold text-slate-800">${u.name}</div><div class="text-xs text-slate-400">${u.email}</div></td>
-                    <td class="p-8"><span class="px-4 py-2 ${u.role === 'admin' ? 'bg-amber-100 text-amber-600' : 'bg-indigo-100 text-indigo-600'} rounded-xl text-[10px] font-black uppercase tracking-tighter">${u.role}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        function filterUsers() {
-            const term = document.getElementById('admin-search').value.toLowerCase();
-            renderUsers(cachedUsers.filter(u => u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)));
+        async function fetchUsers() {
+            const res = await fetch(SCRIPT_URL);
+            const list = await res.json();
+            document.getElementById('admin-table-body').innerHTML = list.map(u => `
+                <tr><td class="p-8 font-bold">${u.name}<br><span class="text-xs text-slate-400 font-normal">${u.email}</span></td>
+                <td class="p-8 text-center text-primary font-black uppercase text-xs">${u.role}</td></tr>`).join('');
         }
     </script>
 </body>
