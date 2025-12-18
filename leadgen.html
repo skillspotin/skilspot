@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillsPT | AI-Powered Skill Assessment</title>
+    <style>
+        :root { --primary: #00f2ff; --bg: #050505; --card: #111; }
+        body { background: var(--bg); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        
+        .lead-card { background: var(--card); border: 1px solid #333; padding: 40px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 10px 50px rgba(0,0,0,0.5); }
+        .badge { background: rgba(0,242,255,0.1); color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        
+        h2 { font-size: 28px; margin: 15px 0; }
+        .step { display: none; }
+        .step.active { display: block; animation: slideIn 0.4s ease; }
+        
+        input, select { width: 100%; padding: 15px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 12px; font-size: 16px; }
+        input:focus { border-color: var(--primary); outline: none; }
+        
+        .btn-main { width: 100%; padding: 18px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,242,255,0.4); }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    </style>
+</head>
+<body>
+
+<div class="lead-card">
+    <span class="badge">AI Skill Analyzer v2.0</span>
+    
+    <form name="submit-to-google-sheet" id="leadForm">
+        <div class="step active" id="step1">
+            <h2>What is your AI Goal?</h2>
+            <p>Tell us what you want to achieve to build your path.</p>
+            <select name="Interest" required>
+                <option value="Robotics">Master Robotics & Hardware</option>
+                <option value="AI Web Dev">AI-Based Web Development</option>
+                <option value="ChatGPT">ChatGPT & Prompt Engineering</option>
+            </select>
+            <select name="Role" required>
+                <option value="Student">I am a Student</option>
+                <option value="Teacher">I am a Teacher/Educator</option>
+                <option value="Professional">I am a Professional</option>
+            </select>
+            <button type="button" class="btn-main" onclick="nextStep()">Continue to Analysis →</button>
+        </div>
+
+        <div class="step" id="step2">
+            <h2>Secure Your Result</h2>
+            <p>Where should we send your custom Robotics & AI learning syllabus?</p>
+            <input type="text" name="Name" placeholder="Your Full Name" required>
+            <input type="email" name="Email" placeholder="Your Best Email" required>
+            <input type="tel" name="Phone" placeholder="WhatsApp Number (For Support)" required>
+            <button type="submit" class="btn-main" id="submitBtn">Get My AI Syllabus Now</button>
+        </div>
+    </form>
+    <div id="loading" style="display:none; text-align: center; margin-top: 20px;">
+        <p style="color: var(--primary);">🤖 AI is calculating your curriculum...</p>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5bGEDl8S8HGigMgngwMTDJQcc9wQdJO700aW_jdFkidnWhX0vCxqnCGxkwB9GX-Fu/exec';
+    const form = document.forms['submit-to-google-sheet'];
+
+    function nextStep() {
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+    }
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                alert("Success! Your custom syllabus has been generated. Our team will WhatsApp you the PDF shortly.");
+                window.location.reload(); //
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert("Something went wrong. Please check your connection.");
+            });
+    });
+</script>
+
+</body>
+</html>
