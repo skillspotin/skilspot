@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skillspot.in - AI Skill Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4F46E5', 
+                        'secondary': '#10B981', 
+                        'accent': '#F59E0B',
+                        'accent-2': '#EC4899', 
+                        'accent-3': '#8B5CF6', 
+                        'dark-bg': '#0F172A',
+                        'dark-card': '#1E293B', 
+                        'light-bg': '#F8FAFC', 
+                        'text-primary': '#1E293B',
+                        'whatsapp': '#25D366', 
+                        'instagram': '#E4405F', 
+                        'linkedin': '#0A66C2',
+                        'youtube': '#FF0000', 
+                        'twitter': '#1DA1F2', 
+                        'highlight': '#FF6B35'
+                    },
+                    animation: { 
+                        'float': 'float 6s ease-in-out infinite', 
+                        'pulse-slow': 'pulse 3s ease-in-out infinite', 
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'shine': 'shine 3s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.3s ease-out'
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(-10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px rgba(255, 107, 53, 0.5)' },
+                            '100%': { boxShadow: '0 0 30px rgba(255, 107, 53, 0.8), 0 0 40px rgba(255, 107, 53, 0.4)' }
+                        },
+                        shine: {
+                            '0%': { backgroundPosition: '200% center' },
+                            '100%': { backgroundPosition: '-200% center' }
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                        'card-hover': '0 20px 40px -10px rgba(0, 0, 0, 0.2)',
+                        'glow': '0 0 20px rgba(79, 70, 229, 0.3)',
+                        'glow-green': '0 0 20px rgba(16, 185, 129, 0.3)',
+                        'dropdown': '0 20px 60px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
+        body.dark { background-color: #0F172A; color: #F1F5F9; }
+        html { scroll-behavior: smooth; }
+        
+        .grid-pattern {
+            background-image: linear-gradient(to right, rgba(79, 70, 229, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(79, 70, 229, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .dark .grid-pattern {
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+        
+        .step { display: none; }
+        .step.active { display: block; animation: slideUp 0.4s ease-out; }
+        .interest-chip input:checked + div { 
+            background: linear-gradient(135deg, #4F46E5, #8B5CF6);
+            color: white; 
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .loader-ring { 
+            border: 4px solid #f3f3f3; 
+            border-top: 4px solid #4F46E5; 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        .mobile-menu {
+            transition: max-height 0.5s ease-in-out;
+        }
+        
+        /* Custom Dropdown Styles */
+        .custom-select-container {
+            position: relative;
+        }
+        
+        .custom-select {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .custom-select-selected {
+            padding: 1rem;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        
+        .dark .custom-select-selected {
+            background: #1E293B;
+            border-color: #334155;
+        }
+        
+        .custom-select-selected:hover {
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .custom-select-selected.active {
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        
+        .custom-select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #E2E8F0;
+            border-top: none;
+            border-radius: 0 0 1rem 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .custom-select-options {
+            background: #1E293B;
+            border-color: #334155;
+        }
+        
+        .custom-select-options.show {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .custom-select-option {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        
+        .dark .custom-select-option {
+            border-bottom-color: #334155;
+        }
+        
+        .custom-select-option:last-child {
+            border-bottom: none;
+        }
+        
+        .custom-select-option:hover {
+            background: #F8FAFC;
+        }
+        
+        .dark .custom-select-option:hover {
+            background: #334155;
+        }
+        
+        .custom-select-option.selected {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(139, 92, 246, 0.1));
+            color: #4F46E5;
+        }
+        
+        .dark .custom-select-option.selected {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(139, 92, 246, 0.2));
+            color: #8B5CF6;
+        }
+        
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .option-content {
+            flex: 1;
+        }
+        
+        .option-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .option-description {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        
+        .option-check {
+            color: #10B981;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .custom-select-option.selected .option-check {
+            opacity: 1;
+        }
+        
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+        
+        .custom-select.active .arrow {
+            transform: rotate(180deg);
+        }
+        
+        /* Enhanced Input Styles */
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748B;
+        }
+        
+        .dark .input-icon {
+            color: #94A3B8;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding-left: 3rem;
+            padding-right: 1rem;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .dark .input-field {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+        
+        .input-field:focus {
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .input-field::placeholder {
+            color: #94A3B8;
+        }
+        
+        .dark .input-field::placeholder {
+            color: #64748B;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4F46E5, #8B5CF6);
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-highlight {
+            background: linear-gradient(135deg, #FF6B35, #FF8E53);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .btn-highlight:hover {
+            background: linear-gradient(135deg, #FF5722, #FF6B35);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            border: 2px solid #4F46E5;
+            color: #4F46E5;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline:hover {
+            background-color: #4F46E5;
+            color: white;
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element-2 {
+            animation: float 8s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        
+        .floating-element-3 {
+            animation: float 7s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-highlight {
+            background: linear-gradient(90deg, #FF6B35, #FF8E53);
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Custom scrollbar for dropdown */
+        .custom-select-options::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-select-options::-webkit-scrollbar-track {
+            background: #F1F5F9;
+            border-radius: 3px;
+        }
+        
+        .dark .custom-select-options::-webkit-scrollbar-track {
+            background: #334155;
+        }
+        
+        .custom-select-options::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        
+        .dark .custom-select-options::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        
+        .custom-select-options::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+        
+        .dark .custom-select-options::-webkit-scrollbar-thumb:hover {
+            background: #64748B;
+        }
+    </style>
+</head>
+<body class="bg-light-bg text-text-primary dark:bg-dark-bg dark:text-white">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent-3 flex items-center justify-center">
+                        <i class="fas fa-bolt text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-primary dark:text-white">Skillspot<span class="text-secondary">.in</span></div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 -mt-1">Unlock Your Potential</div>
+                    </div>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html#home" class="nav-link font-medium hover:text-primary transition-colors">Home</a>
+                    <a href="index.html#courses" class="nav-link font-medium hover:text-primary transition-colors">Courses</a>
+                    <a href="index.html#why-us" class="nav-link font-medium hover:text-primary transition-colors">Why Us</a>
+                    <a href="index.html#testimonials" class="nav-link font-medium hover:text-primary transition-colors">Success Stories</a>
+                    <a href="index.html#faq" class="nav-link font-medium hover:text-primary transition-colors">FAQ</a>
+                    <a href="index.html#contact" class="nav-link font-medium hover:text-primary transition-colors">Contact</a>
+                </nav>
+                
+                <!-- Right Side Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <i id="sun-icon" class="fas fa-sun text-yellow-500 hidden"></i>
+                        <i id="moon-icon" class="fas fa-moon text-gray-700 dark:text-gray-300"></i>
+                    </button>
+                    
+                    <!-- Login Button (Desktop) -->
+                    <a href="https://skillspot.in/login.html" class="hidden md:inline-block btn-outline px-6 py-2 rounded-lg font-medium transition-all">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+                    
+                    <!-- All Courses Button -->
+                    <a href="index.html#courses" class="hidden md:inline-block btn-primary px-6 py-2 rounded-lg font-medium">
+                        <i class="fas fa-graduation-cap mr-2"></i>All Courses
+                    </a>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu md:hidden max-h-0 overflow-hidden">
+                <div class="py-4 border-t border-gray-200 dark:border-gray-800">
+                    <a href="index.html#home" class="block py-3 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">Home</a>
+                    <a href="index.html#courses" class="block py-3 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">Courses</a>
+                    <a href="index.html#why-us" class="block py-3 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">Why Us</a>
+                    <a href="index.html#testimonials" class="block py-3 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">Success Stories</a>
+                    <a href="index.html#faq" class="block py-3 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">FAQ</a>
+                    <a href="index.html#contact" class="block py-3 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">Contact</a>
+                    <div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
+                        <a href="https://skillspot.in/login.html" class="btn-primary block text-center py-3 rounded-lg font-medium">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login / Sign Up
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section id="home" class="relative overflow-hidden min-h-[85vh] flex flex-col items-center justify-center py-16 px-4">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 grid-pattern"></div>
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <!-- Floating Elements -->
+        <div class="floating-element absolute top-1/4 left-10 text-4xl text-primary/20">
+            <i class="fas fa-code"></i>
+        </div>
+        <div class="floating-element-2 absolute top-1/3 right-20 text-5xl text-secondary/20">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="floating-element-3 absolute bottom-1/4 left-1/4 text-6xl text-accent/20">
+            <i class="fas fa-laptop-code"></i>
+        </div>
+        
+        <!-- Badges -->
+        <!-- <div class="relative z-20 mb-8">
+            <div class="flex flex-wrap justify-center gap-3">
+                <span class="badge badge-highlight">
+                    <i class="fas fa-fire mr-1"></i> AI-Powered
+                </span>
+                <span class="badge" style="background: linear-gradient(90deg, #4F46E5, #8B5CF6); color: white;">
+                    <i class="fas fa-brain mr-1"></i> Smart Analysis
+                </span>
+                <span class="badge" style="background: linear-gradient(90deg, #10B981, #34D399); color: white;">
+                    <i class="fas fa-bolt mr-1"></i> Instant Results
+                </span>
+            </div>
+        </div> -->
+        
+        <!-- Main Form Container -->
+        <div class="relative z-10 w-full max-w-lg px-4">
+            <div class="bg-white dark:bg-dark-card p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-gray-800 relative overflow-hidden">
+                <!-- Progress Bar -->
+                <div class="absolute top-0 left-0 w-full h-2 bg-slate-100 dark:bg-gray-800">
+                    <div id="progressBar" class="h-full bg-gradient-to-r from-primary to-accent-3 transition-all duration-500" style="width: 33%"></div>
+                </div>
+
+                <!-- Header Section -->
+                <div class="flex flex-col items-center mb-8 text-center">
+                    <!-- <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent-3 flex items-center justify-center shadow-lg mb-4 text-white animate-pulse">
+                        <i class="fas fa-robot text-3xl"></i>
+                    </div> -->
+                    <!-- <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full">AI Skill Analyzer v2.0</span> -->
+                    <h1 class="text-2xl font-bold text-slate-800 dark:text-white mt-4">Get Your Personalized AI Learning Path</h1>
+                    <p class="text-slate-500 dark:text-gray-400 text-sm mt-2">Answer 3 simple questions to get a custom syllabus</p>
+                </div>
+
+                <!-- Form -->
+                <form id="leadForm" name="submit-to-google-sheet">
+                    <!-- Step 1: AI Goal -->
+                    <div class="step active" id="step1">
+                        
+                        
+                        <div class="space-y-6">
+                            <!-- Primary Interest Dropdown -->
+                            <div class="custom-select-container">
+                                <label class="text-xs font-bold uppercase text-slate-500 dark:text-gray-400 mb-2 block">Primary Interest</label>
+                                <div class="custom-select" id="interestSelect">
+                                    <div class="custom-select-selected" id="interestSelected">
+                                        <div class="flex items-center">
+                                            <div class="option-icon bg-gradient-to-br from-blue-500 to-purple-500">
+                                                <i class="fas fa-laptop-code text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">AI-Based Web Development</div>
+                                                <div class="option-description">Build intelligent web applications</div>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-chevron-down arrow text-slate-400"></i>
+                                    </div>
+                                    <div class="custom-select-options" id="interestOptions">
+                                        <div class="custom-select-option" data-value="AI Web Dev">
+                                            <div class="option-icon bg-gradient-to-br from-blue-500 to-purple-500">
+                                                <i class="fas fa-laptop-code text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">AI-Based Web Development</div>
+                                                <div class="option-description">Build intelligent web applications</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="Robotics">
+                                            <div class="option-icon bg-gradient-to-br from-red-500 to-pink-500">
+                                                <i class="fas fa-robot text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">Master Robotics & Hardware</div>
+                                                <div class="option-description">Build and program physical robots</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="ChatGPT">
+                                            <div class="option-icon bg-gradient-to-br from-green-500 to-emerald-500">
+                                                <i class="fas fa-comments text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">ChatGPT & Prompt Engineering</div>
+                                                <div class="option-description">Master AI conversation & prompts</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="Data Science">
+                                            <div class="option-icon bg-gradient-to-br from-orange-500 to-yellow-500">
+                                                <i class="fas fa-chart-bar text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">Data Science & ML</div>
+                                                <div class="option-description">Analyze data & build ML models</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="Automation">
+                                            <div class="option-icon bg-gradient-to-br from-indigo-500 to-blue-500">
+                                                <i class="fas fa-cogs text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">AI Automation</div>
+                                                <div class="option-description">Automate tasks with AI</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="Interest" value="AI Web Dev">
+                                </div>
+                            </div>
+                            
+                            <!-- Current Status Dropdown -->
+                            <div class="custom-select-container">
+                                <label class="text-xs font-bold uppercase text-slate-500 dark:text-gray-400 mb-2 block">Your Current Status</label>
+                                <div class="custom-select" id="statusSelect">
+                                    <div class="custom-select-selected" id="statusSelected">
+                                        <div class="flex items-center">
+                                            <div class="option-icon bg-gradient-to-br from-purple-500 to-pink-500">
+                                                <i class="fas fa-user-graduate text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">I am a Student</div>
+                                                <div class="option-description">Learning new skills</div>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-chevron-down arrow text-slate-400"></i>
+                                    </div>
+                                    <div class="custom-select-options" id="statusOptions">
+                                        <div class="custom-select-option" data-value="Student">
+                                            <div class="option-icon bg-gradient-to-br from-purple-500 to-pink-500">
+                                                <i class="fas fa-user-graduate text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">I am a Student</div>
+                                                <div class="option-description">Learning new skills</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="Teacher">
+                                            <div class="option-icon bg-gradient-to-br from-blue-500 to-cyan-500">
+                                                <i class="fas fa-chalkboard-teacher text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">I am a Teacher/Educator</div>
+                                                <div class="option-description">Teaching or academic role</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="Professional">
+                                            <div class="option-icon bg-gradient-to-br from-green-500 to-teal-500">
+                                                <i class="fas fa-briefcase text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">I am a Professional</div>
+                                                <div class="option-description">Working professional</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="Beginner">
+                                            <div class="option-icon bg-gradient-to-br from-orange-500 to-red-500">
+                                                <i class="fas fa-seedling text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">Complete Beginner</div>
+                                                <div class="option-description">Starting from scratch</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                        <div class="custom-select-option" data-value="Freelancer">
+                                            <div class="option-icon bg-gradient-to-br from-yellow-500 to-orange-500">
+                                                <i class="fas fa-rocket text-white"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <div class="option-title">Freelancer</div>
+                                                <div class="option-description">Working independently</div>
+                                            </div>
+                                            <i class="fas fa-check option-check"></i>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="Role" value="Student">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" onclick="goToStep(2)" class="btn-primary w-full mt-8 py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 transition-transform active:scale-95">
+                            Next: Personalize Path <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 2: Personalize -->
+                    <div class="step" id="step2">
+                        <h2 class="text-2xl font-extrabold text-slate-800 dark:text-white mb-2">Personalize your result</h2>
+                        <p class="text-slate-500 dark:text-gray-400 text-sm mb-6">Select specific topics you find interesting:</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-8">
+                            <label class="interest-chip cursor-pointer">
+                                <input type="checkbox" name="Topic" value="IoT" class="hidden">
+                                <div class="border-2 border-slate-200 dark:border-gray-700 p-4 rounded-2xl text-center text-sm font-semibold text-slate-600 dark:text-gray-300 transition-all hover:border-primary hover:scale-105">
+                                    <i class="fas fa-wifi mb-2 text-lg"></i>
+                                    <div>IoT</div>
+                                </div>
+                            </label>
+                            <label class="interest-chip cursor-pointer">
+                                <input type="checkbox" name="Topic" value="Automation" class="hidden">
+                                <div class="border-2 border-slate-200 dark:border-gray-700 p-4 rounded-2xl text-center text-sm font-semibold text-slate-600 dark:text-gray-300 transition-all hover:border-primary hover:scale-105">
+                                    <i class="fas fa-robot mb-2 text-lg"></i>
+                                    <div>Automation</div>
+                                </div>
+                            </label>
+                            <label class="interest-chip cursor-pointer">
+                                <input type="checkbox" name="Topic" value="LLM" class="hidden">
+                                <div class="border-2 border-slate-200 dark:border-gray-700 p-4 rounded-2xl text-center text-sm font-semibold text-slate-600 dark:text-gray-300 transition-all hover:border-primary hover:scale-105">
+                                    <i class="fas fa-brain mb-2 text-lg"></i>
+                                    <div>LLM Models</div>
+                                </div>
+                            </label>
+                            <label class="interest-chip cursor-pointer">
+                                <input type="checkbox" name="Topic" value="Freelancing" class="hidden">
+                                <div class="border-2 border-slate-200 dark:border-gray-700 p-4 rounded-2xl text-center text-sm font-semibold text-slate-600 dark:text-gray-300 transition-all hover:border-primary hover:scale-105">
+                                    <i class="fas fa-briefcase mb-2 text-lg"></i>
+                                    <div>Freelancing</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <button type="button" onclick="goToStep(3)" class="btn-primary w-full py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3">
+                            Continue to Secure Result <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                        <button type="button" onclick="goToStep(1)" class="w-full text-slate-500 dark:text-gray-400 text-sm font-medium mt-4 hover:text-primary transition-colors">
+                            <i class="fas fa-arrow-left mr-2"></i>Go Back
+                        </button>
+                    </div>
+
+                    <!-- Step 3: Contact Details -->
+                    <div class="step" id="step3">
+                        <h2 class="text-2xl font-extrabold text-slate-800 dark:text-white mb-2">Almost there!</h2>
+                        <p class="text-slate-500 dark:text-gray-400 text-sm mb-8">Where should we send your custom AI curriculum?</p>
+                        
+                        <div class="space-y-4">
+                            <div class="input-with-icon">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" name="Name" placeholder="Full Name" required 
+                                       class="input-field text-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-gray-500">
+                            </div>
+                            
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" name="Email" placeholder="Email Address" required 
+                                       class="input-field text-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-gray-500">
+                            </div>
+                            
+                            <div class="input-with-icon">
+                                <i class="fab fa-whatsapp input-icon"></i>
+                                <input type="tel" name="Phone" placeholder="WhatsApp Number" required 
+                                       class="input-field text-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-gray-500">
+                            </div>
+                        </div>
+
+                        <div class="mt-8 p-4 bg-slate-50 dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-700">
+                            <div class="flex items-start">
+                                <i class="fas fa-shield-alt text-secondary mt-1 mr-3"></i>
+                                <div>
+                                    <p class="text-sm text-slate-600 dark:text-gray-400">
+                                        Your information is secure. We'll send your personalized syllabus and <span class="font-semibold text-primary">exclusive discount</span> via WhatsApp.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-highlight w-full mt-6 py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 transition-transform active:scale-95 animate-pulse">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                            Generate My AI Syllabus
+                        </button>
+                        <button type="button" onclick="goToStep(2)" class="w-full text-slate-500 dark:text-gray-400 text-sm font-medium mt-4 hover:text-primary transition-colors">
+                            <i class="fas fa-arrow-left mr-2"></i>Go Back
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Loading State -->
+                <div id="loadingUI" class="hidden flex flex-col items-center justify-center py-10 text-center">
+                    <div class="loader-ring mb-6"></div>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2" id="loadingText">Analyzing Data...</h3>
+                    <p class="text-slate-400 text-sm italic">Skillspot AI is tailoring your technical roadmap</p>
+                    
+                    <div class="mt-8 w-full bg-slate-50 dark:bg-gray-900 p-6 rounded-2xl text-sm font-mono text-slate-500 dark:text-gray-400 text-left overflow-hidden">
+                        <div class="flex items-center mb-4">
+                            <div class="w-3 h-3 rounded-full bg-secondary mr-2 animate-pulse"></div>
+                            <div id="statusLog">>> Initializing neural weights...</div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-primary mr-2 animate-pulse" style="animation-delay: 0.2s"></div>
+                            <div id="statusLog2">>> Loading course database...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 w-full">
+                        <div class="flex justify-between text-xs text-slate-500 mb-2">
+                            <span>Processing</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                            <div id="progressLoader" class="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trust Badges -->
+            <div class="mt-8 text-center">
+                <p class="text-sm text-slate-500 dark:text-gray-400 mb-4">Trusted by students from</p>
+                <div class="flex flex-wrap justify-center gap-6 opacity-50">
+                    <div class="flex items-center">
+                        <i class="fas fa-graduation-cap text-xl mr-2"></i>
+                        <span class="text-sm">IITs & NITs</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-building text-xl mr-2"></i>
+                        <span class="text-sm">Tech Companies</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-university text-xl mr-2"></i>
+                        <span class="text-sm">Universities</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Company Info -->
+                <div>
+                    <a href="index.html" class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent-3 flex items-center justify-center">
+                            <i class="fas fa-bolt text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">Skillspot<span class="text-secondary">.in</span></div>
+                            <div class="text-xs text-gray-400 -mt-1">Unlock Your Potential</div>
+                        </div>
+                    </a>
+                    <p class="text-gray-400 mb-6">
+                        Your destination for affordable, high-quality technical education. Empowering learners with industry-relevant skills.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/skillspot.in" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/_skillspot.in/" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-instagram transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/skillspot-in-913735393/" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-linkedin transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@skillspot_in" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-youtube transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="index.html#home" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="index.html#courses" class="text-gray-400 hover:text-white transition-colors">Courses</a></li>
+                        <li><a href="index.html#why-us" class="text-gray-400 hover:text-white transition-colors">Why Choose Us</a></li>
+                        <li><a href="index.html#testimonials" class="text-gray-400 hover:text-white transition-colors">Success Stories</a></li>
+                        <li><a href="index.html#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="index.html#contact" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Popular Courses -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">Popular Courses</h4>
+                    <ul class="space-y-3">
+                        <li><a href="index.html#featured-course" class="text-gray-400 hover:text-white transition-colors">Chat AI & Web Development</a></li>
+                        <li><a href="index.html#courses" class="text-gray-400 hover:text-white transition-colors">Fullstack MERN Development</a></li>
+                        <li><a href="index.html#courses" class="text-gray-400 hover:text-white transition-colors">Python Programming</a></li>
+                        <li><a href="index.html#courses" class="text-gray-400 hover:text-white transition-colors">React Frontend Development</a></li>
+                        <li><a href="index.html#courses" class="text-gray-400 hover:text-white transition-colors">Robotics Fundamentals</a></li>
+                        <li><a href="index.html#courses" class="text-gray-400 hover:text-white transition-colors">C/C++ Programming</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">Stay Updated</h4>
+                    <p class="text-gray-400 mb-4">Subscribe to our newsletter for course updates and tech tips.</p>
+                    <form class="space-y-3">
+                        <input type="email" placeholder="Your email address" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">
+                            Subscribe
+                        </button>
+                    </form>
+                    <div class="mt-6 p-4 bg-gray-800/50 rounded-lg">
+                        <p class="text-sm text-gray-400">
+                            <i class="fas fa-shield-alt text-secondary mr-2"></i>
+                            We respect your privacy. Unsubscribe at any time.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Skillspot.in. All rights reserved. | 
+                    <a href="https://merchant.razorpay.com/policy/Ro0O2zOA29Tno4/terms" class="hover:text-white transition-colors">Terms and Conditions</a> | 
+                    <a href="https://merchant.razorpay.com/policy/Ro0O2zOA29Tno4/privacy" class="hover:text-white transition-colors">Privacy</a> | 
+                    <a href="https://merchant.razorpay.com/policy/Ro0O2zOA29Tno4/refund" class="hover:text-white transition-colors">Cancellation & Refunds</a> | 
+                    <a href="https://merchant.razorpay.com/policy/Ro0O2zOA29Tno4/shipping" class="hover:text-white transition-colors">Shipping</a> |
+                    <a href="https://merchant.razorpay.com/policy/Ro0O2zOA29Tno4/contact_us" class="hover:text-white transition-colors">Contact Us</a>
+                </p>
+                <p class="text-gray-500 text-sm mt-2">
+                    Designed with <i class="fas fa-heart text-red-500 mx-1"></i> for aspiring tech professionals
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Buttons -->
+    <div class="fixed bottom-6 right-6 z-30 flex flex-col space-y-4">
+        <!-- WhatsApp Button -->
+        <a href="https://wa.me/919074854599" target="_blank" class="relative group">
+            <div class="absolute -top-12 right-0 bg-gray-900 text-white text-sm py-2 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                Chat with Us
+            </div>
+            <div class="w-14 h-14 rounded-full bg-whatsapp shadow-lg flex items-center justify-center text-white text-2xl hover:scale-110 transition-transform animate-bounce">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+        </a>
+        
+        <!-- Scroll to Top -->
+        <button id="scroll-top" class="w-14 h-14 rounded-full bg-primary shadow-lg flex items-center justify-center text-white text-2xl hover:scale-110 transition-transform hidden">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'light') {
+            document.body.classList.remove('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        } else {
+            document.body.classList.add('dark');
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            
+            if (document.body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            if (mobileMenu.style.maxHeight) {
+                mobileMenu.style.maxHeight = null;
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            } else {
+                mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-times text-xl"></i>';
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.style.maxHeight = null;
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            });
+        });
+
+        // Custom Dropdown Functionality
+        function initializeCustomSelect(selectId) {
+            const select = document.getElementById(selectId);
+            const selectedDiv = document.getElementById(selectId.replace('Select', 'Selected'));
+            const optionsDiv = document.getElementById(selectId.replace('Select', 'Options'));
+            const hiddenInput = select.querySelector('input[type="hidden"]');
+            
+            // Initialize with first option selected
+            const firstOption = optionsDiv.querySelector('.custom-select-option');
+            if (firstOption && !firstOption.classList.contains('selected')) {
+                firstOption.classList.add('selected');
+                updateSelectedDisplay(firstOption, selectedDiv);
+            }
+            
+            // Toggle dropdown
+            selectedDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isActive = select.classList.contains('active');
+                
+                // Close all other dropdowns
+                document.querySelectorAll('.custom-select').forEach(s => {
+                    if (s.id !== selectId) {
+                        s.classList.remove('active');
+                        s.querySelector('.custom-select-options').classList.remove('show');
+                        s.querySelector('.custom-select-selected').classList.remove('active');
+                    }
+                });
+                
+                // Toggle current dropdown
+                select.classList.toggle('active');
+                selectedDiv.classList.toggle('active');
+                optionsDiv.classList.toggle('show');
+            });
+            
+            // Handle option selection
+            optionsDiv.querySelectorAll('.custom-select-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Remove selected class from all options
+                    optionsDiv.querySelectorAll('.custom-select-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    option.classList.add('selected');
+                    
+                    // Update selected display
+                    updateSelectedDisplay(option, selectedDiv);
+                    
+                    // Update hidden input value
+                    const value = option.getAttribute('data-value');
+                    hiddenInput.value = value;
+                    
+                    // Close dropdown
+                    select.classList.remove('active');
+                    selectedDiv.classList.remove('active');
+                    optionsDiv.classList.remove('show');
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!select.contains(e.target)) {
+                    select.classList.remove('active');
+                    selectedDiv.classList.remove('active');
+                    optionsDiv.classList.remove('show');
+                }
+            });
+        }
+        
+        function updateSelectedDisplay(option, selectedDiv) {
+            const icon = option.querySelector('.option-icon').cloneNode(true);
+            const title = option.querySelector('.option-title').textContent;
+            const description = option.querySelector('.option-description').textContent;
+            
+            // Clear selected div
+            selectedDiv.innerHTML = '';
+            
+            // Create new content
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex items-center';
+            contentDiv.appendChild(icon);
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'option-content';
+            textDiv.innerHTML = `
+                <div class="option-title">${title}</div>
+                <div class="option-description">${description}</div>
+            `;
+            contentDiv.appendChild(textDiv);
+            
+            selectedDiv.appendChild(contentDiv);
+            
+            // Add arrow
+            const arrow = document.createElement('i');
+            arrow.className = 'fas fa-chevron-down arrow text-slate-400';
+            selectedDiv.appendChild(arrow);
+        }
+        
+        // Initialize dropdowns
+        initializeCustomSelect('interestSelect');
+        initializeCustomSelect('statusSelect');
+
+        // Form Step Navigation
+        const steps = document.querySelectorAll('.step');
+        const progress = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressLoader = document.getElementById('progressLoader');
+        
+        function goToStep(stepNum) {
+            steps.forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + stepNum).classList.add('active');
+            
+            // Update progress bar
+            const progressWidth = (stepNum / 3) * 100;
+            progress.style.width = progressWidth + '%';
+            
+            // Update loading progress if visible
+            if (progressLoader) {
+                progressLoader.style.width = progressWidth + '%';
+                progressPercent.textContent = Math.round(progressWidth) + '%';
+            }
+        }
+
+        // Form Submission
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5bGEDl8S8HGigMgngwMTDJQcc9wQdJO700aW_jdFkidnWhX0vCxqnCGxkwB9GX-Fu/exec'; 
+        const form = document.getElementById('leadForm');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            // Show loading UI
+            form.classList.add('hidden');
+            document.getElementById('loadingUI').classList.remove('hidden');
+            
+            // Simulate progress
+            const logs = [
+                ">> Syncing with Industry Standards...",
+                ">> Mapping AI Learning Path...",
+                ">> Calibrating Neural Networks...",
+                ">> Generating Custom Syllabus...",
+                ">> Creating Personalized Curriculum...",
+                ">> Adding Bonus Resources..."
+            ];
+            
+            const logElements = [
+                document.getElementById('statusLog'),
+                document.getElementById('statusLog2')
+            ];
+            
+            let i = 0;
+            const totalSteps = logs.length;
+            const logInterval = setInterval(() => {
+                logElements[0].innerHTML = logs[i];
+                if (i > 0) {
+                    logElements[1].innerHTML = logs[i-1];
+                }
+                
+                // Update progress
+                const progress = Math.min(100, Math.round(((i + 1) / totalSteps) * 100));
+                progressLoader.style.width = progress + '%';
+                progressPercent.textContent = progress + '%';
+                
+                i++;
+                
+                if(i >= logs.length) {
+                    clearInterval(logInterval);
+                    
+                    // Final step
+                    setTimeout(() => {
+                        document.getElementById('loadingText').textContent = "Syllabus Generated Successfully!";
+                        logElements[0].innerHTML = ">> Personalized AI syllabus ready!";
+                        logElements[1].innerHTML = ">> Redirecting to WhatsApp...";
+                        
+                        // Simulate a small delay before form submission
+                        setTimeout(() => {
+                            submitForm();
+                        }, 1500);
+                    }, 500);
+                }
+            }, 800);
+
+            function submitForm() {
+                fetch(scriptURL, { 
+                    method: 'POST', 
+                    body: new FormData(form)
+                })
+                .then(response => {
+                    // Get form data
+                    const formData = new FormData(form);
+                    const name = formData.get('Name') || 'there';
+                    const interest = formData.get('Interest') || 'AI Learning';
+                    
+                    // Create WhatsApp message
+                    const whatsappMessage = `Hello! I just completed the AI Skill Analyzer and I'm interested in ${interest}. My name is ${name}. Can you send me my personalized syllabus?`;
+                    const encodedMessage = encodeURIComponent(whatsappMessage);
+                    const whatsappUrl = `https://wa.me/919074854599?text=${encodedMessage}`;
+                    
+                    // Redirect to WhatsApp
+                    setTimeout(() => {
+                        window.location.href = whatsappUrl;
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    alert("Error connecting. Please try again.");
+                    form.classList.remove('hidden');
+                    document.getElementById('loadingUI').classList.add('hidden');
+                });
+            }
+        });
+
+        // Scroll to Top Button
+        const scrollTopBtn = document.getElementById('scroll-top');
+        if (scrollTopBtn) {
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.classList.remove('hidden');
+                } else {
+                    scrollTopBtn.classList.add('hidden');
+                }
+            });
+        }
+
+        // Interest chips enhancement
+        document.querySelectorAll('.interest-chip input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const chip = this.closest('.interest-chip');
+                if (this.checked) {
+                    chip.querySelector('div').classList.add('scale-105');
+                } else {
+                    chip.querySelector('div').classList.remove('scale-105');
+                }
+            });
+        });
+
+        // Add subtle animation to form container
+        const formContainer = document.querySelector('.relative.z-10');
+        if (formContainer) {
+            formContainer.style.animation = 'slideUp 0.8s ease-out';
+        }
+
+        // Initialize tooltips
+        document.querySelectorAll('button, a').forEach(element => {
+            if (element.hasAttribute('title')) {
+                element.addEventListener('mouseenter', function(e) {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'fixed z-50 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm';
+                    tooltip.textContent = this.getAttribute('title');
+                    tooltip.style.left = e.pageX + 'px';
+                    tooltip.style.top = (e.pageY - 40) + 'px';
+                    tooltip.id = 'tooltip';
+                    document.body.appendChild(tooltip);
+                });
+                
+                element.addEventListener('mouseleave', function() {
+                    const tooltip = document.getElementById('tooltip');
+                    if (tooltip) {
+                        tooltip.remove();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
