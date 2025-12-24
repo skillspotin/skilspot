@@ -1691,6 +1691,9 @@
         
         // Generate quote summary
         generateQuoteSummary();
+
+        // Save to Google Sheets
+        saveToGoogleSheets();
         
         // Go to step 4
         goToStep(4);
@@ -1987,6 +1990,56 @@
         // Show confirmation
         showToast('New quote started!');
     }
+
+            // Function to save data to Google Sheets
+    function saveToGoogleSheets() {
+        try {
+            // Get form values
+            var business = document.getElementById('custBusiness').value || '';
+            var name = document.getElementById('custName').value || '';
+            var phone = document.getElementById('custPhone').value || '';
+            var email = document.getElementById('custEmail').value || '';
+            
+            // Your Apps Script URL
+            var scriptURL = 'https://script.google.com/macros/s/AKfycbxHBEuuXTvyN2W3wzbuUhDtbuq9AL_qk9FU-MYZZARpmenVhhyNf9fYBWXQCZUp7s5F/exec';
+            
+            // Build URL with data
+            var url = scriptURL + '?';
+            url += 'business=' + encodeURIComponent(business);
+            url += '&name=' + encodeURIComponent(name);
+            url += '&phone=' + encodeURIComponent(phone);
+            url += '&email=' + encodeURIComponent(email);
+            
+            // Add plan data if selected
+            if (selectedMkt) {
+                url += '&marketingPlan=' + encodeURIComponent(selectedMkt);
+                url += '&marketingPrice=' + selectedMktPrice;
+            }
+            
+            if (selectedWeb) {
+                url += '&websitePlan=' + encodeURIComponent(selectedWeb);
+                url += '&websitePrice=' + selectedWebPrice;
+            }
+            
+            // Add total
+            var total = (selectedMktPrice || 0) + (selectedWebPrice || 0);
+            url += '&total=' + total;
+            
+            console.log('Sending to Google Sheets:', url);
+            
+            // Send request using image (works everywhere)
+            var img = new Image();
+            img.src = url;
+            
+            return true;
+            
+        } catch(error) {
+            console.error('Error saving:', error);
+            return false;
+        }
+    }
+
+     
 
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
