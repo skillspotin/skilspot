@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Robotics Course for Students | 25 Hands-on Projects - Skillspot</title>
+    <meta name="description" content="Free robotics course for school & college students. Learn with 25 Arduino projects from basics to advanced. Start your robotics journey today!">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #3730A3;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --bg: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border: #E5E7EB;
+        }
+        
+        body.dark {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary: #34D399;
+            --accent: #FBBF24;
+            --text: #F3F4F6;
+            --text-light: #D1D5DB;
+            --bg: #0F172A;
+            --card-bg: #1E293B;
+            --border: #334155;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Text colors - FIXED for dark/light themes */
+        .text-primary { color: var(--primary) !important; }
+        .text-dark { color: var(--text) !important; }
+        .text-muted { color: var(--text-light) !important; }
+        
+        /* Background colors */
+        .bg-card { background-color: var(--card-bg) !important; }
+        .border-light { border-color: var(--border) !important; }
+        
+        /* Hide sections */
+        .hidden-section {
+            display: none;
+        }
+        
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Project cards */
+        .project-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .dark .project-card:hover {
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+        
+        /* Level badges */
+        .level-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+        
+        .level-beginner {
+            background: linear-gradient(135deg, #E0F2FE, #BAE6FD);
+            color: #0369A1 !important;
+        }
+        
+        .level-intermediate {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            color: #92400E !important;
+        }
+        
+        .level-advanced {
+            background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
+            color: #166534 !important;
+        }
+        
+        .level-expert {
+            background: linear-gradient(135deg, #FAE8FF, #F5D0FE);
+            color: #86198F !important;
+        }
+        
+        /* Dark mode adjustments for badges */
+        .dark .level-beginner {
+            background: linear-gradient(135deg, #0C4A6E, #075985);
+            color: #BAE6FD !important;
+        }
+        
+        .dark .level-intermediate {
+            background: linear-gradient(135deg, #78350F, #92400E);
+            color: #FDE68A !important;
+        }
+        
+        .dark .level-advanced {
+            background: linear-gradient(135deg, #14532D, #166534);
+            color: #BBF7D0 !important;
+        }
+        
+        .dark .level-expert {
+            background: linear-gradient(135deg, #701A75, #86198F);
+            color: #F5D0FE !important;
+        }
+        
+        /* Steps in enrollment */
+        .step { display: none; }
+        .step.active { 
+            display: block; 
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            height: 6px;
+            background: #E5E7EB;
+            border-radius: 3px;
+            margin: 30px auto;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .dark .progress-bar {
+            background: #334155;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s ease;
+        }
+        
+        /* Code block */
+        .code-block {
+            background: #1E293B;
+            color: #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Component chips */
+        .component-chip {
+            display: inline-block;
+            background: linear-gradient(135deg, #E0E7FF, #C7D2FE);
+            color: #3730A3;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 4px;
+            border: 1px solid #C7D2FE;
+        }
+        
+        .dark .component-chip {
+            background: linear-gradient(135deg, #3730A3, #312E81);
+            color: #C7D2FE;
+            border-color: #4F46E5;
+        }
+        
+        /* Button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), #059669);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Success animation */
+        .success-pulse {
+            animation: successPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Robot animation */
+        .robot-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Share buttons */
+        .share-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .share-whatsapp { background: #25D366; }
+        .share-telegram { background: #0088CC; }
+        .share-facebook { background: #1877F2; }
+        .share-twitter { background: #1DA1F2; }
+        .share-copy { background: var(--primary); }
+        
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Input styles */
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        /* Back button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Student badge */
+        .student-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Ensure all text elements use the correct color */
+        h1, h2, h3, h4, h5, h6, p, span, div, label, li {
+            color: var(--text);
+        }
+        
+        /* Specific fixes for dark mode */
+        .dark .text-gray-400 {
+            color: #9CA3AF !important;
+        }
+        
+        .dark .text-gray-500 {
+            color: #6B7280 !important;
+        }
+        
+        .dark .text-white {
+            color: #F3F4F6 !important;
+        }
+        
+        /* Fix for project detail headings */
+        .project-detail h2,
+        .project-detail h3,
+        .project-detail p {
+            color: var(--text) !important;
+        }
+        
+        /* Fix for cards in dark mode */
+        .dark .project-card h3,
+        .dark .project-card p,
+        .dark .project-card span {
+            color: var(--text) !important;
+        }
+    </style>
+</head>
+<body class="dark:bg-gray-900">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-card border-b border-light shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="javascript:void(0)" onclick="showSection('home')" class="flex items-center space-x-3 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--primary)] to-purple-600 flex items-center justify-center shadow-lg">
+                        <i class="fas fa-robot text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-black text-primary">Skillspot<span class="text-secondary">.in</span></div>
+                        <div class="text-xs text-muted -mt-1">Robotics Learning Hub</div>
+                    </div>
+                </a>
+                
+                <!-- Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="javascript:void(0)" onclick="showSection('home')" class="font-medium text-dark hover:text-primary transition-colors cursor-pointer">Home</a>
+                    <a href="javascript:void(0)" onclick="showSection('enrollment')" class="font-medium text-dark hover:text-primary transition-colors cursor-pointer">Get Access</a>
+                    <a href="javascript:void(0)" onclick="showSection('projects')" class="font-medium text-dark hover:text-primary transition-colors cursor-pointer">All Projects</a>
+                    <a href="javascript:void(0)" onclick="showSection('community')" class="font-medium text-dark hover:text-primary transition-colors cursor-pointer">Community</a>
+                </div>
+                
+                <!-- Mobile menu -->
+                <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden fixed top-20 left-0 right-0 bg-card shadow-lg max-h-0 overflow-hidden transition-all duration-300 z-40">
+        <div class="p-6 space-y-4">
+            <a href="javascript:void(0)" onclick="showSection('home')" class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium text-dark cursor-pointer">Home</a>
+            <a href="javascript:void(0)" onclick="showSection('enrollment')" class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium text-dark cursor-pointer">Get Access</a>
+            <a href="javascript:void(0)" onclick="showSection('projects')" class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium text-dark cursor-pointer">All Projects</a>
+            <a href="javascript:void(0)" onclick="showSection('community')" class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium text-dark cursor-pointer">Community</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-16">
+        <!-- Home Section -->
+        <section id="home" class="active-section">
+            <div class="py-12 md:py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center">
+                        <!-- Animated robot icon -->
+                        <div class="flex justify-center mb-8">
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-br from-[var(--primary)] to-purple-600 flex items-center justify-center robot-float shadow-2xl">
+                                <i class="fas fa-robot text-white text-5xl"></i>
+                            </div>
+                        </div>
+                        
+                        <h1 class="text-4xl md:text-6xl font-black mb-6 text-dark">
+                            <span class="text-primary">Robotics Mastery</span><br>
+                            <span class="text-dark">for Students</span>
+                        </h1>
+                        
+                        <p class="text-xl text-muted max-w-3xl mx-auto mb-10">
+                            Join thousands of school & college students learning robotics with our <span class="font-bold text-secondary">FREE 25-project course</span>. From basics to advanced robots - start your STEM journey today!
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+                            <button onclick="showSection('enrollment')" class="btn-primary px-10 py-4 text-lg">
+                                <i class="fas fa-rocket mr-3"></i>Start Learning Free
+                            </button>
+                            <button onclick="showSection('projects')" class="btn-secondary px-10 py-4 text-lg">
+                                <i class="fas fa-eye mr-3"></i>View All Projects
+                            </button>
+                        </div>
+                        
+                        <!-- Student badges -->
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <span class="student-badge bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 text-blue-800 dark:text-blue-200">
+                                <i class="fas fa-school mr-2"></i>Perfect for School Students
+                            </span>
+                            <span class="student-badge bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 text-green-800 dark:text-green-200">
+                                <i class="fas fa-university mr-2"></i>Ideal for College Projects
+                            </span>
+                            <span class="student-badge bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 text-purple-800 dark:text-purple-200">
+                                <i class="fas fa-certificate mr-2"></i>Build Your Portfolio
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enrollment Section -->
+        <section id="enrollment" class="hidden-section py-12">
+            <div class="max-w-4xl mx-auto px-4">
+                <!-- Progress Steps -->
+                <div class="mb-12">
+                    <!-- Progress bar -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 33%"></div>
+                    </div>
+                    
+                    <!-- Step indicators -->
+                    <div class="flex justify-center gap-8 mb-8">
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold mx-auto mb-2">1</div>
+                            <div class="text-sm font-medium text-dark">Get Access</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 text-muted flex items-center justify-center font-bold mx-auto mb-2">2</div>
+                            <div class="text-sm font-medium text-muted">Your Level</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 text-muted flex items-center justify-center font-bold mx-auto mb-2">3</div>
+                            <div class="text-sm font-medium text-muted">Welcome!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Enrollment Form -->
+                <div id="step1" class="step active">
+                    <div class="bg-card border border-light rounded-2xl shadow-xl p-8">
+                        <div class="text-center mb-10">
+                            <h2 class="text-3xl font-bold text-dark mb-4">Get Free Course Access</h2>
+                            <p class="text-muted">Join 5,000+ students learning robotics for free</p>
+                        </div>
+                        
+                        <form id="enrollmentForm" class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-dark mb-2">Full Name *</label>
+                                    <input type="text" id="studentName" placeholder="Enter your full name" required>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-dark mb-2">WhatsApp Number *</label>
+                                    <input type="tel" id="studentPhone" placeholder="For community access" required>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-dark mb-2">Email Address *</label>
+                                <input type="email" id="studentEmail" placeholder="We'll send project details" required>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-dark mb-2">Your Age *</label>
+                                    <select id="studentAge" required>
+                                        <option value="">Select Age</option>
+                                        <option value="10-14">10-14 years (School)</option>
+                                        <option value="15-18">15-18 years (High School)</option>
+                                        <option value="19-22">19-22 years (College)</option>
+                                        <option value="23+">23+ years</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-dark mb-2">Education Level</label>
+                                    <select id="educationLevel">
+                                        <option value="">Select Level</option>
+                                        <option value="school">School Student</option>
+                                        <option value="college">College Student</option>
+                                        <option value="diploma">Diploma Student</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Privacy note -->
+                            <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                                <div class="flex items-start gap-3">
+                                    <i class="fas fa-shield-alt text-blue-500 mt-1"></i>
+                                    <div>
+                                        <p class="font-medium text-dark">Safe & Secure</p>
+                                        <p class="text-sm text-muted">We respect your privacy. Your data is protected and will only be used for course updates.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="button" onclick="validateStep1()" class="w-full btn-primary py-4 text-lg">
+                                <i class="fas fa-lock-open mr-3"></i>Get Free Access Now
+                            </button>
+                        </form>
+                        
+                        <div class="mt-8 text-center">
+                            <p class="text-sm text-muted">
+                                Already enrolled? 
+                                <a href="javascript:void(0)" onclick="showSection('community')" class="text-primary font-medium hover:underline cursor-pointer">Join our WhatsApp community</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Experience Level -->
+                <div id="step2" class="step">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold text-dark mb-4">Choose Your Starting Point</h2>
+                        <p class="text-muted">We'll personalize the learning path based on your experience</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-12">
+                        <!-- Beginner -->
+                        <div class="project-card p-8 text-center" onclick="selectLevel('beginner')">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-seedling text-blue-500 dark:text-blue-400 text-3xl"></i>
+                            </div>
+                            <span class="level-badge level-beginner mb-4">Complete Beginner</span>
+                            <h3 class="text-xl font-bold text-dark mb-4">Just Starting Out</h3>
+                            <p class="text-muted mb-6">Never done any electronics or coding before</p>
+                            <div class="text-left space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Start from absolute basics</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Learn electronics fundamentals</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Build confidence with simple projects</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Intermediate -->
+                        <div class="project-card p-8 text-center" onclick="selectLevel('intermediate')">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-200 dark:from-yellow-900/30 dark:to-yellow-800/30 flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-user-graduate text-yellow-500 dark:text-yellow-400 text-3xl"></i>
+                            </div>
+                            <span class="level-badge level-intermediate mb-4">Some Experience</span>
+                            <h3 class="text-xl font-bold text-dark mb-4">Done Basic Projects</h3>
+                            <p class="text-muted mb-6">Familiar with Arduino basics</p>
+                            <div class="text-left space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Build interactive projects</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Work with sensors & displays</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Learn advanced programming</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Advanced -->
+                        <div class="project-card p-8 text-center" onclick="selectLevel('advanced')">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-rocket text-green-500 dark:text-green-400 text-3xl"></i>
+                            </div>
+                            <span class="level-badge level-advanced mb-4">Advanced Learner</span>
+                            <h3 class="text-xl font-bold text-dark mb-4">Ready for Challenges</h3>
+                            <p class="text-muted mb-6">Built robots or IoT projects before</p>
+                            <div class="text-left space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Build mobile robots</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Work with IoT & cloud</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="text-sm text-dark">Advanced sensor integration</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 text-center">
+                        <div id="levelDescription" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-8 rounded-2xl mb-8">
+                            <h4 class="text-xl font-bold text-dark mb-3">Your Personalized Learning Path</h4>
+                            <p id="levelDescText" class="text-muted"></p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button onclick="goToStep(1)" class="px-8 py-3 rounded-xl border border-light bg-card text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <i class="fas fa-arrow-left mr-2"></i> Back
+                            </button>
+                            <button onclick="completeEnrollment()" id="continueBtn" disabled class="btn-primary px-8 py-3">
+                                Get All Projects <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Success -->
+                <div id="step3" class="step">
+                    <div class="bg-card border border-light rounded-2xl shadow-xl p-10 text-center success-pulse">
+                        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center mx-auto mb-8 shadow-lg">
+                            <i class="fas fa-check text-white text-4xl"></i>
+                        </div>
+                        
+                        <h2 class="text-3xl font-bold text-dark mb-4">Welcome to Skillspot Robotics! 🎉</h2>
+                        <p class="text-xl text-muted mb-8">
+                            Congratulations <span id="successName" class="font-bold text-primary"></span>! 
+                            You now have full access to all 25 projects.
+                        </p>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 mb-10">
+                            <div class="p-6 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                                <i class="fas fa-envelope text-blue-500 text-3xl mb-4"></i>
+                                <p class="font-bold text-dark mb-2">Check Your Email</p>
+                                <p class="text-sm text-muted">Project details sent to your inbox</p>
+                            </div>
+                            <div class="p-6 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                                <i class="fab fa-whatsapp text-green-500 text-3xl mb-4"></i>
+                                <p class="font-bold text-dark mb-2">Join Community</p>
+                                <p class="text-sm text-muted">Get help from 5,000+ students</p>
+                            </div>
+                            <div class="p-6 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+                                <i class="fas fa-project-diagram text-purple-500 text-3xl mb-4"></i>
+                                <p class="font-bold text-dark mb-2">25 Projects</p>
+                                <p class="text-sm text-muted">Complete access to all projects</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+                            <button onclick="joinWhatsAppCommunity()" class="px-8 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium hover:opacity-90 transition-all">
+                                <i class="fab fa-whatsapp mr-3"></i> Join WhatsApp Group
+                            </button>
+                            <button onclick="showSection('projects')" class="px-8 py-3 rounded-xl border border-light bg-card text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium">
+                                <i class="fas fa-book-open mr-3"></i> Explore Projects
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="hidden-section py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <button onclick="showSection('home')" class="back-button mb-6">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </button>
+                    
+                    <div class="text-center mb-10">
+                        <h2 class="text-4xl font-black text-dark mb-4">25 Robotics Projects</h2>
+                        <p class="text-xl text-muted max-w-3xl mx-auto">
+                            Complete learning path from beginner to expert. Perfect for school projects, college assignments, and building your portfolio.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Project filters -->
+                <div class="flex flex-wrap justify-center gap-3 mb-12">
+                    <button onclick="filterProjects('all')" class="px-5 py-2 rounded-full bg-primary text-white font-medium">All Projects</button>
+                    <button onclick="filterProjects('beginner')" class="px-5 py-2 rounded-full border border-light bg-card text-dark hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">Beginner (1-5)</button>
+                    <button onclick="filterProjects('intermediate')" class="px-5 py-2 rounded-full border border-light bg-card text-dark hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">Intermediate (6-10)</button>
+                    <button onclick="filterProjects('advanced')" class="px-5 py-2 rounded-full border border-light bg-card text-dark hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">Advanced (11-20)</button>
+                    <button onclick="filterProjects('expert')" class="px-5 py-2 rounded-full border border-light bg-card text-dark hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">Expert (21-25)</button>
+                </div>
+                
+                <!-- Projects Grid -->
+                <div id="projectsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Projects will be loaded here -->
+                </div>
+                
+                <div class="text-center mt-16">
+                    <button onclick="showSection('enrollment')" class="btn-primary px-12 py-4 text-lg">
+                        <i class="fas fa-unlock mr-3"></i> Get Free Access to All Projects
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Detail View -->
+        <section id="projectDetail" class="hidden-section py-12 project-detail">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button onclick="showSection('projects')" class="back-button mb-8">
+                    <i class="fas fa-arrow-left"></i> Back to All Projects
+                </button>
+                
+                <div id="projectDetailContent">
+                    <!-- Project details will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section id="community" class="hidden-section py-12">
+            <div class="max-w-4xl mx-auto px-4">
+                <button onclick="showSection('home')" class="back-button mb-8">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </button>
+                
+                <div class="bg-gradient-to-r from-primary to-purple-600 rounded-3xl p-10 md:p-16 text-center text-white">
+                    <div class="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-8">
+                        <i class="fab fa-whatsapp text-white text-4xl"></i>
+                    </div>
+                    
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">Join Our Student Community</h2>
+                    <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+                        Connect with 5,000+ students, get project help, share your builds, and collaborate on advanced projects.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-12">
+                        <div class="p-6 bg-white/10 rounded-2xl backdrop-blur-sm">
+                            <i class="fas fa-question-circle text-2xl mb-4"></i>
+                            <p class="font-bold mb-2">Instant Help</p>
+                            <p class="text-sm text-white/80">Get answers within 24 hours</p>
+                        </div>
+                        <div class="p-6 bg-white/10 rounded-2xl backdrop-blur-sm">
+                            <i class="fas fa-share-alt text-2xl mb-4"></i>
+                            <p class="font-bold mb-2">Project Showcase</p>
+                            <p class="text-sm text-white/80">Share your work with peers</p>
+                        </div>
+                        <div class="p-6 bg-white/10 rounded-2xl backdrop-blur-sm">
+                            <i class="fas fa-trophy text-2xl mb-4"></i>
+                            <p class="font-bold mb-2">Competitions</p>
+                            <p class="text-sm text-white/80">Participate in student contests</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="joinWhatsAppCommunity()" class="bg-white text-primary px-10 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl">
+                        <i class="fab fa-whatsapp mr-3"></i> Join Free WhatsApp Group
+                    </button>
+                    
+                    <p class="text-white/70 text-sm mt-8">
+                        WhatsApp group managed by Skillspot mentors. 100% free for students.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-10 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div>
+                    <a href="javascript:void(0)" onclick="showSection('home')" class="flex items-center space-x-3 mb-6 cursor-pointer">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                            <i class="fas fa-robot text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">Skillspot<span class="text-emerald-500">.in</span></div>
+                            <div class="text-xs text-gray-400 -mt-1">Student Learning Platform</div>
+                        </div>
+                    </a>
+                    <p class="text-gray-400 mb-6">
+                        Empowering students with practical skills in robotics, programming, and technology.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/skillspot.in" target="_blank" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-indigo-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/_skillspot.in/" target="_blank" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@skillspot_in" target="_blank" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-red-600 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="javascript:void(0)" onclick="showSection('enrollment')" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Free Robotics Course</a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('projects')" class="text-gray-400 hover:text-white transition-colors cursor-pointer">All Projects</a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('community')" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Student Community</a></li>
+                        <li><a href="https://skillspot.in#courses" target="_blank" class="text-gray-400 hover:text-white transition-colors">More Courses</a></li>
+                    </ul>
+                </div>
+                
+                <!-- For Students -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">For Students</h4>
+                    <ul class="space-y-3">
+                        <li><span class="text-gray-400">School Students:</span> <span class="text-white">Class 8-12</span></li>
+                        <li><span class="text-gray-400">College Students:</span> <span class="text-white">Engineering</span></li>
+                        <li><span class="text-gray-400">Diploma Students:</span> <span class="text-white">Polytechnic</span></li>
+                        <li><span class="text-gray-400">Competitions:</span> <span class="text-white">Science Fairs</span></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">Contact & Help</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-envelope text-gray-400 mt-1"></i>
+                            <div>
+                                <p class="text-gray-400 text-sm">Email</p>
+                                <p class="text-white">contact@skillspot.in</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fab fa-whatsapp text-gray-400 mt-1"></i>
+                            <div>
+                                <p class="text-gray-400 text-sm">Student Help</p>
+                                <p class="text-white">+91 90748 54599</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt text-gray-400 mt-1"></i>
+                            <div>
+                                <p class="text-gray-400 text-sm">Based in</p>
+                                <p class="text-white">Kerala, India</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom -->
+            <div class="pt-10 border-t border-gray-800 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Skillspot.in - Free Robotics Course for Students | 
+                    <a href="https://merchant.razorpay.com/policy/Ro0O2zOA29Tno4/terms" target="_blank" class="hover:text-white transition-colors">Terms</a> | 
+                    <a href="https://merchant.razorpay.com/policy/Ro0O2zOA29Tno4/privacy" target="_blank" class="hover:text-white transition-colors">Privacy</a>
+                </p>
+                <p class="text-gray-500 text-sm mt-3">
+                    Made with <i class="fas fa-heart text-red-500 mx-1"></i> for students by Skillspot
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage" class="text-white"></span>
+        </div>
+    </div>
+
+    <!-- External Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    
+    <!-- Main Application Logic -->
+    <script>
+        // Global variables
+        let studentData = {};
+        let selectedLevel = null;
+        let currentStep = 1;
+        let projectsData = [];
+        let currentProject = null;
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            loadProjects();
+            goToStep(1);
+            showSection('home'); // Show home by default
+            
+            // Check if already enrolled
+            const savedData = localStorage.getItem('skillspot_student');
+            if (savedData) {
+                studentData = JSON.parse(savedData);
+                if (studentData.name) {
+                    // User is already enrolled, show projects directly
+                    document.getElementById('successName').textContent = studentData.name;
+                }
+            }
+        });
+        
+        // Mobile menu
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            let isOpen = false;
+            
+            menuBtn.addEventListener('click', () => {
+                isOpen = !isOpen;
+                mobileMenu.style.maxHeight = isOpen ? mobileMenu.scrollHeight + 'px' : '0';
+                menuBtn.innerHTML = isOpen ? 
+                    '<i class="fas fa-times text-gray-600 dark:text-gray-300"></i>' :
+                    '<i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>';
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target) && isOpen) {
+                    mobileMenu.style.maxHeight = '0';
+                    isOpen = false;
+                    menuBtn.innerHTML = '<i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>';
+                }
+            });
+        }
+        
+        // Show/hide sections
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('main section').forEach(section => {
+                section.classList.remove('active-section');
+                section.classList.add('hidden-section');
+            });
+            
+            // Show selected section
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.remove('hidden-section');
+                section.classList.add('active-section');
+                
+                // If showing projects, make sure they're loaded
+                if (sectionId === 'projects') {
+                    loadProjects();
+                }
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            mobileMenu.style.maxHeight = '0';
+            menuBtn.innerHTML = '<i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>';
+        }
+        
+        // Step navigation for enrollment
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('#enrollment .step').forEach(el => el.classList.remove('active'));
+            
+            // Show current step
+            const stepElement = document.getElementById(`step${step}`);
+            if (stepElement) {
+                stepElement.classList.add('active');
+                currentStep = step;
+                
+                // Update progress
+                const progressFill = document.getElementById('progressFill');
+                if (progressFill) {
+                    progressFill.style.width = `${(step/3) * 100}%`;
+                }
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        // Step 1 validation
+        function validateStep1() {
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const phone = document.getElementById('studentPhone').value.trim();
+            const age = document.getElementById('studentAge').value;
+            
+            if (!name || !email || !phone || !age) {
+                showToast('Please fill all required fields');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showToast('Please enter a valid email address');
+                return;
+            }
+            
+            if (phone.length < 10) {
+                showToast('Please enter a valid WhatsApp number');
+                return;
+            }
+            
+            // Save data
+            studentData = {
+                name: name,
+                email: email,
+                phone: phone,
+                age: age,
+                education: document.getElementById('educationLevel').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to storage
+            localStorage.setItem('skillspot_student', JSON.stringify(studentData));
+            
+            // Go to next step
+            goToStep(2);
+        }
+        
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Select experience level
+        function selectLevel(level) {
+            selectedLevel = level;
+            
+            // Update UI
+            const cards = document.querySelectorAll('#step2 .project-card');
+            cards.forEach(card => {
+                card.style.borderColor = '';
+            });
+            
+            // Add border to selected card
+            event.currentTarget.style.borderColor = 'var(--primary)';
+            
+            // Show description
+            const descDiv = document.getElementById('levelDescription');
+            const descText = document.getElementById('levelDescText');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            let description = '';
+            if (level === 'beginner') {
+                description = 'Perfect! Start with Level 1. You\'ll learn electronics basics, Arduino fundamentals, and build simple circuits. Great for school students starting their robotics journey.';
+            } else if (level === 'intermediate') {
+                description = 'Excellent! Start with Level 2. You\'ll work with sensors, displays, and build interactive projects. Ideal for college students and those with basic Arduino experience.';
+            } else {
+                description = 'Awesome! Start with Level 3. You\'ll build mobile robots, work with IoT, and tackle advanced challenges. Perfect for engineering students and robotics enthusiasts.';
+            }
+            
+            descDiv.classList.remove('hidden');
+            descText.textContent = description;
+            continueBtn.disabled = false;
+            
+            // Save level
+            studentData.level = level;
+            localStorage.setItem('skillspot_student', JSON.stringify(studentData));
+        }
+        
+        // Complete enrollment
+        function completeEnrollment() {
+            if (!selectedLevel) {
+                showToast('Please select your experience level');
+                return;
+            }
+            
+            // Update success name
+            document.getElementById('successName').textContent = studentData.name;
+            
+            // Go to step 3
+            goToStep(3);
+        }
+        
+        // Load projects from embedded data
+        function loadProjects() {
+            // Sample projects data - You should replace this with your complete 25 projects
+            projectsData = [
+                {
+                    "id": 1,
+                    "title": "The Smart Blinker",
+                    "level": "Beginner",
+                    "components": ["Arduino Uno", "LED", "220-ohm Resistor", "Breadboard", "Jumper Wires"],
+                    "wiring": "1. Connect Long Leg (Anode) of LED to Arduino Pin 13\n2. Connect Short Leg (Cathode) to one end of Resistor\n3. Connect other end of Resistor to Arduino GND",
+                    "steps": [
+                        "Step 1: Identify LED legs (long = positive/Anode, short = negative/Cathode)",
+                        "Step 2: Place LED on breadboard across center gap",
+                        "Step 3: Connect 220Ω resistor from LED negative leg to breadboard negative rail",
+                        "Step 4: Connect breadboard negative rail to Arduino GND pin",
+                        "Step 5: Connect LED positive leg to Arduino Digital Pin 13",
+                        "Step 6: Upload the code and watch LED blink every second!"
+                    ],
+                    "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(1000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}",
+                    "logic": "Basic digital output control - sending electricity to an output device. This is the fundamental concept of robotics: controlling hardware with code.",
+                    "description": "The 'Hello World' of robotics. Learn how to send electricity to an output device."
+                },
+                {
+                    "id": 2,
+                    "title": "Digital Doorbell",
+                    "level": "Beginner",
+                    "components": ["Arduino Uno", "Push Button", "Piezo Buzzer", "10k Resistor", "Jumper Wires"],
+                    "wiring": "1. Button one side to Pin 2, other to 5V (with 10k pull-down resistor)\n2. Buzzer red wire to Pin 8, black to GND\n3. Connect components on breadboard",
+                    "steps": [
+                        "Step 1: Place push button on breadboard (straddles center gap)",
+                        "Step 2: Connect 10kΩ resistor from one button pin to GND rail",
+                        "Step 3: Connect same button pin to Arduino Digital Pin 2",
+                        "Step 4: Connect opposite button pin to 5V pin on Arduino",
+                        "Step 5: Connect buzzer positive (+) to Arduino Pin 8",
+                        "Step 6: Connect buzzer negative (-) to GND rail",
+                        "Step 7: Upload code, press button to hear sound!"
+                    ],
+                    "code": "void setup() {\n  pinMode(2, INPUT);\n  pinMode(8, OUTPUT);\n}\n\nvoid loop() {\n  int buttonState = digitalRead(2);\n  if (buttonState == HIGH) {\n    digitalWrite(8, HIGH);\n  } else {\n    digitalWrite(8, LOW);\n  }\n}",
+                    "logic": "Digital input triggering output - learn how physical buttons interact with microcontrollers to create sound feedback systems.",
+                    "description": "Learn how to use a digital input (button) to trigger a sound output."
+                },
+                {
+                    "id": 3,
+                    "title": "Automatic Night Light",
+                    "level": "Beginner",
+                    "components": ["LDR (Light Sensor)", "LED", "10k Resistor", "Arduino Uno", "Breadboard"],
+                    "wiring": "1. Create voltage divider with LDR and 10k Resistor\n2. Connect junction point to Analog Pin A0\n3. Connect LED to Pin 9",
+                    "steps": [
+                        "Step 1: Place LDR on breadboard (2 legs in different rows)",
+                        "Step 2: Connect 10kΩ resistor in series with LDR",
+                        "Step 3: Connect junction between LDR and resistor to Arduino A0",
+                        "Step 4: Connect LDR other end to 5V, resistor other end to GND",
+                        "Step 5: Connect LED with 220Ω resistor to Pin 9",
+                        "Step 6: Cover LDR with hand - LED should turn on automatically!"
+                    ],
+                    "code": "void setup() {\n  pinMode(9, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int lightLevel = analogRead(A0);\n  Serial.println(lightLevel);\n  \n  if (lightLevel < 500) {\n    digitalWrite(9, HIGH);\n  } else {\n    digitalWrite(9, LOW);\n  }\n  delay(100);\n}",
+                    "logic": "Analog sensing and conditional control - robots 'feel' their environment using sensors and react autonomously.",
+                    "description": "Learn how robots 'feel' the environment using analog sensors."
+                }
+                // Add all 25 projects here following the same structure
+            ];
+            
+            displayProjects();
+        }
+        
+        function displayProjects() {
+            const grid = document.getElementById('projectsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            projectsData.forEach(project => {
+                const card = createProjectCard(project);
+                grid.appendChild(card);
+            });
+            
+            // Highlight any code in project detail if it's visible
+            if (window.hljs && document.getElementById('projectDetail').classList.contains('active-section')) {
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+        }
+        
+        function createProjectCard(project) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            
+            // Level class
+            let levelClass = '';
+            if (project.level === 'Beginner') levelClass = 'level-beginner';
+            else if (project.level === 'Intermediate') levelClass = 'level-intermediate';
+            else if (project.level === 'Advanced') levelClass = 'level-advanced';
+            else levelClass = 'level-expert';
+            
+            card.innerHTML = `
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="${levelClass}">${project.level}</span>
+                        <span class="text-sm font-bold bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-dark">Project ${project.id}</span>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-dark mb-3">${project.title}</h3>
+                    <p class="text-muted mb-6">${project.description}</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        ${project.components.slice(0, 3).map(comp => 
+                            `<span class="text-xs bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-dark">${comp}</span>`
+                        ).join('')}
+                        ${project.components.length > 3 ? 
+                            `<span class="text-xs bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-dark">+${project.components.length - 3} more</span>` : ''
+                        }
+                    </div>
+                    
+                    <div class="flex justify-between items-center pt-4 border-t border-light">
+                        <span class="text-sm text-muted">
+                            <i class="fas fa-clock mr-1"></i> 30-45 mins
+                        </span>
+                        <button onclick="showProjectDetail(${project.id})" class="text-sm bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                            View Details <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Show project detail view - FIXED VERSION
+        function showProjectDetail(projectId) {
+            const project = projectsData.find(p => p.id === projectId);
+            if (!project) {
+                showToast('Project not found!');
+                return;
+            }
+            
+            currentProject = project;
+            
+            // Level class
+            let levelClass = '';
+            if (project.level === 'Beginner') levelClass = 'level-beginner';
+            else if (project.level === 'Intermediate') levelClass = 'level-intermediate';
+            else if (project.level === 'Advanced') levelClass = 'level-advanced';
+            else levelClass = 'level-expert';
+            
+            // Build project detail HTML
+            const detailContent = `
+                <div class="bg-card border border-light rounded-2xl shadow-xl p-8">
+                    <div class="mb-10">
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                            <div class="flex items-center gap-3">
+                                <span class="${levelClass}">${project.level}</span>
+                                <span class="text-sm font-bold bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-dark">Project ${project.id}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm text-muted">Perfect for: </span>
+                                <span class="text-sm font-bold text-primary">Students</span>
+                            </div>
+                        </div>
+                        <h2 class="text-3xl font-bold text-dark mb-4">${project.title}</h2>
+                        <p class="text-lg text-muted">${project.description}</p>
+                    </div>
+                    
+                    <div class="grid lg:grid-cols-2 gap-10">
+                        <!-- Left column -->
+                        <div>
+                            <!-- Components -->
+                            <div class="mb-10">
+                                <h3 class="text-xl font-bold text-dark mb-6 flex items-center gap-3">
+                                    <i class="fas fa-tools text-primary"></i>
+                                    Required Components
+                                </h3>
+                                <div class="flex flex-wrap gap-2">
+                                    ${project.components.map(comp => 
+                                        `<span class="component-chip">${comp}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                            
+                            <!-- Wiring -->
+                            <div class="mb-10">
+                                <h3 class="text-xl font-bold text-dark mb-6 flex items-center gap-3">
+                                    <i class="fas fa-project-diagram text-green-500"></i>
+                                    Wiring Instructions
+                                </h3>
+                                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                                    ${project.wiring.split('\n').map(step => 
+                                        `<p class="text-dark mb-2 flex items-start gap-2">
+                                            <span class="text-primary font-bold">${step.charAt(0)}</span>${step.substring(1)}
+                                        </p>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                            
+                            <!-- Steps -->
+                            <div class="mb-10">
+                                <h3 class="text-xl font-bold text-dark mb-6 flex items-center gap-3">
+                                    <i class="fas fa-list-ol text-orange-500"></i>
+                                    Step-by-Step Guide
+                                </h3>
+                                <div class="space-y-4">
+                                    ${project.steps.map((step, index) => `
+                                        <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                                                ${index + 1}
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-dark dark:text-white">${step}</p>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <!-- Logic -->
+                            <div>
+                                <h3 class="text-xl font-bold text-dark mb-6 flex items-center gap-3">
+                                    <i class="fas fa-brain text-purple-500"></i>
+                                    What You'll Learn
+                                </h3>
+                                <p class="text-muted p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">${project.logic}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Right column -->
+                        <div>
+                            <!-- Code -->
+                            <div class="mb-10">
+                                <h3 class="text-xl font-bold text-dark mb-6 flex items-center gap-3">
+                                    <i class="fas fa-code text-blue-500"></i>
+                                    Complete Arduino Code
+                                </h3>
+                                <div class="code-block">
+                                    <pre><code class="cpp">${project.code}</code></pre>
+                                </div>
+                                <div class="flex gap-4 mt-6">
+                                    <button onclick="copyProjectCode()" class="px-5 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                                        <i class="far fa-copy mr-2"></i>Copy Code
+                                    </button>
+                                    <button onclick="downloadProjectCode()" class="px-5 py-2 rounded-lg bg-primary text-white hover:opacity-90 transition-colors">
+                                        <i class="fas fa-download mr-2"></i>Download .ino
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Student Tips -->
+                            <div>
+                                <h3 class="text-xl font-bold text-dark mb-6 flex items-center gap-3">
+                                    <i class="fas fa-lightbulb text-yellow-500"></i>
+                                    Student Tips
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
+                                        <p class="font-medium text-dark mb-1">
+                                            <i class="fas fa-exclamation-circle text-yellow-500 mr-2"></i>
+                                            Safety First
+                                        </p>
+                                        <p class="text-sm text-muted">Always disconnect power before making wiring changes.</p>
+                                    </div>
+                                    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                                        <p class="font-medium text-dark mb-1">
+                                            <i class="fas fa-question-circle text-blue-500 mr-2"></i>
+                                            Need Help?
+                                        </p>
+                                        <p class="text-sm text-muted">Share photos in our WhatsApp group for instant help.</p>
+                                    </div>
+                                    <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                                        <p class="font-medium text-dark mb-1">
+                                            <i class="fas fa-graduation-cap text-green-500 mr-2"></i>
+                                            Academic Use
+                                        </p>
+                                        <p class="text-sm text-muted">Perfect for school projects and college assignments.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="mt-12 pt-10 border-t border-light">
+                        <div class="flex flex-col lg:flex-row justify-between items-center gap-6">
+                            <div>
+                                <p class="text-muted mb-3">Share with classmates:</p>
+                                <div class="flex gap-3">
+                                    <button onclick="shareCurrentProject('whatsapp')" class="share-btn share-whatsapp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </button>
+                                    <button onclick="shareCurrentProject('telegram')" class="share-btn share-telegram">
+                                        <i class="fab fa-telegram"></i>
+                                    </button>
+                                    <button onclick="copyProjectUrl()" class="share-btn share-copy">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4">
+                                <button onclick="joinWhatsAppCommunity()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:opacity-90 transition-colors">
+                                    <i class="fab fa-whatsapp mr-2"></i> Get Help
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <p class="text-xs text-muted mt-6 text-center">
+                            Shared from <span class="text-primary font-medium">Skillspot.in</span> - Free Robotics Course for Students
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            // Update the detail content
+            document.getElementById('projectDetailContent').innerHTML = detailContent;
+            
+            // Highlight code
+            if (window.hljs) {
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+            
+            // Show project detail view
+            showSection('projectDetail');
+        }
+        
+        // Copy code
+        function copyProjectCode() {
+            if (!currentProject) return;
+            
+            navigator.clipboard.writeText(currentProject.code)
+                .then(() => showToast('Code copied to clipboard!'))
+                .catch(() => showToast('Failed to copy code'));
+        }
+        
+        function downloadProjectCode() {
+            if (!currentProject) return;
+            
+            const blob = new Blob([currentProject.code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `skillspot_project_${currentProject.id}_${currentProject.title.replace(/\s+/g, '_')}.ino`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Code downloaded!');
+        }
+        
+        // Filter projects
+        function filterProjects(level) {
+            const cards = document.querySelectorAll('#projectsGrid .project-card');
+            cards.forEach(card => {
+                card.style.display = 'block';
+            });
+            
+            if (level !== 'all') {
+                cards.forEach(card => {
+                    const badge = card.querySelector('.level-badge');
+                    if (badge) {
+                        const cardLevel = badge.textContent.toLowerCase();
+                        if (!cardLevel.includes(level)) {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            }
+        }
+        
+        // WhatsApp community
+        function joinWhatsAppCommunity() {
+            const message = `Hello Skillspot Team! 👋\n\nI want to join the free robotics student community.\n\nName: ${studentData.name || 'New Student'}\nLevel: ${selectedLevel || 'Beginner'}\n\nPlease add me to the WhatsApp group.`;
+            
+            const url = `https://wa.me/919074854599?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+        
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            if (toast && toastMessage) {
+                toastMessage.textContent = message;
+                toast.style.display = 'flex';
+                
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // Share functions
+        function shareCurrentProject(platform) {
+            if (!currentProject) return;
+            
+            const text = `Check out this robotics project from Skillspot's FREE course!\n\n${currentProject.title} - ${currentProject.description}\n\nPerfect for students learning robotics and electronics.\n\nView complete project details at Skillspot.in\n\n#Robotics #Students #${currentProject.title.replace(/\s+/g, '')} #Skillspot`;
+            
+            let url = '';
+            switch(platform) {
+                case 'whatsapp':
+                    url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                    break;
+                case 'telegram':
+                    url = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
+                    break;
+            }
+            
+            if (url) {
+                window.open(url, '_blank');
+                showToast(`Sharing project via ${platform}...`);
+            }
+        }
+        
+        function copyProjectUrl() {
+            if (!currentProject) return;
+            
+            const link = `https://skillspot.in/project-${currentProject.id}`;
+            navigator.clipboard.writeText(link)
+                .then(() => showToast('Project link copied! Share with classmates!'))
+                .catch(() => showToast('Failed to copy link'));
+        }
+        
+        // Expose functions to global scope
+        window.validateStep1 = validateStep1;
+        window.selectLevel = selectLevel;
+        window.goToStep = goToStep;
+        window.completeEnrollment = completeEnrollment;
+        window.joinWhatsAppCommunity = joinWhatsAppCommunity;
+        window.showProjectDetail = showProjectDetail;
+        window.copyProjectCode = copyProjectCode;
+        window.downloadProjectCode = downloadProjectCode;
+        window.filterProjects = filterProjects;
+        window.showSection = showSection;
+    </script>
+</body>
+</html>
