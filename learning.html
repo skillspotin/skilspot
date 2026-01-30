@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Platform - SkillSpot.in</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=4">
+    <style>
+        :root {
+            /* SaaS Theme Palette */
+            --bg-body: #F9FAFB;
+            --bg-card: #ffffff;
+            --bg-surface: #F3F4F6;
+
+            --text-main: #111827;
+            --text-secondary: #4B5563;
+            --text-muted: #9CA3AF;
+
+            --border-light: #E5E7EB;
+            --border-hover: #D1D5DB;
+
+            --primary: #4F46E5;
+            /* Indigo 600 */
+            --primary-light: #EEF2FF;
+
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        body.dark-mode {
+            --bg-body: #0B0F19;
+            /* Deep dark */
+            --bg-card: #111827;
+            --bg-surface: #1F2937;
+
+            --text-main: #F9FAFB;
+            --text-secondary: #D1D5DB;
+            --text-muted: #6B7280;
+
+            --border-light: #374151;
+            /* Gray 700 */
+            --border-hover: #4B5563;
+
+            --primary: #6366F1;
+            --primary-light: rgba(99, 102, 241, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-top: 75px;
+            /* Adjusted to 75px */
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout Grid */
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            max-width: 1600px;
+            /* Wider for App feel */
+            margin: 0 auto;
+            padding: 0 40px 40px 40px;
+            min-height: calc(100vh - 80px);
+            /* Standard Web Scroll */
+        }
+
+        /* Sidebar - Clean & Minimal */
+        .sidebar {
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+            padding-right: 20px;
+            border-right: 1px solid var(--border-light);
+            position: sticky;
+            top: 90px;
+            /* Below Navbar */
+        }
+
+        .sidebar h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-left: 12px;
+        }
+
+        .course-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            /* Tight list */
+        }
+
+        .course-item {
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .course-item:hover {
+            background: var(--bg-surface);
+            color: var(--text-main);
+        }
+
+        .course-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .course-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .course-item.active .course-icon {
+            opacity: 1;
+        }
+
+        /* Main Area - Dashboard Feel */
+        .main-content {
+            /* height: 100%; REMOVED for Global Scroll */
+            /* overflow-y: auto; REMOVED */
+            position: relative;
+            min-height: 500px;
+        }
+
+        /* Lesson/Project Mode: Fixed Container with Sticky Footer */
+        .main-content.lesson-mode {
+            /* display: flex; REMOVED */
+            /* flex-direction: column; REMOVED */
+            display: block;
+        }
+
+        .scrollable-lesson-body {
+            /* flex-grow: 1; REMOVED */
+            /* overflow-y: auto; REMOVED */
+            overflow: visible;
+            padding-top: 4px;
+            padding-right: 10px;
+            padding-bottom: 20px;
+        }
+
+        .lesson-footer {
+            /* flex-shrink: 0; REMOVED */
+            padding: 20px 0;
+            background: var(--bg-body);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar for Main Content */
+        .main-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Hide Chrome */
+
+        /* App-Like Header */
+        .app-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .app-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .app-breadcrumbs {
+            display: flex;
+            gap: 8px;
+            font-size: 1rem;
+            /* Increased size */
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .app-breadcrumbs span[onclick] {
+            color: var(--primary);
+            font-weight: 600;
+            padding: 4px 8px;
+            margin-left: -8px;
+            /* Offset the padding */
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .app-breadcrumbs span[onclick]:hover {
+            background: var(--bg-surface);
+            text-decoration: none;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        /* W3Schools-like Content Styles */
+        .w3-code {
+            background-color: #f1f1f1;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: #333;
+            margin: 20px 0;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+
+        /* Card System - Clean */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem 12px;
+            /* Added 12px left margin */
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .saas-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .saas-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .saas-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .saas-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Lesson View Grid */
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+                padding: 0 20px 20px 20px;
+                /* Reduced top padding to 0 */
+                overflow-y: auto;
+                /* Allow scrolling on mobile main body */
+                gap: 0;
+                /* Remove grid gap on mobile */
+            }
+
+            #mobileMenuBtn {
+                display: flex !important;
+                background: white;
+                /* Ensure bg is white */
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+                /* Subtle shadow */
+            }
+
+            .app-header {
+                flex-direction: column;
+                /* Stack vertically on mobile */
+                align-items: flex-start;
+                gap: 1rem;
+                padding-left: 12px;
+                /* Shift content right (3 letter spaces) */
+            }
+
+            .app-header h1 {
+                font-size: 1.75rem;
+                /* Reduce font size */
+            }
+
+            .app-header>div:last-child {
+                width: 100%;
+                justify-content: flex-start;
+                /* Align tags to left */
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                margin-bottom: 2rem;
+                display: none;
+                /* Hidden by default */
+            }
+
+            .sidebar.mobile-visible {
+                display: block;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            .lesson-grid {
+                grid-template-columns: 1fr;
+                /* Stack on mobile */
+                gap: 20px;
+            }
+
+            .app-breadcrumbs {
+                flex-wrap: wrap;
+                /* Allow wrapping on small screens */
+            }
+
+            .course-list {
+                display: flex;
+                flex-direction: column;
+                /* Stack vertically on mobile menu */
+                gap: 5px;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar-placeholder"></div>
+
+    <div class="container">
+        <!-- Mobile Toggle Button (Visible only on mobile) -->
+        <button id="mobileMenuBtn" onclick="toggleSidebar()"
+            style="display: none; width: 100%; padding: 16px; background: var(--bg-card); border: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 10px; align-items: center; justify-content: space-between; font-weight: 600; color: var(--text-main); cursor: pointer;">
+            <span><i class="fas fa-bars" style="margin-right: 8px; color: var(--primary);"></i> Browse Courses</span>
+            <i class="fas fa-chevron-down" id="menuChevron" style="transition: transform 0.3s;"></i>
+        </button>
+
+        <!-- Modern Sidebar -->
+        <aside class="sidebar" id="appSidebar">
+            <a href="#"
+                style="display: block; padding: 16px; margin-bottom: 24px; background: linear-gradient(135deg, #4F46E5, #9333EA); border-radius: 12px; color: white; text-decoration: none; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-weight: 600; font-size: 0.95rem;">Student Portal</span>
+                    <i class="fas fa-arrow-right" style="font-size: 0.8rem; opacity: 0.8;"></i>
+                </div>
+                <div style="font-size: 0.8rem; opacity: 0.9; margin-top: 4px;">Login to LMS</div>
+            </a>
+
+            <h2>Learning Paths</h2>
+            <ul class="course-list" id="courseList"></ul>
+        </aside>
+
+        <main class="main-content">
+            <div id="courseDisplay"></div>
+        </main>
+    </div>
+
+    <!-- Minimal Viewer Modal -->
+    <div id="viewerModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden;">
+            <div
+                style="padding: 20px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin:0; font-size:1.1rem;" id="modalTitle">Lesson Viewer</h3>
+                <button onclick="closeModal()" style="background:none; border:none; cursor:pointer; padding:8px;"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div id="modalBody" style="padding: 30px; max-height: 70vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="learning-data.js"></script>
+    <script src="navbar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Shared Elements & State
+            const courseListEl = document.getElementById('courseList');
+            const displayEl = document.getElementById('courseDisplay');
+            let currentProjects = []; // Store loaded projects
+            let activeCourseId = 'html';
+
+            // Global Sidebar Toggle (Attached to Window for onClick)
+            window.toggleSidebar = function () {
+                const sidebar = document.getElementById('appSidebar');
+                const chevron = document.getElementById('menuChevron');
+                sidebar.classList.toggle('mobile-visible');
+
+                if (sidebar.classList.contains('mobile-visible')) {
+                    chevron.style.transform = 'rotate(180deg)';
+                } else {
+                    chevron.style.transform = 'rotate(0deg)';
+                }
+            };
+
+            // Viewer Modal Close
+            window.closeModal = function () {
+                const m = document.getElementById('viewerModal');
+                if (m) m.style.display = 'none';
+            };
+
+            // Auto-load project data script
+            function loadProjectData(courseId, callback) {
+                // Remove old script if exists
+                const oldScript = document.getElementById('project-data-script');
+                if (oldScript) oldScript.remove();
+
+                const script = document.createElement('script');
+                script.id = 'project-data-script';
+                script.src = `project-data/${courseId}.js`;
+                script.onerror = () => {
+                    // console.log('No specific project file for ' + courseId);
+                    currentProjects = []; // Reset if no file
+                    if (callback) callback();
+                };
+                script.onload = () => {
+                    if (window.projectsData) {
+                        currentProjects = window.projectsData;
+                    }
+                    if (callback) callback();
+                };
+                document.body.appendChild(script);
+            }
+
+            // Check Data Availability
+            if (typeof courseData === 'undefined') {
+                if (displayEl) displayEl.innerHTML = "<div style='padding:40px; text-align:center;'>Error loading course data. Please refresh.</div>";
+                return;
+            }
+
+            // Initial URL Params
+            const urlParams = new URLSearchParams(window.location.search);
+            activeCourseId = urlParams.get('course') || 'html';
+
+            // Sidebar Render
+            if (courseListEl) {
+                Object.keys(courseData).forEach(key => {
+                    const course = courseData[key];
+                    const isLocked = course.locked;
+                    const li = document.createElement('li');
+                    li.className = `course-item ${key === activeCourseId ? 'active' : ''}`;
+                    if (isLocked) li.style.opacity = '0.6';
+
+                    li.innerHTML = `
+                            <div class="course-icon" style="color:${isLocked ? '#94a3b8' : course.color}">
+                                <i class="${course.icon}"></i>
+                            </div>
+                            <span style="${isLocked ? 'color:#64748b' : ''}">${course.title}</span>
+                            ${isLocked ? '<i class="fas fa-lock" style="margin-left:auto; font-size:0.8rem; color:#94a3b8;"></i>' : ''}
+                        `;
+
+                    li.onclick = () => {
+                        if (isLocked) {
+                            alert(`The ${course.title} course is locked. Upgrade to SkillSpot Pro to unlock this path.`);
+                            return;
+                        }
+
+                        window.loadCourse(key);
+                        // Auto close mobile sidebar
+                        const sidebar = document.getElementById('appSidebar');
+                        if (sidebar && sidebar.classList.contains('mobile-visible')) {
+                            window.toggleSidebar();
+                        }
+                    };
+                    courseListEl.appendChild(li);
+                });
+            }
+
+            // --- CORE FUNCTIONS (Closures) ---
+
+            function renderDashboard(course) {
+                // 1. Group sections by module first so we have counts
+                const sections = course.sections || [];
+                const modules = {};
+                sections.forEach((section, index) => {
+                    const modName = section.module || "Core Modules";
+                    if (!modules[modName]) modules[modName] = [];
+                    modules[modName].push({ ...section, originalIndex: index });
+                });
+
+                const totalModules = Object.keys(modules).length;
+                const totalLessons = sections.length;
+
+                // 2. Calculate Progress
+                const completed = parseInt(localStorage.getItem(`skill_progress_${activeCourseId}`)) || 0;
+                const progressPercent = Math.min(100, Math.round((completed / Math.max(totalLessons, 1)) * 100));
+
+                // 3. Render Header
+                const headerHtml = `
+                        <div class="app-header">
+                            <div>
+                                <div class="app-breadcrumbs">Path / ${course.title}</div>
+                                <h1>${course.title} Fundamentals</h1>
+                                <div style="margin-top:20px; max-width:400px;">
+                                    <div style="display:flex; justify-content:space-between; color:var(--text-secondary); margin-bottom:5px; font-size:0.85rem; font-weight:600;">
+                                        <span>Course Progress</span>
+                                        <span style="color:var(--primary);">${progressPercent}%</span>
+                                    </div>
+                                    <div style="width:100%; height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                                        <div style="width:${progressPercent}%; height:100%; background: linear-gradient(90deg, var(--primary), #a855f7); border-radius:4px; transition: width 0.5s ease;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items: flex-start;">
+                                <span class="badge-pill"><i class="fas fa-layer-group"></i> ${totalModules} Modules</span>
+                                <span class="badge-pill"><i class="fas fa-book"></i> ${totalLessons} Lessons</span>
+                            </div>
+                        </div>
+                    `;
+
+                let curriculumHtml = "";
+                const moduleKeys = Object.keys(modules);
+
+                if (moduleKeys.length > 0) {
+                    curriculumHtml += `<div style="display:flex; flex-direction:column; gap:40px;">`;
+                    moduleKeys.forEach(modName => {
+                        curriculumHtml += `
+                            <div>
+                                <div class="section-title"><i class="fas fa-layer-group" style="color:var(--primary);"></i> ${modName}</div>
+                                <div class="grid-cards">
+                                    ${modules[modName].map(t => {
+                            let icon = "fa-book-open"; // Default text icon
+
+                            return `
+                                        <div class="saas-card" onclick="openTopic(${t.originalIndex})">
+                                            <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px;">
+                                                <h3>${t.title}</h3>
+                                                <i class="fas ${icon}" style="color:var(--text-muted); font-size:1.2rem;"></i>
+                                            </div>
+                                            <p>${t.content ? t.content.replace(/<[^>]*>?/gm, '').substring(0, 80) + '...' : 'Master the core concepts...'}</p>
+                                            <div class="meta-row">
+                                                <span>${t.type && t.type !== 'video' ? t.type.toUpperCase() : 'LESSON'}</span>
+                                                <span>Start <i class="fas fa-arrow-right" style="font-size:0.7em;"></i></span>
+                                            </div>
+                                        </div>
+                                    `;
+                        }).join('')}
+                                </div>
+                            </div>
+                         `;
+                    });
+                    curriculumHtml += `</div>`;
+                }
+
+                // Use Loaded Projects or Fallback
+                const projectsToList = currentProjects.length > 0 ? currentProjects : [
+                    { title: `${course.title} Starter`, level: 'Beginner', description: 'Build a real-world application using the concepts you learned.', status: 'View' },
+                    { title: 'Advanced Workshop', level: 'Advanced', description: 'Deep dive into complex scenarios and performance optimization.', status: 'Locked' }
+                ];
+
+                const projectsHtml = `
+                        <div class="section-title" style="margin-top: 40px;"><i class="fas fa-code-branch" style="color:var(--primary);"></i> Projects</div>
+                         <div class="grid-cards">
+                            ${projectsToList.map((p, idx) => `
+                            <div class="saas-card" onclick="openProject(${idx})">
+                                <h3>${p.title}</h3>
+                                <p>${p.description || p.desc}</p>
+                                <div class="meta-row">
+                                    <span style="color: ${p.level === 'Beginner' ? '#059669' : '#D97706'}; font-weight:500;">${p.level}</span>
+                                    <span>View -></span>
+                                </div>
+                            </div>
+                            `).join('')}
+                        </div>
+                    `;
+
+                displayEl.innerHTML = headerHtml + curriculumHtml + projectsHtml;
+            }
+
+            window.loadCourse = function (courseId) {
+                const validId = courseData[courseId] ? courseId : 'html';
+                const course = courseData[validId];
+                activeCourseId = validId;
+
+                // Ensure default scrolling for Dashboard
+                document.querySelector('.main-content').classList.remove('lesson-mode');
+
+                // Update UI state (URL & Sidebar)
+                const newUrl = `${window.location.pathname}?course=${validId}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+
+                document.querySelectorAll('.course-item').forEach(el => {
+                    el.classList.toggle('active', el.textContent.includes(course.title));
+                });
+
+                // Load Project Data & Update View
+                loadProjectData(validId, () => {
+                    renderDashboard(course);
+                });
+            };
+
+            window.openTopic = (index) => {
+                const course = courseData[activeCourseId];
+                const topic = course.sections[index];
+                const total = course.sections.length;
+
+                // Enable Fixed Layout for Lesson
+                document.querySelector('.main-content').classList.add('lesson-mode');
+
+                // Steps / Takeaways
+                const steps = topic.steps || ["Review key concepts.", "Practice scenarios."];
+
+                // Content Generation: Text Only Mode
+                const stepsHtml = steps.map((s, i) => `
+                    <div id="step-${i}" style="margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border-light);">
+                        <h4 style="color:var(--primary); margin-bottom:10px;">${i + 1}. ${s}</h4>
+                        <p style="color:var(--text-secondary); line-height:1.6;">
+                            Detailed explanation for "<strong>${s}</strong>" goes here. This section expands on the key concept to ensure thorough understanding.
+                        </p>
+                    </div>
+                `).join('');
+
+                const lessonBody = `
+                    <div class="saas-card" style="min-height: 400px;">
+                        <h3 style="margin-bottom: 20px; font-size: 1.25rem;">Lesson Material</h3>
+                        <div style="font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary);">
+                            ${topic.content || `<p>Welcome to <strong>${topic.title}</strong>.</p>`}
+                            <div style="margin-top: 20px;">
+                                ${stepsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const contentHtml = `
+                        <div class="app-header" style="flex-shrink:0;">
+                            <div>
+                                <div class="app-breadcrumbs">
+                                    <span style="cursor:pointer; color:var(--primary);" onclick="window.loadCourse('${activeCourseId}')">
+                                        <i class="fas fa-arrow-left"></i> Back to Course
+                                    </span>
+                                    / Module ${index + 1}
+                                </div>
+                                <h1>${topic.title}</h1>
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <span class="badge-pill">Reading Time: 5 min</span>
+                            </div>
+                        </div>
+
+                        <div class="scrollable-lesson-body">
+                            <div class="lesson-grid">
+                                <!-- Main Lesson Content -->
+                                <div style="display:flex; flex-direction:column;">
+                                    ${lessonBody}
+                                </div>
+
+                                <!-- Sidebar / Control Blocks (Sticky) -->
+                                <div style="display: flex; flex-direction: column; gap: 20px; position: sticky; top: 1rem; max-height: calc(100vh - 40px); overflow-y: auto; padding-right:5px;">
+                                    <div class="saas-card">
+                                        <h3><i class="fas fa-list-ul" style="color:var(--primary);"></i> Key Points</h3>
+                                        <ul style="padding: 0; margin: 0; list-style: none; display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+                                            ${steps.map((s, i) => `
+                                            <li onclick="document.getElementById('step-${i}') ? document.getElementById('step-${i}').scrollIntoView({behavior: 'smooth', block: 'center'}) : null"
+                                                style="padding: 10px; border-radius: 6px; background: var(--bg-body); cursor: pointer; font-size: 0.9rem; color: var(--text-main); transition: 0.2s; border: 1px solid transparent;">
+                                                <span style="color:var(--primary); font-weight:600; margin-right:8px;">${i + 1}</span> ${s}
+                                            </li>
+                                            `).join('')}
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="saas-card" style="background: linear-gradient(135deg, var(--primary), #a855f7); color: white; border: none;">
+                                        <h3 style="color:white; opacity:0.9;">Ready?</h3>
+                                        <p style="color:white; opacity:0.8; margin-bottom:15px;">Verify your knowledge.</p>
+                                        <button onclick="openQuiz(${index})" style="background:white; color:var(--primary); border:none; padding:10px 20px; border-radius:6px; font-weight:600; cursor:pointer; width:100%;">Start Quiz</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Footer -->
+                        <div class="lesson-footer">
+                            ${index > 0 ?
+                        `<button onclick="openTopic(${index - 1})" class="saas-card" style="padding:10px 20px; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>` : '<div></div>'}
+
+                            ${index < total - 1 ?
+                        `<button onclick="completeTopic(${index}); openTopic(${index + 1})" class="saas-card" style="padding:10px 20px; display:flex; align-items:center; gap:8px; border-color:var(--primary); color:var(--primary);">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>` :
+                        `<button onclick="completeTopic(${index}); finishCourse('${activeCourseId}')" class="saas-card" style="padding:10px 20px; display:flex; align-items:center; gap:8px; background:var(--primary); color:white; border:none; cursor:pointer;">
+                                    Finish Course <i class="fas fa-trophy"></i>
+                                </button>`}
+                        </div>
+                    `;
+
+                displayEl.innerHTML = contentHtml;
+            };
+
+            window.finishCourse = (courseId) => {
+                // Simple Celebration Demo
+                const celebrationHtml = `
+                    <div id="celebration-overlay" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column; color:white; text-align:center; animation: fadeIn 0.3s;">
+                        <i class="fas fa-trophy" style="font-size:5rem; color:#F59E0B; margin-bottom:20px; animation: bounce 1s infinite;"></i>
+                        <h1 style="font-size:2.5rem; margin-bottom:10px;">Course Completed!</h1>
+                        <p style="font-size:1.2rem; color:#e2e8f0; margin-bottom:30px;">You've mastered the fundamentals of ${courseId.toUpperCase()}.</p>
+                        <button onclick="window.openCertificateForm('${courseId}')" style="background:#22c55e; color:white; border:none; padding:15px 40px; border-radius:30px; font-weight:bold; font-size:1.2rem; cursor:pointer; transition: transform 0.2s;">
+                            Claim Certificate
+                        </button>
+                    </div>
+                `;
+                const div = document.createElement('div');
+                div.innerHTML = celebrationHtml;
+                document.body.appendChild(div);
+            };
+
+            // --- EDITOR ENGINE FUNCTIONS ---
+            window.runCode = function () {
+                const html = document.getElementById('ed-html').value;
+                const css = document.getElementById('ed-css').value;
+                const js = document.getElementById('ed-js').value;
+                const frame = document.getElementById('ed-frame');
+                const doc = frame.contentDocument || frame.contentWindow.document;
+                doc.open();
+                doc.write(html + '<style>' + css + '</style><script>' + js + '<\/script>');
+                doc.close();
+            };
+
+            window.switchTab = function (tab) {
+                document.querySelectorAll('.ed-textarea').forEach(el => el.style.display = 'none');
+                document.getElementById('ed-' + tab).style.display = 'block';
+
+                // Reset Tabs
+                document.querySelectorAll('.ed-tab').forEach(el => {
+                    el.style.background = 'transparent';
+                    el.style.color = '#94a3b8';
+                    el.style.borderTop = '2px solid transparent';
+                });
+
+                // Activate Tab
+                const activeBtn = document.getElementById('tab-' + tab);
+                activeBtn.style.background = '#0f172a';
+                activeBtn.style.color = 'white';
+                activeBtn.style.borderTop = '2px solid #6366f1';
+            };
+
+            window.copyEditorCode = function (btn) {
+                // Determine active code
+                let code = "";
+                if (document.getElementById('ed-html').style.display !== 'none') code = document.getElementById('ed-html').value;
+                else if (document.getElementById('ed-css').style.display !== 'none') code = document.getElementById('ed-css').value;
+                else code = document.getElementById('ed-js').value;
+
+                navigator.clipboard.writeText(code).then(() => {
+                    const original = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => btn.innerHTML = original, 2000);
+                });
+            };
+
+            window.openProject = (index) => {
+                // Enable Fixed Layout for Project
+                document.querySelector('.main-content').classList.add('lesson-mode');
+
+                let project = {
+                    title: 'Starter Project',
+                    description: 'Build a complete application.',
+                    status: 'Active'
+                };
+
+                if (currentProjects && currentProjects[index]) {
+                    project = currentProjects[index];
+                }
+
+                const contentHtml = `
+                    <div class="app-header" style="flex-shrink:0;">
+                         <div>
+                             <div class="app-breadcrumbs">
+                                <span style="cursor:pointer; color:var(--primary);" onclick="window.loadCourse('${activeCourseId}')">
+                                    <i class="fas fa-arrow-left"></i> Back to Course
+                                </span> 
+                                / Projects
+                            </div>
+                            <h1>${project.title}</h1>
+                        </div>
+                         <div style="display:flex; gap:10px;">
+                            <span class="badge-pill" style="background:#ECFDF5; color:#059669; border-color:#A7F3D0;">Challenge</span>
+                        </div>
+                    </div>
+
+                    <div class="scrollable-lesson-body">
+                        <div style="max-width: 900px; margin: 0 auto; padding-top:40px; padding-bottom: 40px; text-align:center;">
+                            <div class="saas-card" style="padding: 40px;">
+                                <div style="font-size:3rem; color:var(--primary); margin-bottom:20px;">
+                                    <i class="fas fa-file-code"></i>
+                                </div>
+                                <h2 style="margin-top:0; font-size:2rem; margin-bottom:10px;">${project.title}</h2>
+                                <p style="color: var(--text-secondary); line-height: 1.6; font-size:1.1rem; margin-bottom:30px;">
+                                    ${project.description}
+                                </p>
+                                
+                                ${project.steps ? `
+                                    <div style="text-align:left; background:#f8fafc; padding:20px; border-radius:8px; margin-bottom:30px; border:1px solid #e2e8f0;">
+                                        <strong><i class="fas fa-tasks"></i> Objectives:</strong>
+                                        <ul style="margin-top:10px; margin-bottom:0; padding-left:20px; color:var(--text-secondary);">
+                                            ${project.steps.map(s => `<li>${s}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+
+                                <button onclick="startProjectLab(${index})" style="background:var(--primary); color:white; border:none; padding:15px 30px; border-radius:8px; font-weight:600; font-size:1.1rem; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition: transform 0.2s;">
+                                    <i class="fas fa-laptop-code"></i> Open Code Engine
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                displayEl.innerHTML = contentHtml;
+            };
+
+            window.startProjectLab = (index) => {
+                let project = { title: 'Starter Project', description: 'Build a complete app.', code: '' };
+                if (currentProjects && currentProjects[index]) {
+                    project = currentProjects[index];
+                }
+
+                // Editor Layout HTML
+                const editorHtml = `
+                    <div class="saas-card" style="padding:0; overflow:hidden; border:1px solid #334155; background:#0f172a; margin-top:30px; display:flex; flex-direction:column; height: 600px;">
+                        <!-- Toolbar -->
+                        <div style="display:flex; justify-content:space-between; background:#1e293b; border-bottom:1px solid #334155; height: 50px; flex-shrink:0;">
+                            <div style="display:flex;">
+                                <button id="tab-html" onclick="switchTab('html')" class="ed-tab" style="padding:0 20px; background:#0f172a; color:white; border:none; border-top:2px solid #6366f1; cursor:pointer; font-weight:500;">HTML</button>
+                                <button id="tab-css" onclick="switchTab('css')" class="ed-tab" style="padding:0 20px; background:transparent; color:#94a3b8; border:none; border-top:2px solid transparent; cursor:pointer; font-weight:500;">CSS</button>
+                                <button id="tab-js" onclick="switchTab('js')" class="ed-tab" style="padding:0 20px; background:transparent; color:#94a3b8; border:none; border-top:2px solid transparent; cursor:pointer; font-weight:500;">JS</button>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:10px; padding-right:10px;">
+                                <button onclick="openProject(${index})" style="background:transparent; color:#94a3b8; border:none; padding:6px 10px; cursor:pointer; margin-right:10px;">Back to Brief</button>
+                                <button onclick="copyEditorCode(this)" style="background:rgba(255,255,255,0.1); color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;" title="Copy Active Tab"><i class="far fa-copy"></i></button>
+                                <button onclick="runCode()" style="background:#22c55e; color:white; border:none; padding:6px 16px; border-radius:4px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:6px;"><i class="fas fa-play"></i> Run</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Editor Body -->
+                        <div style="display:flex; flex-wrap:wrap; flex-grow:1; height: calc(100% - 50px);">
+                            <div style="flex:1; min-width:300px; border-right:1px solid #334155; position:relative;">
+                                <textarea id="ed-html" class="ed-textarea" placeholder="HTML Code..." style="width:100%; height:100%; background:#0f172a; color:#e2e8f0; padding:15px; border:none; font-family:'Menlo', monospace; resize:none; outline:none; font-size:14px; line-height:1.5; box-sizing:border-box; display:block;"></textarea>
+                                <textarea id="ed-css" class="ed-textarea" placeholder="CSS Code..." style="width:100%; height:100%; background:#0f172a; color:#e2e8f0; padding:15px; border:none; font-family:'Menlo', monospace; resize:none; outline:none; font-size:14px; line-height:1.5; box-sizing:border-box; display:none;"></textarea>
+                                <textarea id="ed-js" class="ed-textarea" placeholder="JavaScript Code..." style="width:100%; height:100%; background:#0f172a; color:#e2e8f0; padding:15px; border:none; font-family:'Menlo', monospace; resize:none; outline:none; font-size:14px; line-height:1.5; box-sizing:border-box; display:none;"></textarea>
+                            </div>
+                            <div style="flex:1; min-width:300px; background:white; position:relative;">
+                                <div style="position:absolute; top:0; left:0; right:0; height:30px; background:#f1f5f9; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; padding-left:10px; color:#64748b; font-size:0.8rem; font-weight:600;">
+                                    <i class="fas fa-desktop" style="margin-right:6px;"></i> Preview / Output
+                                </div>
+                                <iframe id="ed-frame" style="width:100%; height:calc(100% - 30px); margin-top:30px; border:none;"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                 `;
+
+                const contentHtml = `
+                    <div class="app-header" style="flex-shrink:0;">
+                         <div>
+                             <div class="app-breadcrumbs">
+                                <span style="cursor:pointer; color:var(--primary);" onclick="window.openProject('${index}')">
+                                    <i class="fas fa-arrow-left"></i> Back to Project Brief
+                                </span> 
+                                / Lab
+                            </div>
+                            <h1>${project.title} - Engine</h1>
+                        </div>
+                    </div>
+                    <div class="scrollable-lesson-body">
+                        <div style="max-width: 1400px; margin: 0 auto; padding-bottom: 40px;">
+                             ${editorHtml}
+                        </div>
+                    </div>
+                 `;
+
+                displayEl.innerHTML = contentHtml;
+
+                // Initialize Code Content Safe Injection
+                if (project.code) {
+                    document.getElementById('ed-html').value = project.code;
+                } else {
+                    document.getElementById('ed-html').value = "<!-- No source code available -->\n<h1>Hello World</h1>";
+                }
+                document.getElementById('ed-css').value = "body { font-family: sans-serif; padding: 20px; }";
+                document.getElementById('ed-js').value = "// console.log('Ready');";
+
+                setTimeout(window.runCode, 100);
+            };
+
+            window.openQuiz = (index) => {
+                const course = courseData[activeCourseId];
+                const topic = course.sections[index];
+                const quizData = topic.quiz || [
+                    { q: "What is the main purpose of this topic?", options: ["It looks cool", "It serves a function", "None of the above"], a: 1 },
+                    { q: "True or False: This is important.", options: ["True", "False"], a: 0 }
+                ];
+
+                document.querySelector('.main-content').classList.add('lesson-mode');
+
+                const contentHtml = `
+                    <div class="app-header" style="flex-shrink:0;">
+                         <div>
+                             <div class="app-breadcrumbs">
+                                <span style="cursor:pointer; color:var(--primary);" onclick="window.openTopic('${index}')">
+                                    <i class="fas fa-arrow-left"></i> Back to Lesson
+                                </span> 
+                                / Assessment
+                            </div>
+                            <h1>Quiz: ${topic.title}</h1>
+                        </div>
+                    </div>
+
+                    <div class="scrollable-lesson-body">
+                        <div style="max-width: 800px; margin: 0 auto; padding-top:40px; padding-bottom: 40px;">
+                            ${quizData.map((q, i) => `
+                                <div class="saas-card" style="padding: 30px; margin-bottom: 20px;">
+                                    <h3 style="margin-top:0; margin-bottom:20px; color:var(--text-main); font-size:1.1rem;">
+                                        <span style="color:var(--primary); margin-right:8px;">Q${i + 1}.</span> ${q.q}
+                                    </h3>
+                                    <div style="display:flex; flex-direction:column; gap:10px;">
+                                        ${q.options.map((opt, optIdx) => `
+                                            <label style="display:flex; align-items:center; padding:15px; border:1px solid var(--border-light); border-radius:6px; cursor:pointer; transition:0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                                                <input type="radio" name="q-${i}" value="${optIdx}" style="margin-right:15px; accent-color:var(--primary);">
+                                                ${opt}
+                                            </label>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+
+                            <div style="text-align:right;">
+                                <button onclick="window.submitQuiz(${index})" style="background:var(--primary); color:white; border:none; padding:15px 40px; border-radius:8px; font-weight:600; font-size:1.1rem; cursor:pointer;">
+                                    Submit Answers <i class="fas fa-paper-plane" style="margin-left:8px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                displayEl.innerHTML = contentHtml;
+            };
+
+            window.submitQuiz = (index) => {
+                const course = courseData[activeCourseId];
+                const quizData = course.sections[index].quiz || [];
+                let score = 0;
+                let total = quizData.length;
+
+                quizData.forEach((q, i) => {
+                    const selected = document.querySelector(`input[name="q-${i}"]:checked`);
+                    if (selected && parseInt(selected.value) === q.a) {
+                        score++;
+                    }
+                });
+
+                const passed = (score / total) >= 0.5;
+                const modalHtml = `
+                    <div id="quiz-result" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column; color:white; text-align:center; animation: fadeIn 0.3s;">
+                        <i class="fas ${passed ? 'fa-check-circle' : 'fa-times-circle'}" style="font-size:5rem; color:${passed ? '#22c55e' : '#ef4444'}; margin-bottom:20px;"></i>
+                        <h1 style="font-size:2.5rem; margin-bottom:10px;">${passed ? 'Well Done!' : 'Keep Trying'}</h1>
+                        <p style="font-size:1.5rem; color:#e2e8f0; margin-bottom:30px;">You scored ${score} / ${total}</p>
+                        <div style="display:flex; gap:20px;">
+                            ${passed ?
+                        `<button onclick="document.getElementById('quiz-result').remove(); window.openTopic(${index < course.sections.length - 1 ? index + 1 : index})" style="background:var(--primary); color:white; border:none; padding:12px 30px; border-radius:30px; font-weight:bold; cursor:pointer;">Continue Learning</button>` :
+                        `<button onclick="document.getElementById('quiz-result').remove()" style="background:white; color:#333; border:none; padding:12px 30px; border-radius:30px; font-weight:bold; cursor:pointer;">Try Again</button>`
+                    }
+                        </div>
+                    </div>
+                `;
+                const div = document.createElement('div');
+                div.innerHTML = modalHtml;
+                document.body.appendChild(div);
+            };
+
+            window.openCertificateForm = (courseId) => {
+                if (document.getElementById('celebration-overlay')) document.getElementById('celebration-overlay').remove();
+
+                const formHtml = `
+                    <div class="app-header" style="justify-content:center;"><h1>Claim Certificate</h1></div>
+                    <div style="display:flex; justify-content:center; align-items:center; min-height:60vh;">
+                        <div class="saas-card" style="padding:40px; text-align:center; max-width:500px; width:100%; display:flex; flex-direction:column; align-items:center;">
+                            <i class="fas fa-certificate" style="font-size:4rem; color:var(--primary); margin-bottom:20px;"></i>
+                            <h2>Verify Your Identity</h2>
+                            <p style="color:var(--text-secondary); margin-bottom:30px;">Enter your full name for the certificate.</p>
+                            <input type="text" id="cert-name" placeholder="Full Name (e.g. John Doe)" style="width:100%; padding:15px; border:1px solid #cbd5e1; border-radius:8px; font-size:1.1rem; margin-bottom:20px; outline:none; text-align:center;">
+                            <button onclick="window.generateCertificate('${courseId}')" style="background:var(--primary); color:white; border:none; padding:15px 40px; border-radius:8px; font-weight:600; font-size:1.1rem; cursor:pointer; width:100%;">Generate Certificate</button>
+                        </div>
+                    </div>
+                `;
+                displayEl.innerHTML = formHtml;
+            };
+
+            window.generateCertificate = (courseId) => {
+                const name = document.getElementById('cert-name').value || "Learner";
+                const date = new Date().toLocaleDateString();
+                const courseName = courseData[courseId].title + " Fundamentals";
+
+                const certHtml = `
+                    <div style="background:#f8fafc; min-height:100vh; padding:20px; display:flex; flex-direction:column; align-items:center;">
+                        <button onclick="window.loadCourse('${courseId}')" style="align-self:flex-start; margin-bottom:20px; border:none; background:transparent; cursor:pointer; font-size:1rem; color:#64748b;"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+                        
+                        <div id="certificate-view" style="width:100%; max-width:900px; background:#fff; padding:80px; box-shadow:0 10px 30px -10px rgba(0,0,0,0.1); position:relative; overflow:hidden;">
+                            <!-- Accent -->
+                            <div style="position:absolute; top:0; left:0; right:0; height:6px; background:linear-gradient(90deg, var(--primary), #a855f7);"></div>
+                            <div style="text-align:center;">
+                                <div style="font-size:0.9rem; text-transform:uppercase; letter-spacing:3px; color:#64748b; font-weight:600; margin-bottom:20px;">Certificate of Completion</div>
+                                <h1 style="font-size:4rem; font-weight:800; color:#0f172a; margin:10px 0 30px; letter-spacing:-1px;">${name}</h1>
+                                <p style="font-size:1.1rem; color:#334155; margin-bottom:5px;">For the successful completion of</p>
+                                <h2 style="font-size:2rem; font-weight:600; color:var(--primary); margin:0 0 60px;">${courseName}</h2>
+                                <div style="border-top:1px solid #e2e8f0; padding-top:30px; display:flex; justify-content:space-between; align-items:flex-end;">
+                                    <div style="text-align:left;"><div style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase;">Date</div><div style="font-weight:500;">${date}</div></div>
+                                    <div style="text-align:right;"><div style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase;">ID</div><div style="font-family:monospace;">${"CID-" + Math.random().toString(36).substr(2, 6).toUpperCase()}</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="window.print()" style="margin-top:40px; background:#1e293b; color:white; border:none; padding:15px 40px; border-radius:8px; font-weight:600; font-size:1.1rem; cursor:pointer;"><i class="fas fa-download"></i> Download / Print</button>
+                    </div>
+                `;
+
+                if (!document.getElementById('print-style')) {
+                    const printStyle = document.createElement('style');
+                    printStyle.id = 'print-style';
+                    printStyle.innerHTML = `@media print { body * { visibility: hidden; } #certificate-view, #certificate-view * { visibility: visible; } #certificate-view { position: absolute; left: 0; top: 0; width: 100%; border: 5px solid #000 !important; margin: 0; } button { display: none !important; } .app-sidebar, .app-header { display: none !important; } }`;
+                    document.head.appendChild(printStyle);
+                }
+
+                displayEl.innerHTML = certHtml;
+            };
+
+            window.completeTopic = (index) => {
+                const key = `skill_progress_${activeCourseId}`;
+                const current = parseInt(localStorage.getItem(key)) || 0;
+                if (index + 1 > current) {
+                    localStorage.setItem(key, index + 1);
+                }
+            };
+
+            // Initial Trigger
+            window.loadCourse(activeCourseId);
+        });
+    </script>
+</body>
+
+</html>

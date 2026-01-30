@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/favicon_round.png" type="image/png">
+    <title>Blog - SkillSpot.in | Tech Trends & Insights</title>
+    <meta name="description"
+        content="Stay updated with the latest in technology, coding tutorials, and career advice from SkillSpot.in.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <!-- Navbar Styles will be loaded by navbar.js -->
+
+    <style>
+        body {
+            font-size: 14.5px;
+        }
+
+        /* Blog Specific Styles */
+        .blog-header {
+            padding: 20px 5% 0px;
+            /* TIGHT GAP FOR FRONT PAGE (List View) */
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+        }
+
+        .blog-header h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5% 4rem;
+            /* Zero top padding */
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 3rem;
+        }
+
+        /* List View Styles */
+        .blog-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .blog-content {
+            padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-meta {
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .blog-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            color: var(--text-main);
+        }
+
+        .blog-excerpt {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .read-more {
+            color: var(--text-main);
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.2s;
+        }
+
+        .read-more:hover {
+            gap: 12px;
+            color: var(--primary);
+        }
+
+        /* Detail View Styles */
+        .blog-detail {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            margin-top: 120px;
+            /* RESTORED: Wide gap for Article View to clear navbar */
+        }
+
+        .detail-header {
+            margin-bottom: 2rem;
+        }
+
+        .detail-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .detail-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+
+        .detail-body h2,
+        .detail-body h3 {
+            color: var(--text-main);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-heading);
+        }
+
+        .detail-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-body ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .detail-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Sidebar */
+        .sidebar-widget {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            transition: margin-top 0.3s ease;
+        }
+
+
+        .widget-title {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .recent-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recent-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .recent-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .recent-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-main);
+            transition: color 0.2s;
+        }
+
+        .recent-item:hover .recent-info h4 {
+            color: var(--primary);
+        }
+
+        .recent-info span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .cat-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 0 5px 5px 0;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .cat-tag:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        /* MOBILE OPTIMIZATION for BLOG */
+        @media (max-width: 900px) {
+            .blog-header {
+                padding: 10px 5% 10px;
+                /* Tight for List View */
+            }
+
+            .blog-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .blog-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-widget {
+                margin-top: 2rem;
+            }
+
+            .detail-image {
+                height: 250px;
+            }
+
+            .blog-detail {
+                margin-top: 80px;
+                /* RESTORED: Safe gap for Mobile Article View */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar-placeholder"></div>
+    <div class="background-glow"></div>
+
+    <!-- Header -->
+    <header class="blog-header fade-up">
+        <h1>Our <span class="gradient-text">Insights</span></h1>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+            Explore the latest trends in technology, tutorials, and career growth strategies curated by our experts.
+        </p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="blog-container">
+
+        <!-- List View -->
+        <div class="blog-list" id="blogListContainer">
+            <!-- Dynamic Content -->
+        </div>
+
+        <!-- Detail View -->
+        <div class="blog-detail" id="blogDetailContainer">
+            <!-- Dynamic Content -->
+        </div>
+
+        <!-- Sidebar -->
+        <aside id="blogSidebar">
+            <!-- REMOVED ADMIN WIDGET AS REQUESTED -->
+
+            <!-- Recent Posts -->
+            <div class="sidebar-widget">
+                <h3 class="widget-title">Recent Blogs</h3>
+                <div class="recent-list" id="recentListContainer">
+                    <!-- Dynamic Recent -->
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="sidebar-widget">
+                <h3 class="widget-title">Categories</h3>
+                <div id="categoryContainer">
+                    <a href="#" class="cat-tag">Web Dev</a>
+                    <a href="#" class="cat-tag">AI & ML</a>
+                    <a href="#" class="cat-tag">Career</a>
+                    <a href="#" class="cat-tag">Cyber Security</a>
+                    <a href="#" class="cat-tag">Tutorials</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script src="navbar.js"></script>
+    <script src="footer.js"></script>
+
+    <!-- Load Local JSON or Fallback -->
+    <script src="blog-data.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Data Aggregation
+            let posts = [];
+            if (window.blogData) posts = window.blogData;
+
+            // Merge with LocalStorage (User Generated)
+            const localBlogs = JSON.parse(localStorage.getItem('skillspot_custom_blogs') || '[]');
+            const allPosts = [...localBlogs, ...posts];
+
+            // 2. Elements
+            const listContainer = document.getElementById('blogListContainer');
+            const detailContainer = document.getElementById('blogDetailContainer');
+            const recentContainer = document.getElementById('recentListContainer');
+            const header = document.querySelector('.blog-header');
+            const sidebar = document.getElementById('blogSidebar');
+
+            // 3. Router Checking
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            if (postId) {
+                renderDetailView(postId);
+            } else {
+                renderListView();
+            }
+
+            // Function: List View
+            function renderListView() {
+                listContainer.style.display = 'grid';
+                detailContainer.style.display = 'none';
+                header.style.display = 'block'; // Show header in list view
+                sidebar.style.marginTop = '0'; // Reset sidebar margin
+
+                listContainer.innerHTML = '';
+                recentContainer.innerHTML = '';
+
+                allPosts.forEach((post, index) => {
+                    // Main Feed
+                    const card = document.createElement('article');
+                    card.className = 'blog-card';
+                    card.innerHTML = `
+                        <img src="${post.image}" alt="${post.title}" class="blog-image">
+                        <div class="blog-content">
+                            <div class="blog-meta">${post.category} • ${post.date}</div>
+                            <h2 class="blog-title">${post.title}</h2>
+                            <p class="blog-excerpt">${post.excerpt || ''}</p>
+                            <a href="blog.html?id=${post.id}" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    `;
+                    listContainer.appendChild(card);
+
+                    // Recent Sidebar (Top 5)
+                    if (index < 5) {
+                        const recItem = document.createElement('li');
+                        recItem.className = 'recent-item';
+                        recItem.onclick = () => window.location.href = `blog.html?id=${post.id}`;
+                        recItem.innerHTML = `
+                            <img src="${post.image}" alt="thumb" class="recent-thumb">
+                            <div class="recent-info">
+                                <h4>${post.title}</h4>
+                                <span>${post.date}</span>
+                            </div>
+                        `;
+                        recentContainer.appendChild(recItem);
+                    }
+                });
+            }
+
+            // Function: Detail View
+            function renderDetailView(id) {
+                const post = allPosts.find(p => p.id === id);
+                if (!post) {
+                    listContainer.innerHTML = '<h3>Post not found</h3>';
+                    return;
+                }
+
+                listContainer.style.display = 'none';
+                detailContainer.style.display = 'block';
+                // HIDE HEADER
+                header.style.display = 'none';
+
+                document.querySelector('.blog-container').classList.add('detail-view-active');
+
+                // RESTORED: Sidebar margin to match old behavior
+                // Desktop: 120px, Mobile: 80px (safe values)
+                sidebar.style.marginTop = window.innerWidth <= 900 ? '80px' : '120px';
+
+                detailContainer.innerHTML = `
+                    <a href="blog.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Blogs</a>
+                    
+                    <div class="detail-header">
+                        <div class="blog-meta">${post.category} • ${post.date} • By ${post.author || 'SkillSpot'}</div>
+                        <h1 style="font-family: var(--font-heading); font-size: 2.2rem; margin-top: 10px; line-height: 1.2;">${post.title}</h1>
+                    </div>
+
+                    <img src="${post.image}" class="detail-image" alt="${post.title}">
+
+                    <div class="detail-body">
+                        ${post.content}
+                    </div>
+                `;
+
+                // Still populate sidebar recent list
+                allPosts.slice(0, 5).forEach(post => {
+                    const recItem = document.createElement('li');
+                    recItem.className = 'recent-item';
+                    recItem.onclick = () => window.location.href = `blog.html?id=${post.id}`;
+                    recItem.innerHTML = `
+                            <img src="${post.image}" alt="thumb" class="recent-thumb">
+                            <div class="recent-info">
+                                <h4>${post.title}</h4>
+                                <span>${post.date}</span>
+                            </div>
+                        `;
+                    recentContainer.appendChild(recItem);
+                });
+            }
+        });
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+
+</html>

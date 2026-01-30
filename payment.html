@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout - SkillSpot.in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            /* Page-specific variables that default to Light Mode */
+            --right-panel-bg: #f1f5f9;
+            --glass-border: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode {
+            /* Dark Mode Overrides */
+            --right-panel-bg: #0b1120;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            font-size: 14.5px;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-top: 80px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .payment-container {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px 80px;
+            /* Adaptive background gradient */
+            background:
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
+        }
+
+        .checkout-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            overflow: hidden;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        body.dark-mode .checkout-card {
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Left Side */
+        .checkout-info {
+            padding: 50px;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        /* Right Side */
+        .checkout-payment {
+            padding: 50px;
+            background: var(--right-panel-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .course-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .course-badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            color: var(--text-main);
+            margin-top: 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .platform-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.05);
+            /* Light mode bg */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .platform-icon {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Typography overrides for specific areas if needed */
+        .feature-item h4 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Payment Buttons & Methods */
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+        }
+
+        .payment-method-card {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 16px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        body.dark-mode .payment-method-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--glass-border);
+        }
+
+        .payment-method-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .payment-method-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-method-card p {
+            color: var(--text-main);
+        }
+
+        .payment-method-card i {
+            color: var(--text-muted);
+        }
+
+        .upload-area {
+            border: 2px dashed #10b981;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .upload-area:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .divider {
+            background: var(--text-muted);
+            opacity: 0.2;
+        }
+
+        body.dark-mode .divider {
+            background: #fff;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 850px) {
+            .checkout-card {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-info {
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 30px;
+            }
+
+            .checkout-payment {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+    <script src="navbar.js"></script>
+
+    <div class="payment-container">
+        <div class="checkout-card">
+            <!-- Left Side: Course Info -->
+            <div class="checkout-info">
+                <span class="course-badge">Premium Access</span>
+                <h1 id="course-title" style="font-size: 1.75rem; line-height: 1.1; margin-bottom: 1rem;">Course Name
+                </h1>
+                <p id="course-desc"
+                    style="color:var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2.5rem;">
+                    Unlock lifetime access to expert-led lessons, real-world projects, and recognized certification.
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="feature-item">
+                        <div class="platform-icon" style="color: #818cf8;"><i class="fas fa-infinity"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-weight:700; color:var(--text-main);">Lifetime Access</h4>
+                            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Learn at your own
+                                pace, anytime.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="platform-icon" style="color: #f472b6;"><i class="fas fa-certificate"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-weight:700; color:var(--text-main);">Verified Certification</h4>
+                            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Boost your resume
+                                instantly.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="platform-icon" style="color: #34d399;"><i class="fas fa-users"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-weight:700; color:var(--text-main);">Community Support</h4>
+                            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Get help when you're
+                                stuck.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; display: flex; gap: 20px; opacity: 0.5;">
+                    <i class="fab fa-cc-visa fa-2x" style="color:var(--text-main)"></i>
+                    <i class="fab fa-cc-mastercard fa-2x" style="color:var(--text-main)"></i>
+                    <i class="fab fa-google-pay fa-2x" style="color:var(--text-main)"></i>
+                    <i class="fas fa-shield-halved fa-2x" style="color:var(--text-main)"></i>
+                </div>
+            </div>
+
+            <!-- Right Side: Payment -->
+            <div class="checkout-payment">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+                    <div>
+                        <p
+                            style="margin:0; text-transform:uppercase; font-size:0.85rem; font-weight:700; letter-spacing:1px; color:var(--text-muted);">
+                            Total Pay</p>
+                        <h3 id="course-price"
+                            style="margin:5px 0 0; font-size: 2.2rem; font-weight: 800; color: var(--text-main);">₹499
+                        </h3>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="text-decoration: line-through; color: var(--text-muted); font-size: 0.9rem;">₹4,999
+                        </div>
+                        <div id="discount-amount" style="color: #10b981; font-weight: 700; font-size: 0.9rem;">90% OFF
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Razorpay Hidden Temporarily (Step 2107) -->
+                <div style="margin-bottom: 1.5rem; display: none;">
+                    <button onclick="payWithRazorpay()" class="btn btn-primary"
+                        style="width: 100%; padding: 18px; font-size: 1.1rem; font-weight:600;display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 16px;">
+                        <i class="fas fa-bolt"></i> Pay Securely with Razorpay
+                    </button>
+                    <p style="text-align:center; font-size:0.8rem; margin-top:10px; color:var(--text-muted);">
+                        <i class="fas fa-lock" style="color:#10b981; margin-right:5px;"></i> 256-bit Encrypted
+                    </p>
+                </div>
+
+                <div
+                    style="display: none; align-items: center; text-align: center; margin: 20px 0; gap: 15px; opacity: 0.6;">
+                    <div class="divider" style="flex-grow: 1; height: 1px;"></div>
+                    <span
+                        style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color:var(--text-muted);">Or
+                        Manual Payment</span>
+                    <div class="divider" style="flex-grow: 1; height: 1px;"></div>
+                </div>
+
+                <a id="upi-intent" href="#" class="payment-method-card">
+                    <div
+                        style="width: 40px; height: 40px; background: rgba(99, 102, 241, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-mobile-screen-button" style="color: #818cf8;"></i>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <p style="margin:0; font-weight: 600; color: var(--text-main);">UPI Direct</p>
+                        <p style="margin:0; font-size: 0.8rem; color: var(--text-muted);">GPay, Paytm, PhonePe</p>
+                    </div>
+                    <i class="fas fa-chevron-right" style="opacity:0.3; font-size:0.8rem;"></i>
+                </a>
+
+                <a href="https://wa.me/919074854599?text=Hi%20SkillSpot,%20I've%20completed%20the%20payment%20via%20UPI.%20Here's%20my%20screenshot."
+                    target="_blank" class="upload-area" style="margin-top: 15px;">
+                    <i class="fab fa-whatsapp" style="color: #10b981; font-size: 1.5rem; margin-bottom: 5px;"></i>
+                    <div style="font-weight: 700; color: #10b981; margin-bottom:2px;">Send Screenshot</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">For instant activation via WhatsApp</div>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="footer.js"></script>
+    <script>
+        // Parse URL Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        // Check for 'amount' (from digitalform) OR 'price' (std courses)
+        const coursePrice = urlParams.get('amount') || urlParams.get('price') || '499';
+
+        // Check for 'course' name or default based on context
+        let defaultName = 'Premium Access';
+        if (urlParams.get('amount')) defaultName = 'Custom Digital Quote';
+        const courseName = urlParams.get('course') || defaultName;
+
+        document.getElementById('course-title').innerText = courseName;
+        document.getElementById('course-price').innerText = '₹' + parseInt(coursePrice).toLocaleString();
+
+        // Dynamic Discount/Price Logic
+        const originalPrice = 4999;
+        const currentVal = parseInt(coursePrice);
+
+        // If price is higher than original (e.g. 25000), hide discount and original price
+        if (currentVal >= originalPrice) {
+            document.querySelector('.checkout-payment div[style*="text-decoration"]').style.display = 'none';
+            document.getElementById('discount-amount').style.display = 'none';
+        } else {
+            // Standard small course logic
+            // const discountVal = originalPrice - currentVal; 
+            // document.getElementById('discount-amount').innerText = 'SAVE ₹' + discountVal;
+        }
+
+        // UPI Intent Link Generation
+        const upiID = 'harisalisg-1@oksbi';
+        const upiName = 'SkillSpot.in';
+        const intentLink = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(upiName)}&am=${coursePrice}&cu=INR&tn=${encodeURIComponent(courseName)}`;
+        document.getElementById('upi-intent').setAttribute('href', intentLink);
+
+        function payWithRazorpay() {
+            var options = {
+                "key": "rzp_test_YOUR_KEY",
+                "amount": parseInt(coursePrice) * 100,
+                "currency": "INR",
+                "name": "SkillSpot.in",
+                "description": "Payment for " + courseName,
+                "image": "https://skillspot.in/logo.png",
+                "handler": function (response) {
+                    alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                    window.location.href = "learning.html?success=true&course=" + encodeURIComponent(courseName);
+                },
+                "prefill": {
+                    "name": localStorage.getItem('user_name') || "",
+                    "email": localStorage.getItem('user_email') || "",
+                    "contact": ""
+                },
+                "notes": {
+                    "course": courseName
+                },
+                "theme": {
+                    "color": "#6366f1"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        }
+    </script>
+</body>
+
+</html>

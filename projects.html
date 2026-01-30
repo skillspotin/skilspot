@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Hub | SkillSpot.in</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=3">
+
+    <style>
+        /* --- Udemy-Style Course Player Layout --- */
+        body {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px;
+            /* Smaller header for player view */
+            background-color: #1c1d1f;
+            /* Udemy Player Dark BG */
+            color: #ffffff;
+        }
+
+        #navbar-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: #1c1d1f;
+            border-bottom: 1px solid #3e4143;
+        }
+
+        .app-layout {
+            display: flex;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1c1d1f;
+        }
+
+        /* --- Main Content (Left, 75%) --- */
+        .content-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid #3e4143;
+        }
+
+        /* 1. The Stage (Video/Code Area) */
+        .player-stage {
+            background: #000;
+            min-height: 400px;
+            /* Big stage */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .stage-content {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+
+        /* 2. Tabs Bar */
+        .player-tabs {
+            background: #1c1d1f;
+            border-bottom: 1px solid #3e4143;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #d1d7dc;
+            padding: 15px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #fff;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+        }
+
+        /* 3. Details Area */
+        .details-container {
+            padding: 30px;
+            max-width: 900px;
+        }
+
+        /* --- Sidebar (Right, 25%) --- */
+        .sidebar-list {
+            width: 350px;
+            background-color: #1c1d1f;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #3e4143;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .project-list-container {
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* Course Curriculum Items */
+        .project-list-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #3e4143;
+            background: #1c1d1f;
+            color: #fff;
+            align-items: flex-start;
+        }
+
+        .project-list-item:hover {
+            background-color: #2d2f31;
+        }
+
+        .project-list-item.active {
+            background-color: #2d2f31;
+            border-left: 4px solid #a435f0;
+            /* Udemy Purple */
+        }
+
+        .item-check {
+            margin-top: 4px;
+            color: #6a6f73;
+        }
+
+        .item-info {
+            flex-grow: 1;
+        }
+
+        .item-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .item-meta {
+            font-size: 0.8rem;
+            color: #a1a7b3;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Content Styles */
+        .description-text {
+            line-height: 1.6;
+            color: #d1d7dc;
+            margin-bottom: 20px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .app-layout {
+                flex-direction: column;
+            }
+
+            .sidebar-list {
+                width: 100%;
+                height: 40%;
+                order: 2;
+                border-top: 1px solid #3e4143;
+            }
+
+            .content-view {
+                flex: 1;
+                order: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="navbar-placeholder"></div>
+    <script src="navbar.js"></script>
+
+    <!-- Udemy-Style Layout -->
+
+    <!-- STATE A: COURSE CATALOG GRID -->
+    <div id="catalog-view" class="catalog-container">
+        <div class="catalog-header">
+            <h1>Explore Our Courses</h1>
+            <p>Select a topic to start learning project-based modules.</p>
+        </div>
+
+        <div class="course-grid">
+            <!-- Robotics -->
+            <div class="course-card" onclick="openPlayer('robotics')">
+                <div class="card-icon" style="color: #00d2d3;"><i class="fas fa-robot"></i></div>
+                <div class="card-info">
+                    <h3>Robotics</h3>
+                    <p>21 Modules • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+            <!-- Python -->
+            <div class="course-card" onclick="openPlayer('python')">
+                <div class="card-icon" style="color: #3742fa;"><i class="fab fa-python"></i></div>
+                <div class="card-info">
+                    <h3>Python</h3>
+                    <p>5 Modules • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+            <!-- Web Dev -->
+            <div class="course-card" onclick="openPlayer('web')">
+                <div class="card-icon" style="color: #ff9f43;"><i class="fas fa-globe"></i></div>
+                <div class="card-info">
+                    <h3>Web Development</h3>
+                    <p>10 Modules • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+            <!-- AI -->
+            <div class="course-card" onclick="openPlayer('ai')">
+                <div class="card-icon" style="color: #ff6b6b;"><i class="fas fa-brain"></i></div>
+                <div class="card-info">
+                    <h3>Artificial Intelligence</h3>
+                    <p>Start Learning • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+            <!-- HTML5 -->
+            <div class="course-card" onclick="openPlayer('html5')">
+                <div class="card-icon" style="color: #e55039;"><i class="fab fa-html5"></i></div>
+                <div class="card-info">
+                    <h3>HTML5</h3>
+                    <p>Semantic Web • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+            <!-- CSS3 -->
+            <div class="course-card" onclick="openPlayer('css3')">
+                <div class="card-icon" style="color: #3e6096;"><i class="fab fa-css3-alt"></i></div>
+                <div class="card-info">
+                    <h3>CSS3</h3>
+                    <p>Styling & FX • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+            <!-- JavaScript -->
+            <div class="course-card" onclick="openPlayer('javascript')">
+                <div class="card-icon" style="color: #f1c40f;"><i class="fab fa-js"></i></div>
+                <div class="card-info">
+                    <h3>JavaScript</h3>
+                    <p>Logic & DOM • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+            <!-- React -->
+            <div class="course-card" onclick="openPlayer('react')">
+                <div class="card-icon" style="color: #00d8ff;"><i class="fab fa-react"></i></div>
+                <div class="card-info">
+                    <h3>React</h3>
+                    <p>Modern UI • <span class="start-btn">Start Now</span></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- STATE B: PLAYER VIEW (Hidden by default) -->
+    <div id="player-view" class="app-layout" style="display: none;">
+
+        <!-- MAIN CONTENT (Left) -->
+        <main class="content-view">
+
+            <!-- 1. The Stage (Video/Preview) -->
+            <div class="player-stage" id="playerStage">
+                <!-- Content Injected Here -->
+                <div style="text-align: center; color: #6a6f73;">
+                    <i class="fas fa-play-circle fa-4x" style="margin-bottom: 15px;"></i>
+                    <h3>Select a project to start</h3>
+                </div>
+            </div>
+
+            <!-- 2. Navigation Tabs -->
+            <div class="player-tabs">
+                <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+                <button class="tab-btn" onclick="switchTab('components')">Components</button>
+                <button class="tab-btn" onclick="switchTab('code')">Code & Wiring</button>
+                <button class="tab-btn" onclick="switchTab('steps')">Step-by-Step</button>
+            </div>
+
+            <!-- 3. Details Content -->
+            <div class="detail-card" id="detailContent" style="padding: 30px;">
+                <!-- Tab Contents go here -->
+            </div>
+        </main>
+
+        <!-- SIDEBAR (Right) -->
+        <aside class="sidebar-list">
+            <div class="sidebar-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button onclick="closePlayer()"
+                        style="background:none; border:none; color:#d1d7dc; cursor:pointer;"><i
+                            class="fas fa-arrow-left"></i> Back</button>
+                    <div class="section-header">Curriculum</div>
+                </div>
+                <!-- Mini Topic Selector inside Sidebar -->
+                <select id="topicSelect"
+                    style="background:#2d2f31; color:#fff; border:1px solid #3e4143; padding:5px; border-radius:4px; font-size:0.8rem; height: 30px;">
+                    <option value="robotics">Robotics</option>
+                    <option value="python">Python</option>
+                    <option value="web">Web Dev</option>
+                </select>
+            </div>
+
+            <div class="search-box" style="padding: 10px; border-bottom: 1px solid #3e4143;">
+                <input type="text" id="searchInput" placeholder="Search projects..."
+                    style="width:100%; background:#2d2f31; border:1px solid #3e4143; padding:8px; color:#fff; border-radius:4px;">
+            </div>
+
+            <div class="project-list-container" id="projectList">
+                <!-- List Items -->
+            </div>
+        </aside>
+
+    </div>
+
+    <style>
+        /* --- PREMIUM UI STYLES --- */
+
+        /* Global Animation & Scrollbar */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #3e4143 #1c1d1f;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1c1d1f;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #3e4143;
+            border-radius: 4px;
+        }
+
+        /* Fade Animation for View Switching */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Catalog Container */
+        .catalog-container {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            /* Fill available space */
+            overflow-y: auto;
+            background: radial-gradient(circle at top right, #2d2f31 0%, #1c1d1f 40%);
+        }
+
+        .catalog-header {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .catalog-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff 0%, #a435f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .catalog-header p {
+            color: #a1a7b3;
+            font-size: 1.1rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Modern Course Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+            padding-bottom: 40px;
+        }
+
+        .course-card {
+            background: rgba(45, 47, 49, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Glow Effect on Hover */
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            background: rgba(62, 65, 67, 0.8);
+            border-color: rgba(164, 53, 240, 0.5);
+            /* Purple Glow Border */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .course-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .course-card:hover .card-icon {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .card-info h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0 0 5px 0;
+        }
+
+        .card-info p {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            color: #a1a7b3;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .start-btn {
+            color: #a435f0;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .course-card:hover .start-btn {
+            opacity: 1;
+            text-decoration: underline;
+        }
+    </style>
+
+    <script src="projects-data.js"></script>
+
+    <script>
+        // Tab Switching Logic
+        window.switchTab = function (tabName) {
+            // Update Buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(tabName.replace('steps', 'step'))) btn.classList.add('active');
+            });
+
+            // Show Content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                if (content.id === `tab-${tabName}`) content.classList.add('active');
+            });
+        }
+
+        // Navigation Logic
+        window.openPlayer = function (topic) {
+            document.getElementById('catalog-view').style.display = 'none';
+            document.getElementById('player-view').style.display = 'flex';
+
+            // Update dropdown to match
+            const select = document.getElementById('topicSelect');
+            if (select.querySelector(`option[value="${topic}"]`)) {
+                select.value = topic;
+            }
+
+            // Trigger load
+            loadTopic(topic);
+        }
+
+        window.closePlayer = function () {
+            document.getElementById('player-view').style.display = 'none';
+            document.getElementById('catalog-view').style.display = 'block';
+        }
+
+        // Global scope for loadTopic so openPlayer can call it
+        let loadTopic;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectList = document.getElementById('projectList');
+            const playerStage = document.getElementById('playerStage');
+            const detailContent = document.getElementById('detailContent');
+            const topicSelect = document.getElementById('topicSelect');
+            const searchInput = document.getElementById('searchInput');
+
+            let allProjects = [];
+
+            // Don't auto-load robotics initially anymore, wait for selection
+            // But still define function
+            loadTopic = function (topicName) {
+                const existingScript = document.querySelector('script[src^="project-data/"]');
+                if (existingScript) existingScript.remove();
+
+                const script = document.createElement('script');
+                script.src = `project-data/${topicName}.js`;
+                script.onload = () => {
+                    if (window.projectsData) {
+                        allProjects = window.projectsData;
+                        renderList(allProjects);
+                        if (allProjects.length > 0) loadProject(allProjects[0].id);
+                    }
+                };
+
+                // Fallback for missing files
+                script.onerror = () => {
+                    alert('Content for ' + topicName + ' is coming soon!');
+                    closePlayer(); // Go back
+                };
+
+                document.body.appendChild(script);
+            }
+
+            topicSelect.addEventListener('change', (e) => loadTopic(e.target.value));
+
+            function renderList(projects) {
+                projectList.innerHTML = '';
+                projects.forEach((project, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'project-list-item';
+                    item.dataset.id = project.id;
+                    item.onclick = () => loadProject(project.id);
+
+                    item.innerHTML = `
+                         <div class="item-check"><input type="checkbox" ${index === 0 ? 'checked' : ''} disabled></div>
+                         <div class="item-info">
+                            <div class="item-title">${index + 1}. ${project.title}</div>
+                            <div class="item-meta">
+                                <i class="far fa-play-circle"></i> ${project.timeEstimate || '10 min'}
+                            </div>
+                         </div>
+                    `;
+                    projectList.appendChild(item);
+                });
+            }
+
+            window.loadProject = function (id) {
+                document.querySelectorAll('.project-list-item').forEach(el => el.classList.remove('active'));
+                const activeItem = document.querySelector(`.project-list-item[data-id="${id}"]`);
+                if (activeItem) activeItem.classList.add('active');
+
+                const project = allProjects.find(p => p.id === id);
+                if (!project) return;
+
+                renderDetail(project);
+                // 1. Render Stage (The "Video" Area) - Using Code/Visuals as placeholder
+                playerStage.innerHTML = `
+                    <div style="width:100%; height:100%; padding:40px; display:flex; flex-direction:column; justify-content:center; align-items:center; background: radial-gradient(circle, #2d2f31 0%, #000 100%);">
+                        <i class="fas fa-laptop-code fa-3x" style="color: #a435f0; margin-bottom: 20px;"></i>
+                        <h1 style="font-size: 2rem; margin-bottom: 10px;">${project.title}</h1>
+                        <div class="badge ${project.level}" style="padding: 5px 15px; border-radius: 20px; background: rgba(255,255,255,0.1); font-size: 0.9rem;">${project.level}</div>
+                    </div>
+                `;
+
+                // 2. Render Tabs Content
+                const wiringHtml = project.wiring ? project.wiring.split('\n').map(l => `<li>${l}</li>`).join('') : '<li>See wiring diagram</li>';
+                const stepsHtml = project.steps ? project.steps.map((s, i) => `<div style="margin-bottom:10px; padding:10px; background:#2d2f31; border-radius:6px;"><strong>Step ${i + 1}:</strong> ${s}</div>`).join('') : '';
+                const componentsHtml = project.components ? project.components.map(c => `<span style="background:#2d2f31; padding:8px 12px; border-radius:20px; border:1px solid #3e4143; display:inline-block; margin:5px;">${c}</span>`).join('') : '';
+
+                detailContent.innerHTML = `
+                    <div id="tab-overview" class="tab-content active">
+                        <h3>About this Project</h3>
+                        <p class="description-text">${project.description}</p>
+                        <hr style="border-color:#3e4143; margin:20px 0;">
+                        <h4>What you'll learn</h4>
+                        <p class="description-text">${project.logic || 'Core concepts of this technology.'}</p>
+                    </div>
+
+                    <div id="tab-components" class="tab-content">
+                        <h3>Tools & Components</h3>
+                        <div style="margin-top:20px;">${componentsHtml}</div>
+                    </div>
+
+                    <div id="tab-code" class="tab-content">
+                        <h3>Wiring Diagram</h3>
+                        <ul style="margin-bottom:30px; line-height:1.6; padding-left:20px;">${wiringHtml}</ul>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h3>Source Code</h3>
+                            <button onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText)" style="background:#a435f0; color:white; border:none; padding:5px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">Copy Code</button>
+                        </div>
+                        <pre style="background:#1c1d1f; padding:20px; border-radius:8px; overflow:auto; border:1px solid #3e4143; font-family:monospace; color:#d1d7dc;">${project.code ? project.code.replace(/</g, '&lt;') : '// No code provided'}</pre>
+                    </div>
+
+                    <div id="tab-steps" class="tab-content">
+                        <h3>Project Walkthrough</h3>
+                        <div style="margin-top:20px;">${stepsHtml}</div>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

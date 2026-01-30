@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload Manager - Admin | SkillSpot.in</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=3">
+
+    <style>
+        body {
+            padding-top: 100px;
+            padding-bottom: 60px;
+        }
+
+        .upload-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .upload-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .upload-card:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            background: #6366f1;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .upload-btn:hover {
+            background: #4f46e5;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .preview-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .image-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-actions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .image-card:hover .image-actions {
+            transform: translateY(0);
+        }
+
+        .action-icon {
+            color: white;
+            cursor: pointer;
+        }
+
+        .action-icon:hover {
+            color: #ef4444;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+    <script src="navbar.js"></script>
+
+    <div class="upload-container">
+
+        <div class="header-section">
+            <h1 style="color: white; margin: 0;">
+                <i class="fas fa-images"></i> Image Manager
+            </h1>
+            <a href="admin.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="upload-card" id="dropZone">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <h2 style="color: white; margin-bottom: 10px;">Drag & Drop Images Here</h2>
+            <p style="color: #94a3b8;">or click below to select files</p>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Select Files</button>
+            <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(this.files)">
+        </div>
+
+        <h3
+            style="color: white; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+            Uploaded Images
+        </h3>
+
+        <div class="preview-area" id="gallery">
+            <!-- Existing Images from assets/social_feed -->
+            <div class="image-card"><img src="assets/social_feed/post_29.png" alt="post_29.png">
+                <div class="image-actions"><span>post_29.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_28.png" alt="post_28.png">
+                <div class="image-actions"><span>post_28.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_27.png" alt="post_27.png">
+                <div class="image-actions"><span>post_27.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_26.png" alt="post_26.png">
+                <div class="image-actions"><span>post_26.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_25.png" alt="post_25.png">
+                <div class="image-actions"><span>post_25.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_24.png" alt="post_24.png">
+                <div class="image-actions"><span>post_24.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_23.png" alt="post_23.png">
+                <div class="image-actions"><span>post_23.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_22.png" alt="post_22.png">
+                <div class="image-actions"><span>post_22.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_21.jpeg" alt="post_21.jpeg">
+                <div class="image-actions"><span>post_21.jpeg</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_20.png" alt="post_20.png">
+                <div class="image-actions"><span>post_20.png</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_19.jpeg" alt="post_19.jpeg">
+                <div class="image-actions"><span>post_19.jpeg</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_18.jpeg" alt="post_18.jpeg">
+                <div class="image-actions"><span>post_18.jpeg</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_17.jpeg" alt="post_17.jpeg">
+                <div class="image-actions"><span>post_17.jpeg</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_16.jpeg" alt="post_16.jpeg">
+                <div class="image-actions"><span>post_16.jpeg</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <div class="image-card"><img src="assets/social_feed/post_15.jpeg" alt="post_15.jpeg">
+                <div class="image-actions"><span>post_15.jpeg</span><i class="fas fa-trash action-icon"></i></div>
+            </div>
+            <!-- ... and so on for existing files -->
+        </div>
+
+    </div>
+
+    <script src="footer.js"></script>
+
+    <script>
+        // Initialize counter based on existing files (highest is post_29)
+        let imageCounter = 29;
+
+        const dropZone = document.getElementById('dropZone');
+
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#6366f1';
+            dropZone.style.background = 'rgba(99, 102, 241, 0.1)';
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            dropZone.style.background = 'rgba(255, 255, 255, 0.05)';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            dropZone.style.background = 'rgba(255, 255, 255, 0.05)';
+            handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            const gallery = document.getElementById('gallery');
+
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    // Increment counter for new name
+                    imageCounter++;
+
+                    // Determine extension based on original file type
+                    let extension = 'jpg';
+                    if (file.type === 'image/png') extension = 'png';
+                    else if (file.type === 'image/jpeg') extension = 'jpeg';
+
+                    const newName = `post_${imageCounter}.${extension}`;
+
+                    const reader = new FileReader();
+
+                    reader.onload = (e) => {
+                        const div = document.createElement('div');
+                        div.className = 'image-card';
+                        div.style.border = '2px solid #10b981'; // Green border for new files
+
+                        div.innerHTML = `
+                            <img src="${e.target.result}" alt="${newName}">
+                            <div class="image-actions" style="transform: translateY(0); background: rgba(0,0,0,0.9);">
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <span style="font-size: 0.9rem; color: #10b981; font-weight:bold;">${newName}</span>
+                                    <span style="font-size: 0.7rem; color: #ccc;">(Ready to Save)</span>
+                                </div>
+                                <div style="display:flex; gap:10px;">
+                                    <a href="${e.target.result}" download="${newName}" class="action-icon" title="Save to Folder">
+                                        <i class="fas fa-download" style="color: #10b981;"></i>
+                                    </a>
+                                    <i class="fas fa-trash action-icon" onclick="this.closest('.image-card').remove();" title="Remove"></i>
+                                </div>
+                            </div>
+                        `;
+                        gallery.prepend(div);
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            if (files.length > 0) {
+                alert(`Processed ${files.length} new images! \n\nPlease click the green download icon on each new image to save it to your 'assets/social_feed' folder with the correct name.`);
+            }
+        }
+    </script>
+</body>
+
+</html>

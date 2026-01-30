@@ -1,0 +1,21 @@
+backend:
+  name: github
+  repo: HARISALIP/libraries # Auto-detected from history, please verify!
+  branch: main
+
+media_folder: "assets/social_feed"
+public_folder: "assets/social_feed"
+
+# This enables the Media Library UI
+media_library:
+  name: uploadcare
+  config:
+    publicKey: demopublickey
+
+collections:
+  - name: "posts"
+    label: "Social Posts"
+    folder: "content/posts"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}

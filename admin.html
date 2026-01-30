@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SkillSpot.in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: white;
+            --border-color: #e2e8f0;
+        }
+
+        body.dark-mode {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            font-size: 14.5px;
+        }
+
+        .dashboard-container {
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .stat-card {
+            box-shadow: none;
+        }
+
+        .stat-card h3 {
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .data-table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            overflow-x: auto;
+            /* Allow horizontal scroll on mobile */
+        }
+
+        .table-header {
+            padding: 20px;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: var(--text-color);
+            min-width: 600px;
+            /* Force minimum width for scroll */
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-color);
+            opacity: 0.7;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #6366f1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.8rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        h1,
+        h2 {
+            color: var(--text-color) !important;
+        }
+
+        @media (max-width: 768px) {
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .header-buttons a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar Injection -->
+    <div id="navbar-placeholder"></div>
+    <script src="navbar.js"></script>
+
+    <div class="dashboard-container">
+
+        <div class="header-actions">
+            <h1 style="font-size: 1.75rem; font-weight: 800; font-family: var(--font-heading);">Admin Dashboard</h1>
+            <div class="header-buttons">
+                <a href="admin-upload.html" class="btn btn-primary"
+                    style="padding: 12px 24px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: #10b981;">
+                    <i class="fas fa-image"></i> Image Upload Manager
+                </a>
+                <a href="admin-quote.html" class="btn btn-primary"
+                    style="padding: 12px 24px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-file-invoice"></i> Manual Quote Generator
+                </a>
+                <a href="admin-blog.html" class="btn btn-primary"
+                    style="padding: 12px 24px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: #8b5cf6;">
+                    <i class="fas fa-pen-nib"></i> Blog Upload Manager
+                </a>
+                <a href="admin-reports.html" class="btn btn-primary"
+                    style="padding: 12px 24px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: #f59e0b;">
+                    <i class="fas fa-chart-line"></i> Campaign Reports
+                </a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="value">1,248</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Courses</h3>
+                <div class="value">56</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <div class="value">₹4.2L</div>
+            </div>
+            <div class="stat-card">
+                <h3>New Signups</h3>
+                <div class="value">+120</div>
+            </div>
+        </div>
+
+        <div class="data-table-container">
+            <div class="table-header">
+                <h2 style="color: white; font-size: 1.2rem;">Recent Registrations</h2>
+                <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">Export Data</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="flex items-center"><span class="avatar">JD</span> John Doe</div>
+                        </td>
+                        <td>john@example.com</td>
+                        <td>Student</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>Oct 24, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flex items-center"><span class="avatar">AS</span> Alice Smith</div>
+                        </td>
+                        <td>alice@tech.com</td>
+                        <td>Professional</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>Oct 23, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flex items-center"><span class="avatar">RJ</span> Raj Kumar</div>
+                        </td>
+                        <td>raj@college.edu</td>
+                        <td>Student</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>Oct 23, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flex items-center"><span class="avatar" style="background: #ec4899;">SD</span>
+                                Sara Davis</div>
+                        </td>
+                        <td>sara@design.com</td>
+                        <td>Freelancer</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>Oct 22, 2025</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="footer.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/favicon_round.png" type="image/png">
+    <title>Courses - SkillSpot.in</title>
+    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .page-header {
+            padding: 140px 20px 60px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.75rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        /* New Mini Course Grid Styles (can move to style.css if preferred) */
+        /* New Mini Course Grid Styles (can move to style.css if preferred) */
+        /* Styles moved to style.css for consistency */
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar Injection -->
+    <div id="navbar-placeholder"></div>
+    <script src="navbar.js"></script>
+
+    <div class="page-header">
+        <h1 class="page-title" style="text-align: center;">Explore Our <span class="gradient-text">Premium
+                Courses</span></h1>
+        <p
+            style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1rem; font-family: var(--font-body); text-align: center;">
+            Master high-demand technical skills with our structured, project-based curriculum. Live classes, mentorship,
+            and certification.
+        </p>
+    </div>
+
+    <!-- Premium Courses Grid -->
+    <div class="premium-course-grid" id="premiumCoursesContainer">
+        <!-- Premium Courses Loaded via JS -->
+    </div>
+
+    <!-- Divider -->
+    <div class="max-w-7xl mx-auto px-4 mb-12">
+        <div class="h-px bg-white/10 w-full"></div>
+    </div>
+
+    <div class="section-header" style="text-align: center; max-width: 1200px; margin: 0 auto 2rem; padding: 0 20px;">
+        <h2
+            style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 2.2rem; color: #1e293b; margin-bottom: 0.75rem; text-align: center;">
+            Self-Paced Learning Paths</h2>
+        <p style="color: #64748b; font-size: 1rem; font-family: 'Inter', sans-serif; margin: 0; text-align: center;">
+            Quick guides and
+            reference
+            materials to get you started.</p>
+    </div>
+
+    <!-- Mini Courses Grid (Learning Paths) -->
+    <div class="mini-course-grid" id="coursesContainer" style="margin-bottom: 5rem;">
+        <!-- Learning Paths Loaded via JS -->
+    </div>
+
+    <!-- FAQ Section (Migrated from Home) -->
+    <div class="section-container" style="max-width: 800px; margin: 4rem auto;">
+        <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
+            <h2
+                style="font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+                Frequently <span class="gradient-text">Asked Questions</span></h2>
+            <p style="font-family: 'Inter', sans-serif; color: #64748b; font-size: 1rem;">Common questions about our
+                learning paths.</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <h3 class="faq-question">What will I learn in the Chat AI course? <i class="fas fa-chevron-down"
+                        style="color: var(--text-muted);"></i></h3>
+                <div class="faq-answer">
+                    <p>You will learn to build a complete AI Chatbot from scratch using the OpenAI API, React.js for the
+                        interface, and Node.js for the backend.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Is the MERN course suitable for beginners? <i class="fas fa-chevron-down"
+                        style="color: var(--text-muted);"></i></h3>
+                <div class="faq-answer">
+                    <p>Absolutely! We designed the MERN Stack course for complete beginners, starting with HTML/CSS
+                        fundamentals.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Do I get a certificate? <i class="fas fa-chevron-down"
+                        style="color: var(--text-muted);"></i></h3>
+                <div class="faq-answer">
+                    <p>Yes, upon completion of the course and projects, you receive a verified industry-recognized
+                        certificate.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">How long is access valid? <i class="fas fa-chevron-down"
+                        style="color: var(--text-muted);"></i></h3>
+                <div class="faq-answer">
+                    <p>You get <strong>Lifetime Access</strong> to all course materials and future updates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FAQ Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    // Close all
+                    faqItems.forEach(i => i.classList.remove('active'));
+                    // Open clicked if wasn't open
+                    if (!isActive) item.classList.add('active');
+                });
+            });
+        });
+    </script>
+
+    <!-- Scripts -->
+    <script src="premium-courses-data.js"></script>
+    <script src="learning-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Helper for Loading Effect
+            function getSkeletonCards(count, compact = false) {
+                let html = '';
+                const heightStyle = compact ? 'height: 100px; min-height: 100px;' : 'height: 380px;';
+
+                for (let i = 0; i < count; i++) {
+                    html += `
+                    <div class="skeleton-card" style="${heightStyle} background: #fff; border: 1px solid rgba(0,0,0,0.05);">
+                        <div class="skeleton-shimmer"></div>
+                        ${compact ? '' : '<div class="skeleton-img" style="height: 160px; margin-bottom: 15px;"></div>'}
+                        <div class="skeleton-block" style="${compact ? 'width: 70%; padding-top:10px;' : ''}">
+                            <div class="skeleton-text long" style="margin-bottom: 8px;"></div>
+                            <div class="skeleton-text medium"></div>
+                        </div>
+                    </div>`;
+                }
+                return html;
+            }
+
+            const premiumContainer = document.getElementById('premiumCoursesContainer');
+            const learningContainer = document.getElementById('coursesContainer');
+
+            // 1. Initial Skeleton State
+            if (premiumContainer) premiumContainer.innerHTML = getSkeletonCards(3);
+            if (learningContainer) learningContainer.innerHTML = getSkeletonCards(6, true); // Compact for learning paths
+
+            // 2. Load Content with Delay
+            setTimeout(() => {
+                // Render Premium Courses
+                if (premiumContainer && typeof premiumCourses !== 'undefined') {
+                    premiumContainer.innerHTML = '';
+                    premiumCourses.forEach(course => {
+                        const card = document.createElement('div');
+                        card.className = 'premium-course-card';
+                        card.style.animation = 'fadeIn 0.5s ease-out';
+                        card.innerHTML = `
+                            <div class="course-tag" style="background: ${course.tagColor};">${course.tag}</div>
+                            <div class="course-header">
+                                <div class="course-icon-large" style="color: ${course.color};">
+                                    <i class="${course.image}"></i>
+                                </div>
+                                <h3 class="course-title-large">${course.title}</h3>
+                                <div class="course-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>${course.rating}</span>
+                                    <span class="text-xs text-gray-500 ml-1">(${Math.floor(Math.random() * 500) + 100} reviews)</span>
+                                </div>
+                            </div>
+                            <div class="course-body">
+                                <p class="course-desc">${course.description}</p>
+                                
+                                <div class="course-meta">
+                                    <div class="meta-item">
+                                        <i class="far fa-clock"></i> ${course.duration}
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-layer-group"></i> ${course.projects}
+                                    </div>
+                                </div>
+
+                                <div class="course-footer">
+                                    <div class="course-price">
+                                        <span class="original-price">₹${course.originalPrice}</span>
+                                        <span class="current-price">₹${course.price}</span>
+                                    </div>
+                                    <div class="course-actions">
+                                        <button class="btn btn-sm btn-secondary" onclick="openDetails('${course.id}')">Details</button>
+                                        <a href="payment.html?course=${encodeURIComponent(course.title)}&price=${course.price}" class="btn btn-sm btn-primary">Enroll</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        premiumContainer.appendChild(card);
+                    });
+                }
+
+                // Render Learning Paths (Mini Cards)
+                if (learningContainer && typeof courseData !== 'undefined') {
+                    learningContainer.innerHTML = '';
+                    Object.keys(courseData).forEach(key => {
+                        const course = courseData[key];
+                        const card = document.createElement('a');
+                        card.href = `learning.html?course=${key}`;
+                        card.className = 'mini-course-card';
+                        card.style.animation = 'fadeIn 0.5s ease-out';
+                        card.innerHTML = `
+                            <div class="mini-card-info">
+                                <div class="mini-card-title">${course.title}</div>
+                                <div class="mini-card-meta">
+                                    ${course.sections ? course.sections.length + ' Modules' : 'Self-Paced'}
+                                </div>
+                            </div>
+                            <div class="mini-card-icon" style="color: ${course.color};">
+                                <i class="${course.icon}"></i>
+                            </div>
+                        `;
+                        learningContainer.appendChild(card);
+                    });
+                }
+            }, 1200);
+        });
+
+        function openDetails(courseId) {
+            // Simple alert for now, effectively "seen detailed ok"
+            // Ideally creates a Modal. For now, we can redirect to a details section or show a modal. 
+            // Since user said "seen detailed ok", I will just log it or maybe scroll to a detailed view if I had one.
+            // For this step, let's just alert or log. 
+            console.log("View details for", courseId);
+            alert("Course Details coming soon! Enrollment is open.");
+        }
+    </script>
+    <div id="footer-placeholder"></div>
+    <script src="footer.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+
+</html>

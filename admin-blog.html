@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Admin - SkillSpot.in</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <!-- Navbar Styles will be loaded by navbar.js -->
+
+    <style>
+        .admin-header {
+            padding: 120px 5% 40px;
+            text-align: center;
+        }
+
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .preview-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px dashed var(--glass-border);
+            border-radius: 12px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .code-modal {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            color: #fff;
+        }
+
+        .code-area {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar-placeholder"></div>
+    <div class="background-glow"></div>
+
+    <div class="admin-header">
+        <a href="admin.html"
+            style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; font-weight: 600;"><i
+                class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        <h1>Add New <span class="gradient-text">Blog Post</span></h1>
+        <p style="color: var(--text-muted);">Create content to inspire the community.</p>
+    </div>
+
+    <div class="admin-container">
+        <form id="blogForm">
+            <div class="form-group">
+                <label class="form-label">Blog Title</label>
+                <input type="text" id="title" class="form-control" placeholder="e.g., Mastering CSS Grid" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="category" class="form-control">
+                    <option value="Web Development">Web Development</option>
+                    <option value="AI & ML">AI & ML</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="Career Advice">Career Advice</option>
+                    <option value="Tutorials">Tutorials</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Cover Image URL</label>
+                <input type="url" id="image" class="form-control" placeholder="https://..." required>
+                <div class="preview-box" id="imgPreview">Image Preview</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Excerpt (Short Summary)</label>
+                <textarea id="excerpt" class="form-control" style="min-height: 80px;"
+                    placeholder="Brief description for the card..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Content (HTML Supported)</label>
+                <textarea id="content" class="form-control" placeholder="<p>Write your blog content here...</p>"
+                    required></textarea>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">Tip: You can use HTML tags like
+                    &lt;strong&gt;, &lt;h3&gt;, &lt;ul&gt;.</p>
+            </div>
+
+            <button type="submit" class="btn-submit">Publish Blog</button>
+        </form>
+    </div>
+
+    <!-- Code Export Modal -->
+    <div id="exportModal" class="modal-overlay">
+        <div class="code-modal">
+            <h3><i class="fas fa-check-circle" style="color: #10b981;"></i> Content Saved!</h3>
+            <p style="color: #cbd5e1; margin-bottom: 1rem;">To make this permanent for all users, add this code to
+                <strong>blog-data.js</strong>:
+            </p>
+            <div class="code-area" id="codeOutput"></div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="window.location.href='blog.html'" class="btn-submit" style="background: #10b981;">View
+                    Live Blog</button>
+                <button onclick="document.getElementById('exportModal').style.display='none'" class="btn-submit"
+                    style="background: transparent; border: 1px solid rgba(255,255,255,0.2);">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="navbar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Image Preview Logic
+            const imgInput = document.getElementById('image');
+            const imgPreview = document.getElementById('imgPreview');
+
+            imgInput.addEventListener('input', () => {
+                if (imgInput.value) {
+                    imgPreview.innerHTML = `<img src="${imgInput.value}" style="max-height: 100%; max-width: 100%; border-radius: 8px;">`;
+                } else {
+                    imgPreview.textContent = 'Image Preview';
+                }
+            });
+
+            // Form Submit
+            document.getElementById('blogForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const newPost = {
+                    id: Date.now().toString(),
+                    title: document.getElementById('title').value,
+                    category: document.getElementById('category').value,
+                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    image: document.getElementById('image').value,
+                    excerpt: document.getElementById('excerpt').value,
+                    content: document.getElementById('content').value,
+                    author: 'Admin'
+                };
+
+                // 1. Save to LocalStorage (Instant View)
+                const currentBlogs = JSON.parse(localStorage.getItem('skillspot_custom_blogs') || '[]');
+                currentBlogs.unshift(newPost);
+                localStorage.setItem('skillspot_custom_blogs', JSON.stringify(currentBlogs));
+
+                // 2. Generate Code Snippet (Permanent Store)
+                const codeSnippet = JSON.stringify(newPost, null, 4) + ',';
+                document.getElementById('codeOutput').textContent = codeSnippet;
+                document.getElementById('exportModal').style.display = 'flex';
+
+                // Clear form
+                e.target.reset();
+                imgPreview.textContent = 'Image Preview';
+            });
+        });
+    </script>
+</body>
+
+</html>

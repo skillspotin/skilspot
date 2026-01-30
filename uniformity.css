@@ -1,0 +1,63 @@
+/* =========================================
+   Smooth Infinite Scroll for Business Solutions
+   ========================================= */
+
+/* The Container - Hides Overflow */
+.services-slider-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    /* Optional mask for fade effect at edges */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+/* The Track - Moves Continuously */
+.services-slider-track {
+    display: flex;
+    gap: 30px;
+    /* Space between cards */
+    width: max-content;
+    /* Ensure it fits all children side-by-side */
+    /* Remove any existing transforms or transitions from other scripts */
+    transform: none !important;
+    transition: none !important;
+}
+
+/* The Animation Class (Applied via JS or default) */
+.animate-scroll {
+    animation: scroll-infinite 40s linear infinite;
+}
+
+/* Hover to Pause (Optional - User didn't request but good UX) */
+.services-slider-track:hover {
+    animation-play-state: paused;
+}
+
+/* The Keyframes */
+@keyframes scroll-infinite {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        /* Move exactly half the width (since we will double the content) */
+        transform: translateX(-50%);
+    }
+}
+
+/* Mobile: Disable Marquee if needed, or keep it. 
+   User complaint was "movement jerked", implies they WANT movement but smooth.
+   We keep it responsive. */
+@media (max-width: 900px) {
+    .services-slider-track {
+        gap: 20px;
+    }
+
+    /* Ensure cards have static width on mobile for marquee to work */
+    .services-slider-track .service-card-showcase {
+        min-width: 280px;
+        max-width: 280px;
+    }
+}

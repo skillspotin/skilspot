@@ -1,0 +1,10 @@
+node_modules/
+.env
+*.zip
+*.pdf
+.vscode/
+backup/
+temp_*.css
+login_old.html
+robotics_backup.html
+skillspot_backup_*.zip

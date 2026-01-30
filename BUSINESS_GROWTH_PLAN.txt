@@ -1,0 +1,35 @@
+# 🎯 30-Day Goal: ₹1,00,000 Revenue Plan for SkillSpotin
+
+## 🚀 The Campaign Strategy: "Digital Kerala Initiative"
+We will use the **₹2,999 Single-Page Website** offer as a 'Hook' to gain high volume and then upsell premium services.
+
+### 💰 Revenue Breakdown:
+*   **Target**: ₹1,00,000 / month
+*   **Product**: Single-Page Website @ ₹2,999 (Includes free Domain/Hosting)
+*   **Cost**: Approx ₹1,000 per site (Domain/Server)
+*   **Profit**: ₹2,000 per site
+*   **Volume Required**: ~50 clients (or 20 clients with upsells)
+
+---
+
+### 🛠️ Tomorrow Morning's Action Plan:
+1.  **AI Campaign Update**: 
+    - Adjust `analyze.js` to prioritize the ₹2,999 offer for local shops.
+    - Set the AI tone to "Urgent/Limited Time Offer".
+2.  **Lead Generation**:
+    - Build a focused list of 50 local Kerala businesses (Bakery, Salon, Pharma, Clothing).
+    - Ensure all leads have verified phone numbers for follow-up.
+3.  **Automated Execution**:
+    - Run the AI Agent at 9:00 AM to send 20 emails.
+4.  **Telecalling Strategy**:
+    - Use the Admin Dashboard to extract phone numbers for the 20 contacted leads.
+    - Scripts for "Closing the deal" over the phone.
+
+---
+
+### 📝 Notes for Haris Ali P:
+- **Phase 1 (Morning)**: AI sends proposals with our professional HTML template.
+- **Phase 2 (Afternoon)**: Call the 'Hot Leads'. 
+- **The Pitch**: "Get your business online for less than the price of a dinner. Everything included."
+
+**Created on: 2026-01-30 | Ready to launch tomorrow morning!**
