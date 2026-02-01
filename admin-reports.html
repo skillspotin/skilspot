@@ -140,6 +140,7 @@
                         <button class="filter-btn active" data-status="all">All Logs</button>
                         <button class="filter-btn" data-status="success">✅ Sent Successfully</button>
                         <button class="filter-btn" data-status="failed">❌ Errors/Blocks</button>
+                        <button class="filter-btn" data-status="key">🎯 Key Events Only</button>
                     </div>
                 </div>
                 <button onclick="location.reload()" class="btn btn-primary"
@@ -153,7 +154,7 @@
                             <th>Time</th>
                             <th>Event / Detail</th>
                             <th>Email Address</th>
-                            <th>Contact Number</th>
+                            <th>Contact / Action</th>
                         </tr>
                     </thead>
                     <tbody id="logBody">
@@ -190,9 +191,11 @@
 
                     const isSuccess = log.message.includes('✅') || log.type === 'SUCCESS';
                     const isFailed = log.message.includes('❌') || log.type === 'FAILED' || log.message.includes('Critical');
+                    const isSkipped = log.message.includes('⏭️') || log.message.includes('⚠️') || log.type?.includes('SKIPPED');
 
                     if (currentStatus === 'success') return matchesSearch && isSuccess;
                     if (currentStatus === 'failed') return matchesSearch && isFailed;
+                    if (currentStatus === 'key') return matchesSearch && (isSuccess || isFailed || isSkipped);
                     return matchesSearch;
                 });
 
@@ -211,6 +214,21 @@
                     let pillClass = 'info';
                     if (log.message.includes('✅') || log.type === 'SUCCESS') pillClass = 'success';
                     if (log.message.includes('❌') || log.type === 'FAILED' || log.message.includes('Critical')) pillClass = 'warning';
+                    if (log.message.includes('⏭️') || log.message.includes('⚠️')) pillClass = 'info';
+
+                    let phoneHtml = log.phone || '-';
+                    if (log.phone && log.phone !== 'N/A') {
+                        const cleanName = (log.message.split('contacted ')[1] || log.message.split('send email to ')[1] || 'Business').replace(/["'“”]/g, '');
+                        phoneHtml = `
+                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                <span>${log.phone}</span>
+                                <button onclick="sendWhatsApp('${log.phone}', '${cleanName}')" 
+                                    style="background: #25d366; color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; cursor: pointer; width: fit-content;">
+                                    <i class="fab fa-whatsapp"></i> Chat
+                                </button>
+                            </div>
+                        `;
+                    }
 
                     row.innerHTML = `
                         <td class="timestamp">${log.timestamp}</td>
@@ -218,11 +236,18 @@
                             <span class="status-pill ${pillClass}">${log.message}</span>
                         </td>
                         <td style="font-weight: 500; color: #475569;">${log.email || '-'}</td>
-                        <td style="font-weight: 600; color: #6366f1;">${log.phone || '-'}</td>
+                        <td style="font-weight: 600; color: #6366f1;">${phoneHtml}</td>
                     `;
                     logBody.appendChild(row);
                 });
             }
+
+            window.sendWhatsApp = function (phone, name) {
+                const cleanPhone = phone.replace(/\D/g, '');
+                const finalPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+                const text = encodeURIComponent(`Hi ${name}, this is Haris from SkillSpot. Regarding our recent email about the ₹2,999 website launch...`);
+                window.open(`https://wa.me/${finalPhone}?text=${text}`, '_blank');
+            };
 
             logFilter.addEventListener('input', renderLogs);
 
