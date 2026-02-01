@@ -1,5 +1,186 @@
 window.CAMPAIGN_LOGS = [
   {
+    "timestamp": "1/2/2026, 5:30:00 pm",
+    "message": "✅ Successfully contacted Elite Beauty Zone",
+    "email": "elitebeauty@gmail.com",
+    "phone": "+91 98090 44556",
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:58 pm",
+    "message": "  - Pitch Generated: \"Digital Kerala Initiative: Growth Partnership for Elite Beauty Zone\""
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:57 pm",
+    "message": "Processing: Elite Beauty Zone"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:57 pm",
+    "message": "⚠️ Skipping Vailathur Co-operative Mart: Invalid or Non-existent email (support@vailathurmart.com)",
+    "email": "support@vailathurmart.com",
+    "type": "SKIPPED_INVALID"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:57 pm",
+    "message": "Processing: Vailathur Co-operative Mart"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:57 pm",
+    "message": "⚠️ Skipping Malabar Kitchen Vailathur: Invalid or Non-existent email (food@malabarkitchen.net)",
+    "email": "food@malabarkitchen.net",
+    "type": "SKIPPED_INVALID"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:57 pm",
+    "message": "Processing: Malabar Kitchen Vailathur"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:27 pm",
+    "message": "✅ Successfully contacted Grace Dental Clinic",
+    "email": "appointments@gracedental.in",
+    "phone": "+91 483 2745566",
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:24 pm",
+    "message": "  - Pitch Generated: \"Digital Kerala Initiative: Growth Partnership for Grace Dental Clinic\""
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:23 pm",
+    "message": "Processing: Grace Dental Clinic"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:23 pm",
+    "message": "⚠️ Skipping Vailathur Electronics Hub: Invalid or Non-existent email (hub@vailathur-electronics.com)",
+    "email": "hub@vailathur-electronics.com",
+    "type": "SKIPPED_INVALID"
+  },
+  {
+    "timestamp": "1/2/2026, 5:29:23 pm",
+    "message": "Processing: Vailathur Electronics Hub"
+  },
+  {
+    "timestamp": "1/2/2026, 5:28:53 pm",
+    "message": "✅ Successfully contacted Green Land Nursery",
+    "email": "orders@greenlandnursery.com",
+    "phone": "+91 90610 88997",
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": "1/2/2026, 5:28:50 pm",
+    "message": "  - Pitch Generated: \"Digital Kerala Initiative: Growth Partnership for Green Land Nursery\""
+  },
+  {
+    "timestamp": "1/2/2026, 5:28:50 pm",
+    "message": "Processing: Green Land Nursery"
+  },
+  {
+    "timestamp": "1/2/2026, 5:28:20 pm",
+    "message": "✅ Successfully contacted Modern Hardware Kuttippala",
+    "email": "info@modernhardware.in",
+    "phone": "+91 97455 66778",
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": "1/2/2026, 5:28:17 pm",
+    "message": "  - Pitch Generated: \"Digital Kerala Initiative: Growth Partnership for Modern Hardware Kuttippala\""
+  },
+  {
+    "timestamp": "1/2/2026, 5:28:16 pm",
+    "message": "Processing: Modern Hardware Kuttippala"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:46 pm",
+    "message": "✅ Successfully contacted Sunrise Cafe",
+    "email": "contact@sunrisecafe.net",
+    "phone": "+91 98472 11223",
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:43 pm",
+    "message": "  - Pitch Generated: \"Digital Kerala Initiative: Growth Partnership for Sunrise Cafe\""
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:42 pm",
+    "message": "Processing: Sunrise Cafe"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:42 pm",
+    "message": "⚠️ Skipping Kuttippala Supermarket: Invalid or Non-existent email (sales@kuttippalamart.in)",
+    "email": "sales@kuttippalamart.in",
+    "type": "SKIPPED_INVALID"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:42 pm",
+    "message": "Processing: Kuttippala Supermarket"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:42 pm",
+    "message": "⚠️ Skipping New Trendz Boutique: Invalid or Non-existent email (hello@newtrendz-kuttippala.com)",
+    "email": "hello@newtrendz-kuttippala.com",
+    "type": "SKIPPED_INVALID"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:42 pm",
+    "message": "Processing: New Trendz Boutique"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:12 pm",
+    "message": "✅ Successfully contacted Ideal Public School",
+    "email": "office@idealschool.edu.in",
+    "phone": "+91 483 2742345",
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:09 pm",
+    "message": "  - Pitch Generated: \"Digital Kerala Initiative: Growth Partnership for Ideal Public School\""
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:08 pm",
+    "message": "Processing: Ideal Public School"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:08 pm",
+    "message": "⚠️ Skipping Kottakkal Textiles: Invalid or Non-existent email (sales@kottakkaltextiles.in)",
+    "email": "sales@kottakkaltextiles.in",
+    "type": "SKIPPED_INVALID"
+  },
+  {
+    "timestamp": "1/2/2026, 5:27:08 pm",
+    "message": "Processing: Kottakkal Textiles"
+  },
+  {
+    "timestamp": "1/2/2026, 5:26:38 pm",
+    "message": "✅ Successfully contacted Amana Toyota",
+    "email": "service@amanatoyota.in",
+    "phone": "+91 99460 12345",
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": "1/2/2026, 5:26:35 pm",
+    "message": "  - Pitch Generated: \"Digital Kerala Initiative: Growth Partnership for Amana Toyota\""
+  },
+  {
+    "timestamp": "1/2/2026, 5:26:34 pm",
+    "message": "Processing: Amana Toyota"
+  },
+  {
+    "timestamp": "1/2/2026, 5:26:34 pm",
+    "message": "⏭️ Skipping Global Bakehouse (orders@globalbakehouse.com): Already contacted previously.",
+    "email": "orders@globalbakehouse.com",
+    "type": "SKIPPED_DUPLICATE"
+  },
+  {
+    "timestamp": "1/2/2026, 5:26:34 pm",
+    "message": "⏭️ Skipping Kottakkal Arya Vaidya Sala (info@aryavaidyasala.com): Already contacted previously.",
+    "email": "info@aryavaidyasala.com",
+    "type": "SKIPPED_DUPLICATE"
+  },
+  {
+    "timestamp": "1/2/2026, 5:26:34 pm",
+    "message": "✅ Found 15 potential leads."
+  },
+  {
     "timestamp": "30/1/2026, 4:11:04 pm",
     "message": "✅ Successfully contacted Global Bakehouse",
     "email": "orders@globalbakehouse.com",
@@ -313,167 +494,5 @@ window.CAMPAIGN_LOGS = [
   {
     "timestamp": "30/1/2026, 3:47:51 pm",
     "message": "✅ Found 15 potential leads."
-  },
-  {
-    "timestamp": "30/1/2026, 1:31:45 am",
-    "message": "❌ Failed to send email to Global Logistics Ltd",
-    "email": "info@globallogistics.in",
-    "phone": "+91 94470 11223",
-    "type": "FAILED"
-  },
-  {
-    "timestamp": "30/1/2026, 1:31:44 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Global Logistics Ltd\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:31:44 am",
-    "message": "Processing: Global Logistics Ltd"
-  },
-  {
-    "timestamp": "30/1/2026, 1:30:59 am",
-    "message": "❌ Failed to send email to Flavor Junction",
-    "email": "hello@flavorjunction.co.in",
-    "phone": "+91 98950 44332",
-    "type": "FAILED"
-  },
-  {
-    "timestamp": "30/1/2026, 1:30:59 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Flavor Junction\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:30:59 am",
-    "message": "Processing: Flavor Junction"
-  },
-  {
-    "timestamp": "30/1/2026, 1:30:14 am",
-    "message": "❌ Failed to send email to Skyline Real Estate",
-    "email": "sales@skylinerealty.in",
-    "phone": "+91 91234 56789",
-    "type": "FAILED"
-  },
-  {
-    "timestamp": "30/1/2026, 1:30:13 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Skyline Real Estate\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:30:13 am",
-    "message": "Processing: Skyline Real Estate"
-  },
-  {
-    "timestamp": "30/1/2026, 1:29:28 am",
-    "message": "❌ Failed to send email to Green Valley Hospital",
-    "email": "admin@greenvalleyhospital.com",
-    "phone": "+91 99001 88990",
-    "type": "FAILED"
-  },
-  {
-    "timestamp": "30/1/2026, 1:29:28 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Green Valley Hospital\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:29:28 am",
-    "message": "Processing: Green Valley Hospital"
-  },
-  {
-    "timestamp": "30/1/2026, 1:28:43 am",
-    "message": "❌ Failed to send email to Apex Tech Retail",
-    "email": "contact@apextech.in",
-    "phone": "+91 97420 55667",
-    "type": "FAILED"
-  },
-  {
-    "timestamp": "30/1/2026, 1:28:43 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Apex Tech Retail\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:28:42 am",
-    "message": "Processing: Apex Tech Retail"
-  },
-  {
-    "timestamp": "30/1/2026, 1:27:57 am",
-    "message": "❌ Failed to send email to Grand Horizon School",
-    "email": "info@grandhorizon.edu.in",
-    "phone": "+91 98450 12345",
-    "type": "FAILED"
-  },
-  {
-    "timestamp": "30/1/2026, 1:27:57 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Grand Horizon School\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:27:56 am",
-    "message": "Processing: Grand Horizon School"
-  },
-  {
-    "timestamp": "30/1/2026, 1:27:56 am",
-    "message": "✅ Found 10 potential leads."
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:53 am",
-    "message": "  ✅ Successfully contacted Urban Fashion Hub"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:50 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Urban Fashion Hub\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:49 am",
-    "message": "Processing: Urban Fashion Hub"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:44 am",
-    "message": "  ✅ Successfully contacted AutoCare Solutions"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:42 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for AutoCare Solutions\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:41 am",
-    "message": "Processing: AutoCare Solutions"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:36 am",
-    "message": "  ✅ Successfully contacted Bright Minds Academy"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:34 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Bright Minds Academy\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:33 am",
-    "message": "Processing: Bright Minds Academy"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:28 am",
-    "message": "  ✅ Successfully contacted The Grand Hotel"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:25 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for The Grand Hotel\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:25 am",
-    "message": "Processing: The Grand Hotel"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:20 am",
-    "message": "  ✅ Successfully contacted Global Logistics Ltd"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:17 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Global Logistics Ltd\""
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:17 am",
-    "message": "Processing: Global Logistics Ltd"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:12 am",
-    "message": "  ✅ Successfully contacted Flavor Junction"
-  },
-  {
-    "timestamp": "30/1/2026, 1:13:09 am",
-    "message": "  - Pitch Generated: \"Growth Partnership for Flavor Junction\""
   }
 ];

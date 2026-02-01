@@ -57,7 +57,12 @@ if (!fs.existsSync(SENT_HISTORY_FILE)) {
 function getSentHistory() {
     try {
         const data = fs.readFileSync(SENT_HISTORY_FILE, "utf8");
-        return JSON.parse(data || "[]");
+        const parsed = JSON.parse(data || "[]");
+        // Migration: If old history was just a list of strings, convert to objects
+        if (parsed.length > 0 && typeof parsed[0] === 'string') {
+            return parsed.map(email => ({ email, lastSent: "2026-01-30" }));
+        }
+        return parsed;
     } catch (e) {
         return [];
     }
@@ -65,10 +70,15 @@ function getSentHistory() {
 
 function addToSentHistory(email) {
     const history = getSentHistory();
-    if (!history.includes(email)) {
-        history.push(email);
-        fs.writeFileSync(SENT_HISTORY_FILE, JSON.stringify(history, null, 2));
+    const today = new Date().toISOString().split('T')[0];
+
+    const index = history.findIndex(h => h.email === email);
+    if (index !== -1) {
+        history[index].lastSent = today;
+    } else {
+        history.push({ email, lastSent: today });
     }
+    fs.writeFileSync(SENT_HISTORY_FILE, JSON.stringify(history, null, 2));
 }
 
 async function runMarketingCampaign(query, location) {
@@ -84,14 +94,21 @@ async function runMarketingCampaign(query, location) {
         const sentHistory = getSentHistory();
 
         for (const lead of leads) {
-            // Check if already sent
-            if (sentHistory.includes(lead.email)) {
-                logCampaign(`⏭️ Skipping ${lead.name} (${lead.email}): Already contacted previously.`, {
+            const today = new Date().toISOString().split('T')[0];
+            const alreadySent = sentHistory.find(h => h.email === lead.email);
+
+            // 1. Strict Duplicate Check (Prevent same-day resending)
+            if (alreadySent && alreadySent.lastSent === today) {
+                logCampaign(`⏭️ Skipping ${lead.name} (${lead.email}): Already contacted TODAY.`, {
                     email: lead.email,
-                    type: 'SKIPPED_DUPLICATE'
+                    type: 'SKIPPED_DUPLICATE_TODAY'
                 });
                 continue;
             }
+
+            // 2. Global History Check (Optional: skip if ever sent, or keep as is for re-runs)
+            // If you want to allow resending after X days, change logic here. 
+            // For now, we allow resending on different days, but block same-day.
 
             logCampaign(`Processing: ${lead.name}`, true);
 
