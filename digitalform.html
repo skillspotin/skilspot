@@ -1388,6 +1388,18 @@
                     body: googleFormData.toString()
                 });
 
+                // Save to Inquiry Registry for Admin
+                const inquiry = {
+                    id: 'inq_' + Date.now(),
+                    name, email, phone, subject: subjectText,
+                    message: leadMsg,
+                    date: new Date().toLocaleDateString(),
+                    source: 'Digital Quote Form'
+                };
+                const registry = JSON.parse(localStorage.getItem('ss_inquiry_registry') || '[]');
+                registry.unshift(inquiry);
+                localStorage.setItem('ss_inquiry_registry', JSON.stringify(registry.slice(0, 100)));
+
                 // Show success modal and proceed
                 document.getElementById('successModal').style.display = 'flex';
                 goToStep(4);

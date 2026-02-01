@@ -432,6 +432,17 @@
             // Store for Visitor Tracking
             localStorage.setItem('contact_form_data', JSON.stringify({ name, email, phone }));
 
+            // Save to Inquiry Registry for Admin
+            const inquiry = {
+                id: 'inq_' + Date.now(),
+                name, email, phone, subject, message,
+                date: new Date().toLocaleDateString(),
+                source: 'Contact Page'
+            };
+            const registry = JSON.parse(localStorage.getItem('ss_inquiry_registry') || '[]');
+            registry.unshift(inquiry);
+            localStorage.setItem('ss_inquiry_registry', JSON.stringify(registry.slice(0, 100)));
+
             // Prepare Form Data for Google Form
             const googleFormUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSddAXUmOCsUmtXQLDoYVqojSioUZOLyGif8UxBz7BhYOIrBYQ/formResponse';
             const formData = new URLSearchParams();

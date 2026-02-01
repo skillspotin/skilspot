@@ -1,0 +1,12 @@
+# SkillSpot Git Configuration Info
+# Save this file for future push/pull reference
+
+USER_NAME: skillspotin
+USER_EMAIL: skillspot.in@gmail.com
+REPO_URL: https://github.com/skillspotin/skilspot.git
+BRANCH: main
+
+# Commands used for setup:
+# git config user.name "skillspotin"
+# git config user.email "skillspot.in@gmail.com"
+# git remote set-url origin https://github.com/skillspotin/skilspot.git

@@ -67,6 +67,16 @@
             padding: 20px;
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
         }
 
         body.dark-mode .stat-card {
@@ -77,13 +87,32 @@
             color: var(--text-color);
             opacity: 0.7;
             font-size: 0.9rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card h3 i {
+            font-size: 0.8rem;
+            color: var(--primary);
+            opacity: 0.5;
         }
 
         .stat-card .value {
             font-size: 2rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--text-color);
+        }
+
+        .stat-card .manage-label {
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 10px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .data-table-container {
@@ -221,22 +250,26 @@
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Students</h3>
+            <a href="#registrationsTableBody" class="stat-card" onclick="filterRegistrations('all')">
+                <h3>Total Students <i class="fas fa-chevron-right"></i></h3>
                 <div class="value" id="totalUsersStat">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Active Courses</h3>
+                <span class="manage-label">View List</span>
+            </a>
+            <a href="admin-courses.html" class="stat-card">
+                <h3>Active Courses <i class="fas fa-chevron-right"></i></h3>
                 <div class="value" id="activeCoursesStat">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Total Inquiries</h3>
+                <span class="manage-label">Edit / Add / Delete</span>
+            </a>
+            <a href="admin-inquiries.html" class="stat-card">
+                <h3>Total Inquiries <i class="fas fa-chevron-right"></i></h3>
                 <div class="value" id="totalRevenueStat">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>New Signups</h3>
+                <span class="manage-label">Manage Leads</span>
+            </a>
+            <a href="#registrationsTableBody" class="stat-card" onclick="filterRegistrations('new')">
+                <h3>New Signups <i class="fas fa-chevron-right"></i></h3>
                 <div class="value" id="newSignupsStat">0</div>
-            </div>
+                <span class="manage-label">View Recent</span>
+            </a>
         </div>
 
         <div class="data-table-container">
@@ -271,19 +304,18 @@
             // 1. Load Real Stats
             const registry = JSON.parse(localStorage.getItem('ss_user_registry') || '[]');
             const visitorLogs = JSON.parse(localStorage.getItem('skillspot_visitor_logs') || '[]');
+            const inquiryRegistry = JSON.parse(localStorage.getItem('ss_inquiry_registry') || '[]');
+            const customCourses = JSON.parse(localStorage.getItem('ss_custom_courses'));
 
             // Total Students
             document.getElementById('totalUsersStat').textContent = registry.length || '0';
 
-            // Active Courses (from premium-courses-data.js)
-            if (window.premiumCourses) {
-                document.getElementById('activeCoursesStat').textContent = premiumCourses.length;
-            } else {
-                document.getElementById('activeCoursesStat').textContent = '10'; // Fallback
-            }
+            // Active Courses
+            const courseList = customCourses || (window.premiumCourses || []);
+            document.getElementById('activeCoursesStat').textContent = courseList.length;
 
-            // Total Inquiries (Total entries in visitor logs or registry as a proxy)
-            document.getElementById('totalRevenueStat').textContent = (registry.length + visitorLogs.length);
+            // Total Inquiries (From inquiry registry)
+            document.getElementById('totalRevenueStat').textContent = inquiryRegistry.length;
 
             // New Signups (Last 7 days)
             const sevenDaysAgo = new Date();
@@ -295,29 +327,46 @@
             document.getElementById('newSignupsStat').textContent = '+' + newSignups;
 
             // 2. Populate Registrations Table
-            const tableBody = document.getElementById('registrationsTableBody');
-            if (registry.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; opacity: 0.5;">No registrations yet.</td></tr>';
-            } else {
-                tableBody.innerHTML = '';
-                registry.slice(0, 5).forEach(user => {
-                    const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>
-                            <div style="display: flex; align-items: center;">
-                                <span class="avatar">${initials}</span> 
-                                ${user.name}
-                            </div>
-                        </td>
-                        <td>${user.email}</td>
-                        <td>${user.role || 'Student'}</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>${user.date}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }
+            window.filterRegistrations = function (type) {
+                const tableBody = document.getElementById('registrationsTableBody');
+                const title = document.querySelector('.table-header h2');
+
+                let filtered = registry;
+                if (type === 'new') {
+                    filtered = registry.filter(u => {
+                        const signupDate = new Date(u.date);
+                        return signupDate >= sevenDaysAgo;
+                    });
+                    title.textContent = 'Recent Weekly Signups';
+                } else {
+                    title.textContent = 'Recent Registrations';
+                }
+
+                if (filtered.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; opacity: 0.5;">No registrations found.</td></tr>';
+                } else {
+                    tableBody.innerHTML = '';
+                    filtered.slice(0, 10).forEach(user => {
+                        const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="avatar">${initials}</span> 
+                                    ${user.name}
+                                </div>
+                            </td>
+                            <td>${user.email}</td>
+                            <td>${user.role || 'Student'}</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>${user.date}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            };
+
+            filterRegistrations('all');
         });
     </script>
 </body>

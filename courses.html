@@ -167,9 +167,12 @@
             // 2. Load Content with Delay
             setTimeout(() => {
                 // Render Premium Courses
-                if (premiumContainer && typeof premiumCourses !== 'undefined') {
+                const customCourses = JSON.parse(localStorage.getItem('ss_custom_courses'));
+                const displayCourses = customCourses || (typeof premiumCourses !== 'undefined' ? premiumCourses : []);
+
+                if (premiumContainer) {
                     premiumContainer.innerHTML = '';
-                    premiumCourses.forEach(course => {
+                    displayCourses.forEach(course => {
                         const card = document.createElement('div');
                         card.className = 'premium-course-card';
                         card.style.animation = 'fadeIn 0.5s ease-out';

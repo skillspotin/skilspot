@@ -45,10 +45,24 @@
             if (isSuspicious) identityType = 'BOT/COMPETITOR';
             else if (pageCount > 5) identityType = 'RESEARCHER/COMPETITOR';
 
-            // 4. Construct entry
+            // 4. Construct entry (Deep Identity Search)
             const ssUser = JSON.parse(localStorage.getItem('ss_user') || '{}');
             const contactData = JSON.parse(localStorage.getItem('contact_form_data') || '{}');
+            const userRegistry = JSON.parse(localStorage.getItem('ss_user_registry') || '[]');
             const dev = getDeviceInfo();
+
+            // Try to find identity in registry if not found in current session
+            let foundName = ssUser.name || contactData.name;
+            let foundEmail = ssUser.email || contactData.email;
+
+            if (!foundName && userRegistry.length > 0) {
+                // Heuristic: check if any registered user has ever used this IP (not perfect but helpful)
+                const matchedUser = userRegistry.find(u => u.ip === geoData.ip);
+                if (matchedUser) {
+                    foundName = matchedUser.name + ' (?)';
+                    foundEmail = matchedUser.email;
+                }
+            }
 
             const logEntry = {
                 id: 'v_' + Date.now(),
@@ -59,12 +73,15 @@
                 org: geoData.org || 'Unknown ISP',
                 device: dev.os + ' (' + dev.type + ')',
                 browser: dev.browser,
+                screen: `${window.screen.width}x${window.screen.height}`,
+                lang: navigator.language,
+                tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 referrer: referrer,
                 page: path,
-                action: action, // Action: PAGE_VIEW, HEARTBEAT, or CLICK
+                action: (typeof action === 'string') ? action : 'PAGE_VIEW',
                 meta: meta,
-                name: ssUser.name || contactData.name || fingerprint,
-                email: ssUser.email || contactData.email || 'N/A',
+                name: foundName || fingerprint,
+                email: foundEmail || 'N/A',
                 type: identityType,
                 visitDepth: pageCount
             };
@@ -154,11 +171,98 @@
         }
     }
 
-    // Start tracking when page loads
+    // START TRACKING
     if (document.readyState === 'complete') {
-        trackVisitor();
+        trackVisitor('PAGE_VIEW');
+        initLeadPopup();
     } else {
-        window.addEventListener('load', trackVisitor);
+        window.addEventListener('load', () => {
+            trackVisitor('PAGE_VIEW');
+            initLeadPopup();
+        });
+    }
+
+    // LEAD POPUP LOGIC: Trigger after 9 seconds if identity is unknown
+    function initLeadPopup() {
+        const isKnown = localStorage.getItem('ss_user') || localStorage.getItem('contact_form_data') || localStorage.getItem('ss_lead_submitted');
+
+        if (!isKnown) {
+            setTimeout(showLeadPopup, 9000); // 9 Seconds
+        }
+    }
+
+    function showLeadPopup() {
+        // Double check in case they signed in/contacted while waiting
+        if (localStorage.getItem('ss_user') || localStorage.getItem('contact_form_data')) return;
+
+        const overlay = document.createElement('div');
+        overlay.id = 'ss-lead-overlay';
+        overlay.style = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            z-index: 10000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.5s ease;
+        `;
+
+        const modal = document.createElement('div');
+        modal.style = `
+            background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center;
+            position: relative; transform: translateY(20px); transition: transform 0.5s ease;
+        `;
+
+        modal.innerHTML = `
+            <div style="background: #6366f1; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: -65px auto 20px; box-shadow: 0 10px 15px -3px rgba(99,102,241,0.5);">
+                <i class="fas fa-gift" style="color: white; font-size: 1.5rem;"></i>
+            </div>
+            <h2 style="font-family: 'Inter', sans-serif; font-weight: 800; color: #1e293b; margin-bottom: 10px;">Get Free Syllabus!</h2>
+            <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Enter your details to receive the complete course curriculum and expert guidance.</p>
+            <form id="ss-lead-form">
+                <input type="text" id="lp-name" placeholder="Full Name" required style="width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; outline: none;">
+                <input type="email" id="lp-email" placeholder="Email Address" required style="width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; outline: none;">
+                <button type="submit" style="width: 100%; padding: 14px; background: #6366f1; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: background 0.3s;">Receive Now <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
+            </form>
+            <button id="ss-close-lp" style="margin-top: 15px; background: none; border: none; color: #94a3b8; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">Maybe later</button>
+        `;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        // Animation
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            modal.style.transform = 'translateY(0)';
+        }, 10);
+
+        // Submit Handler
+        document.getElementById('ss-lead-form').onsubmit = function (e) {
+            e.preventDefault();
+            const name = document.getElementById('lp-name').value;
+            const email = document.getElementById('lp-email').value;
+
+            localStorage.setItem('ss_lead_submitted', 'true');
+            localStorage.setItem('contact_form_data', JSON.stringify({ name, email, phone: 'POPUP_LEAD' }));
+
+            trackVisitor('LEAD_CAPTURE', { name, email, source: '9s_Popup' });
+
+            modal.innerHTML = `
+                <div style="background: #10b981; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: -65px auto 20px;">
+                    <i class="fas fa-check" style="color: white; font-size: 1.5rem;"></i>
+                </div>
+                <h2 style="color: #1e293b; margin-bottom: 10px;">Thank You!</h2>
+                <p style="color: #64748b;">The syllabus has been sent to your email.</p>
+            `;
+
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 500);
+            }, 2000);
+        };
+
+        document.getElementById('ss-close-lp').onclick = () => {
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.remove(), 500);
+        };
     }
 
 })();
