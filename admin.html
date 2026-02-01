@@ -301,6 +301,23 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // -- SAMPLE DATA SEER --
+            // If the site is brand new and empty, we seed some sample data for testing purposes
+            if (!localStorage.getItem('ss_user_registry') &&
+                !localStorage.getItem('ss_inquiry_registry')) {
+                const sampleUsers = [
+                    { name: 'Rahul Sharma', email: 'rahul@example.com', role: 'Student', date: '01/02/2026', ip: '103.21.XX.XX' },
+                    { name: 'Priya Patel', email: 'priya@example.com', role: 'Student', date: '31/01/2026', ip: '157.34.XX.XX' },
+                    { name: 'Amit Kumar', email: 'amit@example.com', role: 'Student', date: '30/01/2026', ip: '122.160.XX.XX' }
+                ];
+                const sampleInquiries = [
+                    { id: 'inq_1', name: 'Zeeshan Khan', email: 'zee@test.com', phone: '98XXX-XXXXX', subject: 'MERN Course Inquiry', message: 'I want to know about the batch timings.', date: '01/02/2026', source: 'Contact Page' },
+                    { id: 'inq_2', name: 'Sneha Rao', email: 'sneha@test.com', phone: '88XXX-XXXXX', subject: 'Demo Request: Python', message: 'User interested in Python Mastery', date: '01/02/2026', source: 'Career Popup' }
+                ];
+                localStorage.setItem('ss_user_registry', JSON.stringify(sampleUsers));
+                localStorage.setItem('ss_inquiry_registry', JSON.stringify(sampleInquiries));
+            }
+
             // 1. Load Real Stats
             const registry = JSON.parse(localStorage.getItem('ss_user_registry') || '[]');
             const visitorLogs = JSON.parse(localStorage.getItem('skillspot_visitor_logs') || '[]');
@@ -308,13 +325,13 @@
             const customCourses = JSON.parse(localStorage.getItem('ss_custom_courses'));
 
             // Total Students
-            document.getElementById('totalUsersStat').textContent = registry.length || '0';
+            document.getElementById('totalUsersStat').textContent = registry.length;
 
             // Active Courses
             const courseList = customCourses || (window.premiumCourses || []);
             document.getElementById('activeCoursesStat').textContent = courseList.length;
 
-            // Total Inquiries (From inquiry registry)
+            // Total Inquiries (Total entries in inquiry registry)
             document.getElementById('totalRevenueStat').textContent = inquiryRegistry.length;
 
             // New Signups (Last 7 days)
