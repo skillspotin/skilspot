@@ -323,42 +323,37 @@
                     <canvas id="browserChart"></canvas>
                 </div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <div class="filters" style="margin-bottom: 0;">
-                        <button class="filter-btn active" onclick="filterLogs('all', this)">All</button>
-                        <button class="filter-btn" onclick="filterLogs('threat', this)">Threats</button>
-                        <button class="filter-btn" onclick="filterLogs('known', this)">Users</button>
+        </div>
+
+
+        <div class="log-table-container">
+            <div class="table-header" style="flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h2 style="font-size: 1.1rem; margin: 0;">Recent Activity Logs</h2>
+                    <div style="color: var(--primary); font-weight: 700; font-size: 0.75rem;">Live Feed
+                        [Auto-refreshing]</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center; margin-left: auto;">
+                    <div class="filters" style="margin-bottom: 0; display: flex; gap: 5px;">
+                        <button class="filter-btn active" onclick="filterLogs('all', this)"
+                            style="padding: 4px 12px; font-size: 0.75rem;">All</button>
+                        <button class="filter-btn" onclick="filterLogs('threat', this)"
+                            style="padding: 4px 12px; font-size: 0.75rem;">Threats</button>
+                        <button class="filter-btn" onclick="filterLogs('known', this)"
+                            style="padding: 4px 12px; font-size: 0.75rem;">Users</button>
                     </div>
                     <select id="logTimeRange" onchange="filterTimeLogs()"
-                        style="border: 1px solid var(--border-color); border-radius: 8px; padding: 4px 10px; font-size: 0.8rem; background: var(--bg-card); color: var(--text-main); outline: none; cursor: pointer;">
+                        style="border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 12px; font-size: 0.8rem; background: var(--bg-card); color: var(--text-main); outline: none; cursor: pointer;">
                         <option value="all">Everywhere</option>
                         <option value="today">Today</option>
                         <option value="yesterday">Yesterday</option>
-                        <option value="week">Last Week</option>
+                        <option value="week">This Week</option>
                         <option value="month">Last Month</option>
                         <option value="2024">Year 2024</option>
                         <option value="2025">Year 2025</option>
                         <option value="2026">Year 2026</option>
                     </select>
                 </div>
-                <div class="chart-container"
-                    style="margin-bottom: 0; flex-grow: 1; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none;">
-                    <div style="text-align: center;">
-                        <i class="fas fa-shield-alt fa-2x" style="margin-bottom: 10px; opacity: 0.8;"></i>
-                        <h3 style="font-size: 1.1rem; margin-bottom: 5px;">Security Active</h3>
-                        <p style="font-size: 0.8rem; opacity: 0.8;">Automated IP tracking & threat detection is running.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="log-table-container">
-            <div class="table-header">
-                <h2 style="font-size: 1.1rem; margin: 0;">Recent Activity Logs</h2>
-                <div style="color: var(--primary); font-weight: 700;">Live Feed [Auto-refreshing]</div>
             </div>
             <div style="overflow-x: auto;">
                 <table>
