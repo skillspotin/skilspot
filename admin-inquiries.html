@@ -171,6 +171,12 @@
                         </div>
                         <div style="text-align: right; opacity: 0.6; font-size: 0.8rem;">
                             ${inq.date}
+                            <div style="margin-top: 10px;">
+                                <button onclick="sendWhatsApp('${inq.phone}', '${inq.name}', '${inq.subject || 'Inquiry'}')" 
+                                    style="background: #25d366; color: white; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fab fa-whatsapp"></i> Chat
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div style="font-weight: 700; margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
@@ -181,6 +187,16 @@
                 `;
                 list.appendChild(card);
             });
+        }
+
+        function sendWhatsApp(phone, name, subject) {
+            // Clean phone number (remove spaces, dashes)
+            const cleanPhone = phone.replace(/\D/g, '');
+            // International format (assume India +91 if not present)
+            const finalPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+
+            const text = encodeURIComponent(`Hi ${name}, this is Haris from SkillSpot. Regarding your inquiry about "${subject}"...`);
+            window.open(`https://wa.me/${finalPhone}?text=${text}`, '_blank');
         }
 
         function deleteInquiry(index) {

@@ -361,9 +361,10 @@
                         <tr>
                             <th>Timestamp</th>
                             <th>Visitor Info</th>
-                            <th>Device & Browser</th>
-                            <th>Action / Target</th>
-                            <th>Source / Page</th>
+                            <th>Location & IP</th>
+                            <th>Device</th>
+                            <th>Action</th>
+                            <th>Guard</th>
                         </tr>
                     </thead>
                     <tbody id="visitorLogsBody">
@@ -476,11 +477,12 @@
                     </td>
                     <td>
                         <span class="action-tag ${actionClass}">${actionText}</span>
-                        <div style="font-size: 0.7rem; margin-top: 4px; color: #475569;">${log.meta && log.meta.element ? log.meta.element : (log.meta && typeof log.meta === 'object' ? JSON.stringify(log.meta) : '-')}</div>
+                        <div style="font-size: 0.7rem; margin-top: 4px; color: #475569;">${log.meta && (log.meta.element || log.meta.name || log.meta.interest) ? (log.meta.element || log.meta.name || log.meta.interest) : '-'}</div>
                     </td>
                     <td>
-                        <div style="font-size: 0.75rem; color: #6366f1; font-weight: 500;">${log.referrer || 'Direct'}</div>
-                        <code style="background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-size: 0.7rem; display: block; margin-top: 4px;">${log.page}</code>
+                        <button class="filter-btn" onclick="toggleBlockIP('${log.ip}')" style="padding: 4px 8px; font-size: 0.7rem; background: ${isIPBlocked(log.ip) ? '#ef4444' : 'transparent'}; color: ${isIPBlocked(log.ip) ? 'white' : 'inherit'};">
+                            ${isIPBlocked(log.ip) ? 'Unblock' : 'Block IP'}
+                        </button>
                     </td>
                 `;
 
@@ -766,6 +768,24 @@
                 localStorage.removeItem(STORAGE_KEY);
                 loadStats();
             }
+        }
+
+        function isIPBlocked(ip) {
+            const blocked = JSON.parse(localStorage.getItem('ss_blocked_ips') || '[]');
+            return blocked.includes(ip);
+        }
+
+        function toggleBlockIP(ip) {
+            let blocked = JSON.parse(localStorage.getItem('ss_blocked_ips') || '[]');
+            if (blocked.includes(ip)) {
+                blocked = blocked.filter(item => item !== ip);
+                alert(`IP ${ip} has been UNBLOCKED.`);
+            } else {
+                blocked.push(ip);
+                alert(`IP ${ip} has been BLOCKED stealthily.`);
+            }
+            localStorage.setItem('ss_blocked_ips', JSON.stringify(blocked));
+            filterTimeLogs(); // Refresh view
         }
 
         // Auto Refresh every 30 seconds

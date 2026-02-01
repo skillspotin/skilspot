@@ -13,16 +13,13 @@ async function analyzeAndGeneratePitch(businessInfo) {
 
         const prompt = `
         Context: You are Antigravity, an AI growth strategist for SkillSpotin Digital Solutions.
-        SkillSpotin is launching the "Digital Kerala Initiative" specifically for businesses in the ${businessInfo.location} area.
+        SkillSpotin is launching the "SkillSpot 360 AI & Automation Strategy" specifically for businesses in the ${businessInfo.location} area.
         
         Our Star Offer: 
-        A Professional Single-Page Business Website for just ₹2,999 (Includes Domain & Hosting). 
-        This is a high-volume, low-cost entry product designed to help local businesses get online instantly.
-        
-        SkillSpotin also provides:
-        1. Performance Marketing: Ad campaigns (Meta, Google) for ROI.
-        2. Business Automation: ERP systems & Shop Management Web Apps.
-        3. Interactive Service Robots: For hospitals, hotels, and schools.
+        1. AI-Powered Business Website: A modern, lightning-fast site for just ₹4,999 (Includes Domain & Hosting).
+        2. Business Automation: Custom Dashboards & Shop Management Systems to track inventory and sales.
+        3. AI Marketing: Using Gemini AI to target the right customers in ${businessInfo.location}.
+        4. Interactive Service Robots: For hospitals, hotels, and schools to automate repetitive tasks.
         
         Target Business:
         Name: ${businessInfo.name}
@@ -30,19 +27,17 @@ async function analyzeAndGeneratePitch(businessInfo) {
         Location: ${businessInfo.location}
         
         Task:
-        1. Lead with the "Digital Kerala Initiative" and the ₹2,999 website offer.
-        2. Specifically address them as a "Forward-thinking" or "Newly established" business (even if you're not 100% sure, frame it as growth-focused).
-        3. Mention that for modern shops, we build specialized Web Apps that help with inventory, ordering, and customer management.
-        4. Explain how this small investment of ₹2,999 can significantly increase their visibility in the ${businessInfo.location} market.
-        5. Keep the tone warm, professional, and locally focused. Mention that Haris Ali P is helping businesses in their specific area. Address the recipient as "Hi [Business Name] team," or similar.
-        4. Crucial: The email should sound like a personal outreach from a local growth strategist, not a generic robot.
+        1. Lead with the "SkillSpot 360 Strategy" – focusing on modernizing their business with AI.
+        2. Specifically address how they can outpace competitors in ${businessInfo.location} by using data and automation.
+        3. Mention the ₹4,999 AI website if they don't have a modern one, but prioritize automation/AI growth.
+        4. Keep the tone warm, professional, and results-driven. Mention that Haris Ali P is local and can collaborate directly.
         5. Limit email to 150 words. Use simple, effective language.
         
         Mandatory Signature:
         ---
         Best Regards,
         Haris Ali P
-        Growth Strategist | SkillSpotin Digital Solutions
+        Founder & Strategist | SkillSpotin Digital Solutions
         📞 WhatsApp: +91 9074854599
         🌐 Website: https://skillspot.in
 
@@ -73,8 +68,8 @@ async function analyzeAndGeneratePitch(businessInfo) {
     } catch (error) {
         console.error("AI Analysis Error:", error);
         return {
-            subject: `Digital Kerala Initiative: Growth Partnership for ${businessInfo.name}`,
-            body: `Hi ${businessInfo.name} team,\n\nI'm Haris Ali P from SkillSpotin. We are launching a "Digital Kerala Initiative" in ${businessInfo.location} to help local businesses grow online.\n\nWe are offering professional business websites for just ₹2,999 (including domain and hosting) for a limited time. I'd love to help your business transition to the digital space.\n\nBest Regards,\nHaris Ali P\nSkillSpotin Digital Solutions\nWhatsApp: +91 9074854599`,
+            subject: `Growth Strategy for ${businessInfo.name} in ${businessInfo.location}`,
+            body: `Hi ${businessInfo.name} team,\n\nI'm Haris Ali P from SkillSpotin. We are helping businesses in ${businessInfo.location} implement AI-driven growth strategies and automated management systems.\n\nFrom smart websites to custom inventory apps, we help you save time and scale your profits. I'd love to discuss a 360 transformation for your business.\n\nBest Regards,\nHaris Ali P\nSkillSpotin Digital Solutions\nWhatsApp: +91 9074854599`,
             perceived_value: "Standard fallback pitch"
         };
     }

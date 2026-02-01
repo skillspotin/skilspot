@@ -29,11 +29,44 @@
                 sessionStorage.setItem('ss_geo_cache', JSON.stringify(geoData));
             }
 
-            // 3. Competitor Check
+            // 3. Competitor Check & Stealth Shield
+            const blockedIPs = JSON.parse(localStorage.getItem('ss_blocked_ips') || '[]');
             const org = (geoData.org || "").toLowerCase();
             const isSuspicious = org.includes('amazon') || org.includes('google') ||
                 org.includes('microsoft') || org.includes('hosting') ||
                 org.includes('vpn') || org.includes('data center');
+
+            const isManuallyBlocked = blockedIPs.includes(geoData.ip);
+
+            if (isManuallyBlocked || isSuspicious) {
+                activateStealthShield();
+            }
+
+            function activateStealthShield() {
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    /* Hide Pricing, Dashboards, and Revenue data from competitors */
+                    .ss-pricing, .pricing-table, [data-sec="pricing"], .admin-stats, .revenue-data {
+                        display: none !important;
+                    }
+                    /* Optional: Show fake pricing or broken message */
+                    .ss-pricing-placeholder::after {
+                        content: 'Error loading pricing. Please contact support.';
+                        color: red; font-size: 0.8rem; font-weight: bold;
+                    }
+                `;
+                document.head.appendChild(style);
+
+                // Hide specific links based on text
+                document.querySelectorAll('a').forEach(a => {
+                    const txt = a.textContent.toLowerCase();
+                    if (txt.includes('pricing') || txt.includes('admin') || txt.includes('dashboard') || txt.includes('revenue')) {
+                        a.style.display = 'none';
+                    }
+                });
+
+                console.log("🛡️ Stealth Shield Activated for Suspicious/Blocked Visitor.");
+            }
 
             let pageCount = parseInt(sessionStorage.getItem('ss_page_count') || '0');
             if (action === 'PAGE_VIEW') {
