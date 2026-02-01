@@ -12,14 +12,19 @@ async function analyzeAndGeneratePitch(businessInfo) {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = `
-        Context: You are Antigravity, an AI growth strategist for SkillSpotin Digital Solutions.
-        SkillSpotin is launching the "SkillSpot 360 AI & Automation Strategy" specifically for businesses in the ${businessInfo.location} area.
+        Context: You are Haris Ali P, founder of SkillSpotin Digital Solutions.
+        We are running a "Digital Express Launch" for local businesses in ${businessInfo.location}.
         
-        Our Star Offer: 
-        1. AI-Powered Business Website: A modern, lightning-fast site for just ₹4,999 (Includes Domain & Hosting).
-        2. Business Automation: Custom Dashboards & Shop Management Systems to track inventory and sales.
-        3. AI Marketing: Using Gemini AI to target the right customers in ${businessInfo.location}.
-        4. Interactive Service Robots: For hospitals, hotels, and schools to automate repetitive tasks.
+        Our High-Impact Offer: 
+        A Professional Business Website for just ₹2,999 (Everything included: Domain, Hosting, SSL, and Mobile-Friendly Design).
+        
+        Why we are doing this:
+        To help 100 local businesses in ${businessInfo.location} get online this month. This is a limited-time "Zero-Hassle" package.
+        
+        SkillSpotin also provides:
+        - Google Maps/SEO Optimization (to show up when people search for ${businessInfo.category}).
+        - WhatsApp Business Integration (so customers can chat with you instantly).
+        - Business Automation (for bigger shops and hospitals).
         
         Target Business:
         Name: ${businessInfo.name}
@@ -27,17 +32,17 @@ async function analyzeAndGeneratePitch(businessInfo) {
         Location: ${businessInfo.location}
         
         Task:
-        1. Lead with the "SkillSpot 360 Strategy" – focusing on modernizing their business with AI.
-        2. Specifically address how they can outpace competitors in ${businessInfo.location} by using data and automation.
-        3. Mention the ₹4,999 AI website if they don't have a modern one, but prioritize automation/AI growth.
-        4. Keep the tone warm, professional, and results-driven. Mention that Haris Ali P is local and can collaborate directly.
-        5. Limit email to 150 words. Use simple, effective language.
+        1. Lead with the "Digital Express Launch" ₹2,999 offer.
+        2. Explain how ${businessInfo.name} can benefit from having a professional site (e.g., getting more customers in ${businessInfo.location}).
+        3. Make it sound urgent but professional. "Getting your business online should cost less than a pair of shoes."
+        4. Focus on the value: Domain + Hosting + Website all for ₹2,999 one-time.
+        5. Limit email to 120 words. Simple English. No corporate jargon.
         
         Mandatory Signature:
         ---
         Best Regards,
         Haris Ali P
-        Founder & Strategist | SkillSpotin Digital Solutions
+        Founder | SkillSpotin Digital Solutions
         📞 WhatsApp: +91 9074854599
         🌐 Website: https://skillspot.in
 
@@ -68,8 +73,8 @@ async function analyzeAndGeneratePitch(businessInfo) {
     } catch (error) {
         console.error("AI Analysis Error:", error);
         return {
-            subject: `Growth Strategy for ${businessInfo.name} in ${businessInfo.location}`,
-            body: `Hi ${businessInfo.name} team,\n\nI'm Haris Ali P from SkillSpotin. We are helping businesses in ${businessInfo.location} implement AI-driven growth strategies and automated management systems.\n\nFrom smart websites to custom inventory apps, we help you save time and scale your profits. I'd love to discuss a 360 transformation for your business.\n\nBest Regards,\nHaris Ali P\nSkillSpotin Digital Solutions\nWhatsApp: +91 9074854599`,
+            subject: `Website Launch for ${businessInfo.name} - Special ₹2,999 Offer`,
+            body: `Hi ${businessInfo.name}, \n\nI'm Haris from SkillSpotin. We're helping 100 businesses in ${businessInfo.location} get online with a full professional website for just ₹2,999 (includes domain and hosting).\n\n I noticed your business doesn't have a modern landing page yet, and I'd love to set this up for you this week. Would you like to see a demo?\n\nBest Regards,\nHaris Ali P\nSkillSpotin\nWhatsApp: +91 9074854599`,
             perceived_value: "Standard fallback pitch"
         };
     }

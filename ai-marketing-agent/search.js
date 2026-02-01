@@ -39,7 +39,7 @@ async function getLeadsFromLocation(query, location) {
 
     if (!apiKey) {
         console.log("⚠️ No GOOGLE_MAPS_API_KEY found. Using high-quality Kerala mock database.");
-        return mockLeads.filter(l => l.location.toLowerCase().includes(location.toLowerCase()) || location === "Kottakkal").slice(0, 15);
+        return mockLeads.filter(l => l.location.toLowerCase().includes(location.toLowerCase()) || location === "Kottakkal").slice(0, 100);
     }
 
     console.log(`🔍 Searching Google Maps for: ${query} in ${location}...`);
@@ -50,16 +50,16 @@ async function getLeadsFromLocation(query, location) {
 
         if (response.data.status === "REQUEST_DENIED") {
             console.log("🚀 Google API Billing not enabled. Switching to Kottakkal Mock Database...");
-            return mockLeads.slice(0, 15);
+            return mockLeads.slice(0, 100);
         }
 
         const results = response.data.results || [];
         if (results.length === 0) {
             console.log("ℹ️ No real results found on Maps. Using Kottakkal backup leads.");
-            return mockLeads.slice(0, 15);
+            return mockLeads.slice(0, 100);
         }
 
-        return results.slice(0, 15).map(place => ({
+        return results.slice(0, 100).map(place => ({
             name: place.name,
             category: query,
             location: place.formatted_address,
@@ -68,7 +68,7 @@ async function getLeadsFromLocation(query, location) {
         }));
     } catch (error) {
         console.log("⚠️ Search Error. Using Kottakkal fallback database.");
-        return mockLeads.slice(0, 15);
+        return mockLeads.slice(0, 100);
     }
 }
 
