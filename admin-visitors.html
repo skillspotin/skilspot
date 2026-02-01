@@ -354,6 +354,14 @@
                         <option value="2026">Year 2026</option>
                     </select>
                 </div>
+                <div class="filter-group"
+                    style="display: flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.1); padding: 5px 12px; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <input type="checkbox" id="excludeAdmin" onchange="filterTimeLogs()" checked
+                        style="width: 16px; height: 16px; cursor: pointer;">
+                    <label for="excludeAdmin"
+                        style="font-size: 0.8rem; font-weight: 600; cursor: pointer; color: #6366f1;">Exclude Admin
+                        Logs</label>
+                </div>
             </div>
             <div style="overflow-x: auto;">
                 <table>
@@ -720,6 +728,13 @@
 
             let filtered = allLogs.filter(log => {
                 const logDate = new Date(log.timestamp);
+                const excludeAdmin = document.getElementById('excludeAdmin').checked;
+
+                // 0. Exclude Admin if toggled
+                if (excludeAdmin) {
+                    const isAdmin = (log.email === 'admin@gmail.com') || (log.name && log.name.toLowerCase().includes('admin'));
+                    if (isAdmin) return false;
+                }
 
                 // 1. apply Type Filter first
                 if (currentTypeFilter === 'threat') {
