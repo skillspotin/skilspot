@@ -192,71 +192,96 @@
     }
 
     function showLeadPopup() {
-        // Double check in case they signed in/contacted while waiting
         if (localStorage.getItem('ss_user') || localStorage.getItem('contact_form_data')) return;
 
         const overlay = document.createElement('div');
         overlay.id = 'ss-lead-overlay';
         overlay.style = `
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
             z-index: 10000; display: flex; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.5s ease;
         `;
 
         const modal = document.createElement('div');
         modal.style = `
-            background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center;
-            position: relative; transform: translateY(20px); transition: transform 0.5s ease;
+            background: white; padding: 30px; border-radius: 28px; width: 92%; max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); text-align: center;
+            position: relative; transform: translateY(30px); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         `;
 
         modal.innerHTML = `
-            <div style="background: #6366f1; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: -65px auto 20px; box-shadow: 0 10px 15px -3px rgba(99,102,241,0.5);">
-                <i class="fas fa-gift" style="color: white; font-size: 1.5rem;"></i>
+            <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); width: 66px; height: 66px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: -65px auto 20px; transform: rotate(-10deg); box-shadow: 0 10px 15px -3px rgba(99,102,241,0.5);">
+                <i class="fas fa-rocket" style="color: white; font-size: 1.6rem;"></i>
             </div>
-            <h2 style="font-family: 'Inter', sans-serif; font-weight: 800; color: #1e293b; margin-bottom: 10px;">Get Free Syllabus!</h2>
-            <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Enter your details to receive the complete course curriculum and expert guidance.</p>
-            <form id="ss-lead-form">
-                <input type="text" id="lp-name" placeholder="Full Name" required style="width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; outline: none;">
-                <input type="email" id="lp-email" placeholder="Email Address" required style="width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; outline: none;">
-                <button type="submit" style="width: 100%; padding: 14px; background: #6366f1; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: background 0.3s;">Receive Now <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
+            <h2 style="font-family: 'Inter', sans-serif; font-weight: 900; color: #1e293b; margin-bottom: 5px; font-size: 1.6rem; letter-spacing: -0.03em;">Unlock Your <span style="color: #6366f1;">Potential</span></h2>
+            <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px; font-weight: 500;">Get a Free Career Consultation today!</p>
+            
+            <form id="ss-lead-form" style="display: flex; flex-direction: column; gap: 12px;">
+                <input type="text" id="lp-name" placeholder="Your Name" required style="width: 100%; padding: 12px 18px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; transition: border-color 0.3s; box-sizing: border-box;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="email" id="lp-email" placeholder="Email Address" required style="width: 100%; padding: 12px 18px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; box-sizing: border-box;">
+                    <input type="tel" id="lp-phone" placeholder="Phone Number" required style="width: 100%; padding: 12px 18px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; box-sizing: border-box;">
+                </div>
+                <select id="lp-interest" required style="width: 100%; padding: 12px 18px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; background: #fff; cursor: pointer; box-sizing: border-box;">
+                    <option value="" disabled selected>Select Interest</option>
+                    <option value="MERN Fullstack">MERN Fullstack</option>
+                    <option value="Python Mastery">Python Mastery</option>
+                    <option value="Robotics">Robotics</option>
+                    <option value="Career Counseling">Career Counseling</option>
+                </select>
+                <textarea id="lp-message" placeholder="Ask us anything..." rows="2" style="width: 100%; padding: 12px 18px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; resize: none; box-sizing: border-box;"></textarea>
+                
+                <button type="submit" style="width: 100%; padding: 16px; background: #6366f1; color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: all 0.3s; margin-top: 10px; font-size: 1rem; box-shadow: 0 4px 6px -1px rgba(99,102,241,0.4);">Book Free Demo <i class="fas fa-calendar-check" style="margin-left: 8px;"></i></button>
             </form>
-            <button id="ss-close-lp" style="margin-top: 15px; background: none; border: none; color: #94a3b8; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">Maybe later</button>
+            <button id="ss-close-lp" style="margin-top: 20px; background: none; border: none; color: #94a3b8; font-size: 0.85rem; cursor: pointer; font-weight: 500;">Maybe later</button>
         `;
 
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
-        // Animation
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-            modal.style.transform = 'translateY(0)';
-        }, 10);
+        setTimeout(() => { overlay.style.opacity = '1'; modal.style.transform = 'translateY(0)'; }, 10);
 
-        // Submit Handler
         document.getElementById('ss-lead-form').onsubmit = function (e) {
             e.preventDefault();
             const name = document.getElementById('lp-name').value;
             const email = document.getElementById('lp-email').value;
+            const phone = document.getElementById('lp-phone').value;
+            const interest = document.getElementById('lp-interest').value;
+            const message = document.getElementById('lp-message').value;
 
+            // 1. Mark as submitted
             localStorage.setItem('ss_lead_submitted', 'true');
-            localStorage.setItem('contact_form_data', JSON.stringify({ name, email, phone: 'POPUP_LEAD' }));
+            localStorage.setItem('contact_form_data', JSON.stringify({ name, email, phone }));
 
-            trackVisitor('LEAD_CAPTURE', { name, email, source: '9s_Popup' });
+            // 2. Save to Inquiry Registry for Admin
+            const inquiry = {
+                id: 'inq_' + Date.now(),
+                name, email, phone,
+                subject: `Demo Request: ${interest}`,
+                message: message || `User interested in ${interest}`,
+                date: new Date().toLocaleDateString(),
+                source: 'Career Popup'
+            };
+            const registry = JSON.parse(localStorage.getItem('ss_inquiry_registry') || '[]');
+            registry.unshift(inquiry);
+            localStorage.setItem('ss_inquiry_registry', JSON.stringify(registry.slice(0, 100)));
+
+            // 3. Track in Analytics
+            trackVisitor('LEAD_CAPTURE', { name, email, phone, interest, source: '9s_Consult_Popup' });
 
             modal.innerHTML = `
-                <div style="background: #10b981; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: -65px auto 20px;">
-                    <i class="fas fa-check" style="color: white; font-size: 1.5rem;"></i>
+                <div style="background: #10b981; width: 66px; height: 66px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: -65px auto 20px; box-shadow: 0 10px 15px -3px rgba(16,185,129,0.4);">
+                    <i class="fas fa-check" style="color: white; font-size: 1.6rem;"></i>
                 </div>
-                <h2 style="color: #1e293b; margin-bottom: 10px;">Thank You!</h2>
-                <p style="color: #64748b;">The syllabus has been sent to your email.</p>
+                <h2 style="color: #1e293b; margin-bottom: 10px; font-weight: 800;">Consultation Booked!</h2>
+                <p style="color: #64748b; font-weight: 500;">Our expert will call you shortly on ${phone}.</p>
             `;
 
             setTimeout(() => {
                 overlay.style.opacity = '0';
                 setTimeout(() => overlay.remove(), 500);
-            }, 2000);
+            }, 3000);
         };
 
         document.getElementById('ss-close-lp').onclick = () => {
