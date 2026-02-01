@@ -429,6 +429,9 @@
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value || 'Contact Page Message';
 
+            // Store for Visitor Tracking
+            localStorage.setItem('contact_form_data', JSON.stringify({ name, email, phone }));
+
             // Prepare Form Data for Google Form
             const googleFormUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSddAXUmOCsUmtXQLDoYVqojSioUZOLyGif8UxBz7BhYOIrBYQ/formResponse';
             const formData = new URLSearchParams();

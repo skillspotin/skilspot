@@ -332,4 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
+    // --- Visitor Tracking Injection ---
+    if (!document.querySelector('script[src="visitor-tracking.js"]')) {
+        const trackerScript = document.createElement('script');
+        trackerScript.src = 'visitor-tracking.js';
+        trackerScript.async = true;
+        document.body.appendChild(trackerScript);
+    }
+
 });

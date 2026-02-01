@@ -213,31 +213,35 @@
                     style="padding: 12px 24px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: #f59e0b;">
                     <i class="fas fa-chart-line"></i> Campaign Reports
                 </a>
+                <a href="admin-visitors.html" class="btn btn-primary"
+                    style="padding: 12px 24px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: #6366f1;">
+                    <i class="fas fa-users"></i> Visitor Analytics
+                </a>
             </div>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>Total Users</h3>
-                <div class="value">1,248</div>
+                <h3>Total Students</h3>
+                <div class="value" id="totalUsersStat">0</div>
             </div>
             <div class="stat-card">
                 <h3>Active Courses</h3>
-                <div class="value">56</div>
+                <div class="value" id="activeCoursesStat">0</div>
             </div>
             <div class="stat-card">
-                <h3>Total Revenue</h3>
-                <div class="value">₹4.2L</div>
+                <h3>Total Inquiries</h3>
+                <div class="value" id="totalRevenueStat">0</div>
             </div>
             <div class="stat-card">
                 <h3>New Signups</h3>
-                <div class="value">+120</div>
+                <div class="value" id="newSignupsStat">0</div>
             </div>
         </div>
 
         <div class="data-table-container">
             <div class="table-header">
-                <h2 style="color: white; font-size: 1.2rem;">Recent Registrations</h2>
+                <h2 style="font-size: 1.2rem; margin: 0; color: var(--text-color);">Recent Registrations</h2>
                 <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">Export Data</button>
             </div>
             <table>
@@ -250,44 +254,8 @@
                         <th>Date</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="flex items-center"><span class="avatar">JD</span> John Doe</div>
-                        </td>
-                        <td>john@example.com</td>
-                        <td>Student</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>Oct 24, 2025</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="flex items-center"><span class="avatar">AS</span> Alice Smith</div>
-                        </td>
-                        <td>alice@tech.com</td>
-                        <td>Professional</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>Oct 23, 2025</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="flex items-center"><span class="avatar">RJ</span> Raj Kumar</div>
-                        </td>
-                        <td>raj@college.edu</td>
-                        <td>Student</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>Oct 23, 2025</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="flex items-center"><span class="avatar" style="background: #ec4899;">SD</span>
-                                Sara Davis</div>
-                        </td>
-                        <td>sara@design.com</td>
-                        <td>Freelancer</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>Oct 22, 2025</td>
-                    </tr>
+                <tbody id="registrationsTableBody">
+                    <!-- Dynamic data will be injected here -->
                 </tbody>
             </table>
         </div>
@@ -296,6 +264,62 @@
 
     <div id="footer-placeholder"></div>
     <script src="footer.js"></script>
+    <script src="premium-courses-data.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Load Real Stats
+            const registry = JSON.parse(localStorage.getItem('ss_user_registry') || '[]');
+            const visitorLogs = JSON.parse(localStorage.getItem('skillspot_visitor_logs') || '[]');
+
+            // Total Students
+            document.getElementById('totalUsersStat').textContent = registry.length || '0';
+
+            // Active Courses (from premium-courses-data.js)
+            if (window.premiumCourses) {
+                document.getElementById('activeCoursesStat').textContent = premiumCourses.length;
+            } else {
+                document.getElementById('activeCoursesStat').textContent = '10'; // Fallback
+            }
+
+            // Total Inquiries (Total entries in visitor logs or registry as a proxy)
+            document.getElementById('totalRevenueStat').textContent = (registry.length + visitorLogs.length);
+
+            // New Signups (Last 7 days)
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            const newSignups = registry.filter(u => {
+                const signupDate = new Date(u.date);
+                return signupDate >= sevenDaysAgo;
+            }).length;
+            document.getElementById('newSignupsStat').textContent = '+' + newSignups;
+
+            // 2. Populate Registrations Table
+            const tableBody = document.getElementById('registrationsTableBody');
+            if (registry.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; opacity: 0.5;">No registrations yet.</td></tr>';
+            } else {
+                tableBody.innerHTML = '';
+                registry.slice(0, 5).forEach(user => {
+                    const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <span class="avatar">${initials}</span> 
+                                ${user.name}
+                            </div>
+                        </td>
+                        <td>${user.email}</td>
+                        <td>${user.role || 'Student'}</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>${user.date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
